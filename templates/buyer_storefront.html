@@ -774,13 +774,13 @@
                   <div
                     class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-purple-950 to-purple-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base"
                   >
-                    {{wishlist[1]}}
+                    {{wishlist[0]}}
                   </div>
                   <div>
                     <span class="text-white font-semibold text-lg"
-                      >{{ wishlist[1] }}</span
+                      >{{ wishlist[0] }}</span
                     >
-                    <p class="text-purple-300 text-sm">{{ wishlist[2] }}</p>
+                    <p class="text-purple-300 text-sm">{{ wishlist[1] }}</p>
                     {% if wishlist[4]=='1' %}
                     <div class="flex items-center space-x-3 mt-1">
                       <span
@@ -1245,6 +1245,7 @@
               setTimeout(() => closeModal("popup-modal"), 2000);
               updateCartCount();
             } else {
+
               setTimeout(() => closeModal("popup-modal"), 3000);
             }
           })
