@@ -777,7 +777,8 @@
                     {{ wishlist[0] }}
                   </div>
                   <div>
-                    <span class="text-white font-semibold text-lg"
+                    <span
+                      class="text-white font-semibold text-lg game-name-span"
                       >{{ wishlist[0] }}</span
                     >
                     <p class="text-purple-300 text-sm">{{ wishlist[1] }}</p>
@@ -815,6 +816,7 @@
                     data-username="{{wishlist[0]}}"
                     data-game_name_cart="{{ wishlist[0] }}"
                     data-game_sale_status="{{wishlist[4]}}"
+                    onclick="AddtoCart(event, this)"
                   >
                     Add to Cart
                   </button>
@@ -1375,28 +1377,26 @@
             },
             body: JSON.stringify({ game_name, was_it_on_sale }),
           });
-          if (!response.ok) {
-            const text = await response.text();
-            throw new Error(
-              `AddtoCart failed: ${response.status}, Response: ${text}`
-            );
-          }
+
           const data = await response.json();
           console.log("Add to Cart Response:", data);
 
           const modalTitle = document.querySelector("#popup-modal h3");
           const modalBody = document.querySelector("#popup-modal .modal-body");
 
-          modalTitle.innerHTML = data.message || "Added to Cart";
-          modalBody.innerHTML = "";
-          openModal("popup-modal");
-
-          if (data.success) {
+          if (response.ok && !data.error) {
+            // Success case: response is OK and no error field in data
+            modalTitle.innerHTML = data.message || "Added to Cart";
+            modalBody.innerHTML = "";
+            openModal("popup-modal");
             await updateCartCount();
             await updateWishlistCount(); // Update wishlist count in case the game was added from wishlist
             setTimeout(() => closeModal("popup-modal"), 2000);
           } else {
+            // Error case: either response is not OK or data contains an error
+            modalTitle.innerHTML = "Cart Error";
             modalBody.innerHTML = data.error || "Failed to add to cart.";
+            openModal("popup-modal");
             setTimeout(() => closeModal("popup-modal"), 3000);
           }
         } catch (error) {
@@ -1432,29 +1432,24 @@
             },
             body: JSON.stringify({ game_name }),
           });
-          if (!response.ok) {
-            const text = await response.text();
-            throw new Error(
-              `AddtoWishlist failed: ${response.status}, Response: ${text}`
-            );
-          }
           const data = await response.json();
           console.log("Add to Wishlist Response:", data);
 
           const modalTitle = document.querySelector("#popup-modal h3");
           const modalBody = document.querySelector("#popup-modal .modal-body");
 
-          modalTitle.innerHTML = data.message || "Added to Wishlist";
-          modalBody.innerHTML = "";
-          openModal("popup-modal");
-
-          if (data.success || data.message) {
+          if (response.ok && !data.error) {
+            modalTitle.innerHTML = data.message || "Added to Wishlist";
+            modalBody.innerHTML = "";
+            openModal("popup-modal");
             await updateWishlistCount();
-            await updateCartCount(); // Update cart count in case it affects cart status
+            await updateCartCount();
             await refreshWishlistModal();
             setTimeout(() => closeModal("popup-modal"), 2000);
           } else {
+            modalTitle.innerHTML = "Wishlist Error";
             modalBody.innerHTML = data.error || "Failed to add to wishlist.";
+            openModal("popup-modal");
             setTimeout(() => closeModal("popup-modal"), 3000);
           }
         } catch (error) {
@@ -1487,25 +1482,25 @@
             },
             body: JSON.stringify({ game_name }),
           });
-          if (!response.ok)
-            throw new Error(`RemoveFromWishlist failed: ${response.status}`);
           const data = await response.json();
           console.log("Remove from Wishlist Response:", data);
 
           const modalTitle = document.querySelector("#popup-modal h3");
           const modalBody = document.querySelector("#popup-modal .modal-body");
-          modalTitle.innerHTML = data.message || "Removed from Wishlist";
-          modalBody.innerHTML = "";
-          openModal("popup-modal");
 
-          if (data.success || data.message) {
+          if (response.ok && !data.error) {
+            modalTitle.innerHTML = data.message || "Removed from Wishlist";
+            modalBody.innerHTML = "";
+            openModal("popup-modal");
             await updateWishlistCount();
-            await updateCartCount(); // Update cart count in case it affects cart status
+            await updateCartCount();
             await refreshWishlistModal();
             setTimeout(() => closeModal("popup-modal"), 2000);
           } else {
+            modalTitle.innerHTML = "Wishlist Error";
             modalBody.innerHTML =
               data.error || "Failed to remove from wishlist.";
+            openModal("popup-modal");
             setTimeout(() => closeModal("popup-modal"), 3000);
           }
         } catch (error) {
@@ -1601,10 +1596,8 @@
                     new_password: newPassword,
                   }),
                 });
-                if (!response.ok)
-                  throw new Error(`update_password failed: ${response.status}`);
                 const data = await response.json();
-                if (data.success) {
+                if (response.ok && !data.error) {
                   document
                     .getElementById("password-success")
                     .classList.remove("hidden");

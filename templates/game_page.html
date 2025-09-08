@@ -1,1137 +1,1651 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> {{game_info[0]}}</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon.png') }}">
-
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        inter: ['Inter', 'sans-serif'],
-                    },
-                },
-            },
-        };
-    </script>
-    <script src="https://kit.fontawesome.com/8584240c12.js" crossorigin="anonymous"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{game_info[0]}}</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/icon.png') }}"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.4.7/dist/flowbite.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Manrope:wght@200..800&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Istok+Web&display=swap" rel="stylesheet">
-
-</head>
-
-<body class="font-inter">
-    <header
-        class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 p-2 bg-base-100 rounded-lg">
-        <div class="flex navbar bg-base-100 justify-start rounded-lg">
-            <div class="ml-5 lg:ml-20 mt-5 px-0.5 py-0.5 w-[80px] lg:w-[120px] relative">
-                <div
-                    class="absolute inset-0 bg-gradient-to-r from-sky-700 via-purple-400 to-violet-700 rounded-xl p-[2px]">
-                </div>
-                <a href="/">
-                    <img alt="Tailwind CSS Navbar component" src="{{ url_for('static', filename='img/logo.jpg') }}"
-                        alt="Logo" class="rounded-lg relative z-10">
-                </a>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+              manrope: ["Manrope", "sans-serif"],
+            },
+            keyframes: {
+              slideIn: {
+                "0%": { transform: "translateY(50px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+              skeleton: {
+                "0%, 100%": { opacity: "0.4" },
+                "50%": { opacity: "0.6" },
+              },
+            },
+            animation: {
+              slideIn: "slideIn 0.4s ease-out forwards",
+              fadeIn: "fadeIn 0.3s ease-out forwards",
+              skeleton: "skeleton 1.5s ease-in-out infinite",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script
+      src="https://kit.fontawesome.com/8584240c12.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+      .glassmorphism {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #3b82f6, #93c5fd);
+        border-radius: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #2563eb, #60a5fa);
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+      }
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.1) 25%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.1) 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton 1.5s ease-in-out infinite;
+      }
+      .description-box {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .description-box.expanded {
+        -webkit-line-clamp: unset;
+        overflow: visible;
+      }
+      .trailer-container {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      }
+      .trailer-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0.75rem;
+      }
+    </style>
+  </head>
+  <body
+    class="font-inter bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 min-h-screen"
+  >
+    <header class="sticky top-0 z-50 glassmorphism border-b border-blue-500/20">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <a href="/" class="relative block">
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-12 h-8 lg:w-16 lg:h-12 rounded-xl z-10 transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </a>
             </div>
-        </div>
-        <div class="mt-3 lg:mt-5 lg:mr-5">
-            <select id="user-name" name="user_name"
-                class="block rounded-lg w-full lg:w-[200px] h-[40px] bg-gradient-to-r from-[#515151] to-[#676161] text-[#1A97F0] font-bold focus:ring-2 focus:ring-white focus:text-black appearance-none"
-                onchange="handleDropdownChange(this)" required>
-                <!-- Disabled Option (Gradient Background) -->
-                <option value="" disabled selected
-                    class="bg-gradient-to-r from-[#515151] to-[#676161] text-[#1A97F0] text-center font-bold">
-                    {{ buyer_username }} {{ balance }} $
+            <div class="hidden lg:block">
+              <h1
+                class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
+              >
+                Bashpo
+              </h1>
+              <p class="text-xs text-gray-400">Your Gaming Hub</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2" data-cart-status>
+              {% if cart_status=='1' %}
+              <a href="/ViewCart" class="relative group">
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
+                >
+                  <i class="fas fa-cart-shopping text-blue-400"></i>
+                  <span id="cart-count" class="font-medium"
+                    >Cart ({{cart_value}})</span
+                  >
+                </div>
+              </a>
+              {% else %}
+              <div
+                class="relative group flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400"
+              >
+                <i class="fas fa-cart-shopping"></i>
+                <span id="cart-count" class="font-medium">Cart is Empty</span>
+                <div
+                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                >
+                  Browse games to fill your cart!
+                </div>
+              </div>
+              {% endif %}
+              <button
+                type="button"
+                id="ViewWishlistedGamesButton"
+                data-modal-target="ViewWishlistedGamesModal"
+                class="relative group"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
+                >
+                  <i class="fas fa-heart text-purple-500"></i>
+                  <span id="wishlist-count" class="font-medium"
+                    >Wishlist ({{wishlist_value}})</span
+                  >
+                </div>
+              </button>
+            </div>
+            <div
+              class="flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 px-4 py-2 rounded-xl border border-white/10 glassmorphism"
+            >
+              <i class="fas fa-wallet text-blue-400"></i>
+              <span class="text-white font-medium"
+                >${{ balance | round(2) }}</span
+              >
+            </div>
+            <div class="relative w-[200px]">
+              <select
+                id="user-name"
+                name="user_name"
+                class="glassmorphism w-full h-[44px] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer text-left pl-3"
+                onchange="handleDropdownChange(this)"
+                required
+                aria-label="User menu"
+              >
+                <option
+                  value=""
+                  disabled
+                  selected
+                  class="bg-slate-800 text-gray-300"
+                >
+                  <i class="fas fa-user mr-2"></i>{{ buyer_username }}
                 </option>
-
-                <option value="view_profile" class="bg-[#b3b3b3] text-white">View My Profile</option>
-                <option value="AddMonitorWallet" class="bg-[#b3b3b3] text-white">Add and Monitor Wallet</option>
-                <option value="update_pass" class="bg-[#b3b3b3] text-white">Update Password</option>
-                <option value="logout" class="bg-[#b3b3b3] text-white">Logout</option>
-            </select>
+                <option value="view_profile" class="bg-slate-800 text-white">
+                  <i class="fas fa-user mr-2"></i>View Profile
+                </option>
+                <option
+                  value="AddMonitorWallet"
+                  class="bg-slate-800 text-white"
+                >
+                  <i class="fas fa-wallet mr-2"></i>Manage Wallet
+                </option>
+                <option value="update_pass" class="bg-slate-800 text-white">
+                  <i class="fas fa-lock mr-2"></i>Update Password
+                </option>
+                <option value="logout" class="bg-slate-800 text-white">
+                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
+              >
+                <i
+                  class="fas fa-chevron-down text-white transition-transform duration-300"
+                ></i>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </header>
 
-
-    <main>
-        <section
-            class="relative mt-5 bg-[url('{{ url_for('static', filename='img/featured_bg.jpeg') }}')] bg-cover bg-center w-full h-auto flex flex-col gap-5">
-            <div class="absolute inset-0 bg-gradient-to-b from-[#1B446D] to-[#1B4460] opacity-70"></div>
-
-            <div class="relative z-10 flex flex-col justify-center gap-6 text-center text-white mt-5">
-                <div class="absolute right-0 top-0 flex flex-col gap-4 p-2 items-end">
-                    <div class="w-[80%] lg:w-full flex flex-col lg:flex-row gap-4 mt-5">
-                        {% if cart_status=='1' %}
-                        <a href="/ViewCart">
-
-                            <button type="button"
-                                class="lg:w-[200px] h-[45px] font-bold bg-gradient-to-r from-[#2B983F] to-[#115C1E] text-white rounded-lg">
-                                View Cart({{cart_value}})
-                            </button>
-                        </a>
-                        {% else %}
-                        <button type="button"
-                            class="w-full lg:w-[200px] h-[45px] font-bold bg-gradient-to-r from-[#2B983F] to-[#115C1E] text-white rounded-lg">
-                            View Cart
-                        </button>
-                        {% endif %}
-                        <button type="button" id="ViewWishlistedGamesButton"
-                            data-modal-target="ViewWishlistedGamesModal" data-modal-toggle="ViewWishlistedGamesModal"
-                            class="w-full lg:w-[200px] h-[45px] font-bold bg-gradient-to-r from-[#3E7C9B] to-[#4E6C9F] text-white rounded-lg">
-                            WishList({{wishlist_value}})
-                        </button>
-
-                    </div>
-                    <!-- Search Bar -->
-                    <form class="w-[80%] lg:w-full max-w-md relative">
-                        <label for="default-search"
-                            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                </svg>
-                            </div>
-                            <input type="search" id="default-search"
-                                class="block w-full p-4 pl-10 text-xs lg:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Search for Games" autocomplete="off" required />
-                            <!-- <button type="submit"
-                            class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Search
-                        </button> -->
-                        </div>
-
-                        <!-- Dropdown container for autocomplete -->
-                        <div id="autocomplete-dropdown"
-                            class="absolute bg-[#3d4450] shadow-lg rounded-lg max-h-80 overflow-y-auto w-96 mt-2 border border-gray-200 hidden"
-                            style="z-index: 50;">
-                            <!-- Results will be dynamically added here -->
-                        </div>
-                    </form>
+    <main class="container mx-auto px-4 py-8">
+      <section class="mt-12">
+        <h1
+          class="text-3xl lg:text-5xl font-bold font-manrope text-center bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8"
+        >
+          {{game_info[0]}}
+        </h1>
+        <div class="relative flex flex-col lg:flex-row gap-8">
+          <!-- Left: Carousel and Description -->
+          <div class="lg:w-2/3 flex flex-col gap-6">
+            <div
+              id="auto-carousel"
+              class="relative w-full h-[300px] sm:h-[400px] lg:h-[500px]"
+              data-carousel="slide"
+            >
+              <div
+                class="relative w-full h-full overflow-hidden rounded-2xl border border-white/20"
+              >
+                <div
+                  class="carousel-item hidden duration-700 ease-in-out absolute w-full h-full"
+                  data-carousel-item="active"
+                >
+                  <img
+                    src="{{ url_for('static', filename=game_info[11]) }}"
+                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
+                    alt="Slide 1"
+                    loading="lazy"
+                  />
                 </div>
-                <div>
-
+                <div
+                  class="carousel-item hidden duration-700 ease-in-out absolute w-full h-full"
+                  data-carousel-item
+                >
+                  <img
+                    src="{{ url_for('static', filename=game_info[12]) }}"
+                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
+                    alt="Slide 2"
+                    loading="lazy"
+                  />
                 </div>
+              </div>
+              <div
+                class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3"
+              >
+                <button
+                  type="button"
+                  class="w-3 h-3 rounded-full bg-blue-500/50 hover:bg-blue-500"
+                  aria-current="true"
+                  aria-label="Slide 1"
+                  data-carousel-slide-to="0"
+                ></button>
+                <button
+                  type="button"
+                  class="w-3 h-3 rounded-full bg-white/50 hover:bg-blue-500"
+                  aria-label="Slide 2"
+                  data-carousel-slide-to="1"
+                ></button>
+              </div>
+              <button
+                type="button"
+                class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                data-carousel-prev
+              >
+                <span
+                  class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-blue-500/50 group-focus:ring-4 group-focus:ring-blue-400 group-focus:outline-none"
+                >
+                  <svg
+                    class="w-4 h-4 text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 6 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 1 1 5l4 4"
+                    />
+                  </svg>
+                  <span class="sr-only">Previous</span>
+                </span>
+              </button>
+              <button
+                type="button"
+                class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                data-carousel-next
+              >
+                <span
+                  class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-blue-500/50 group-focus:ring-4 group-focus:ring-blue-400 group-focus:outline-none"
+                >
+                  <svg
+                    class="w-4 h-4 text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 6 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 9 4-4-4-4"
+                    />
+                  </svg>
+                  <span class="sr-only">Next</span>
+                </span>
+              </button>
+            </div>
+            <div class="card relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <div
+                class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/20 p-4"
+              >
+                <h3 class="text-lg font-bold text-white mb-2">Description</h3>
+                <p
+                  id="game-description"
+                  class="text-sm text-gray-300 description-box"
+                >
+                  {{game_info[2]}}
+                </p>
+                <button
+                  id="toggle-description"
+                  class="text-blue-400 text-sm mt-2 hover:underline"
+                  onclick="toggleDescription()"
+                >
+                  See More
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Right: Game Info, Details, and Trailer -->
+          <div class="lg:w-1/3 flex flex-col gap-6">
+            <div class="card relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <div
+                class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/20 p-4"
+              >
+                <img
+                  src="{{ url_for('static', filename=game_info[10]) }}"
+                  alt="{{game_info[0]}} Logo"
+                  class="w-full h-32 object-cover rounded-xl mb-4"
+                  loading="lazy"
+                />
+                <div class="flex justify-between items-center">
+                  {% if game_info[14]=='1' %}
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-400 line-through text-sm"
+                      >${{game_info[3]}}</span
+                    >
+                    <span class="text-blue-400 font-bold"
+                      >${{game_info[15]}}</span
+                    >
+                  </div>
+                  <span
+                    class="bg-blue-800 text-white text-xs px-3 py-1 rounded-lg"
+                    >{{game_info[17]}}% OFF</span
+                  >
+                  {% else %}
+                  <span class="text-blue-400 font-bold"
+                    >${{game_info[15]}}</span
+                  >
+                  {% endif %}
+                </div>
+                <div class="mt-4 flex gap-2">
+                  {% if bought_check=='1' %}
+                  <button
+                    class="flex-1 text-white bg-orange-500 hover:bg-orange-600 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                    data-game_name_cart="{{game_info[0]}}"
+                    data-game_sale_status="{{game_info[14]}}"
+                    disabled
+                  >
+                    Owned
+                  </button>
+                  {% else %}
+                  <button
+                    class="flex-1 text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                    data-game_name_cart="{{game_info[0]}}"
+                    data-game_sale_status="{{game_info[14]}}"
+                    onclick="AddtoCart(this)"
+                  >
+                    Add to Cart
+                  </button>
+                  {% endif %}
+                  <button
+                    class="flex-1 text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                    data-game_name="{{game_info[0]}}"
+                    onclick="AddToWishlist(this)"
+                  >
+                    Add to Wishlist
+                  </button>
+                </div>
+                {% if game_info[14]=='1' %}
+                <p class="text-sm text-gray-400 mt-2">
+                  Offer ends in:
+                  <span id="countdown" class="text-blue-400"></span>
+                </p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <div
+                class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/20 p-4"
+              >
+                <h3 class="text-lg font-bold text-white mb-2">Game Details</h3>
+                <p class="text-sm text-gray-300">
+                  <span class="text-gray-400">Genre:</span> {{game_info[1]}}
+                </p>
+                <p class="text-sm text-gray-300">
+                  <span class="text-gray-400">Rating:</span> {{rating}}
+                </p>
+                <p class="text-sm text-gray-300">
+                  <span class="text-gray-400">Release Year:</span>
+                  {{game_info[18]}}
+                </p>
+                <p class="text-sm text-gray-300">
+                  <span class="text-gray-400">Developer:</span> {{game_info[5]}}
+                </p>
+                <p class="text-sm text-gray-300">
+                  <span class="text-gray-400">Publisher:</span>
+                  {{publisher_name}}
+                </p>
+              </div>
+            </div>
+            <div class="card relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <div
+                class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/20 p-4"
+              >
+                <h3 class="text-lg font-bold text-white mb-4">Game Trailer</h3>
+                <div class="trailer-container">
+                  <iframe
+                    id="game-trailer"
+                    src="https://www.youtube.com/embed/{{game_info[19]}}?rel=0&modestbranding=1&autoplay=0"
+                    title="{{game_info[0]}} Trailer"
+                    class="absolute top-0 left-0 w-full h-full rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen
+                  >
+                  </iframe>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              id="ViewReviewButton"
+              data-modal-target="ViewReviewModal"
+              class="text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+            >
+              Read Reviews
+            </button>
+          </div>
+        </div>
+      </section>
 
-                <div class="h-auto flex flex-row justify-center items-start gap-5 mt-[10rem]">
-                    <div>
+      <!-- Review Modal -->
+      <div
+        id="ViewReviewModal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/80 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-6 sm:p-8 w-full max-w-6xl h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-blue-950/95 to-blue-900/95 rounded-3xl shadow-2xl border border-blue-800/50 p-8 sm:p-10 backdrop-blur-2xl"
+          >
+            <div
+              class="flex justify-between items-center pb-6 mb-6 border-b-2 border-blue-800/50"
+            >
+              <div class="flex items-center space-x-4">
+                <i class="fas fa-star text-blue-400 text-2xl sm:text-3xl"></i>
+                <h3
+                  class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
+                >
+                  Reviews for {{game_info[0]}}
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-blue-700/50 to-transparent hover:from-blue-600/70 rounded-full p-3 transition-all duration-300"
+                data-modal-hide="ViewReviewModal"
+              >
+                <i class="fas fa-times w-6 h-6"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <div class="mb-6 relative">
+              <select
+                id="review-filter"
+                name="review_filter"
+                class="glassmorphism w-[200px] h-[44px] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer text-left pl-3"
+                data-game_name_review="{{game_info[0]}}"
+                onchange="handleDropDownChangeReview(this)"
+                required
+              >
+                <option value="" disabled selected>Review type</option>
+                <option value="positive">Positive only</option>
+                <option value="negative">Negative only</option>
+                <option value="all">All</option>
+              </select>
 
-                    </div>
+            </div>
+            <div
+              id="SortingTest"
+              class="mt-6 max-h-[36rem] overflow-y-auto pr-4 custom-scrollbar"
+            >
+              {% if reviews and reviews|length > 0 %}
+              <ul id="buyerList" class="list-none space-y-4">
+                {% for review in reviews %}
+                <li
+                  class="flex justify-between items-center p-6 bg-gradient-to-r from-blue-900 to-blue-950 rounded-2xl border border-blue-800/50 hover:border-blue-700/60 transition-all duration-300"
+                >
+                  <div class="flex items-center space-x-5">
                     <div
-                        class="absolute top-[7rem] left-[18.5rem] z-0 m-4 text-white font-bold text-xl lg:text-2xl bg-transparent bg-opacity-50 p-1 rounded">
-                        <h1>{{game_info[0]}}</h1>
+                      class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-blue-950 to-blue-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base"
+                    >
+                      {{ review[0] }}
                     </div>
-                    <!-- Carousel Container -->
-                    <div id="auto-carousel" class="relative w-[65%] h-[50%] lg:w-[100%] lg:h-auto lg:max-w-4xl" data-carousel="slide">
-                        <!-- Carousel Wrapper -->
-                        <div class="relative w-full h-auto lg:h-[430px] overflow-hidden rounded-lg">
-                            <!-- Carousel Item 1 -->
-                            <div class="hidden duration-1000 ease-in-out" data-carousel-item>
-                                <img src="{{ url_for('static', filename=game_info[11]) }}" class="block w-full h-full object-cover" alt="Slide 1">
-                            </div>
-                    
-                            <!-- Carousel Item 2 -->
-                            <div class="hidden duration-1000 ease-in-out" data-carousel-item>
-                                <img src="{{ url_for('static', filename=game_info[12]) }}" class="block w-full h-full object-cover" alt="Slide 2">
-                            </div>
-                        </div>
-                    
-                        <!-- (Optional) Indicators for the slides -->
-                        <div class="absolute bottom-0 left-0 right-0 z-30 flex justify-center p-4 space-x-3">
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-                            <button type="button" class="w-3 h-3 rounded-full" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-                        </div>
+                    <div>
+                      <span class="text-white font-semibold text-lg"
+                        >{{ review[0] }} {% if review[2]=='yes' %}recommends
+                        this game{% elif review[2]=='no' %}doesn't recommend
+                        this game{% endif %}</span
+                      >
+                      <p class="text-blue-300 text-sm">"{{ review[1] }}"</p>
                     </div>
-                    
-
-
-
-                    <div class="w-[20%] flex flex-col justify-between gap-5">
-                        <div>
-                            <a href="">
-                                <img src="{{ url_for('static', filename=game_info[10]) }}" alt=""
-                                    class="w-full h-[130px] rounded-lg object-cover">
-                            </a>
-                        </div>
-                        <div>
-                            <h2
-                                class="px-3 justify-start items-center text-left h-[130px] w-full bg-gradient-to-r from-[#182074] via-[rgba(45,60,218,0.13)] to-[rgba(45,60,218,0.85)] text-white font-regular text-sm rounded-lg flex">
-                                {{game_info[2]}}
-                            </h2>
-                        </div>
-
-                        <div>
-                            <h1
-                                class="justify-center items-center h-[130px] w-full bg-gradient-to-r from-[#182074] via-[rgba(45,60,218,0.13)] to-[rgba(45,60,218,0.85)] text-white font-[Inter] text-[14px] rounded-lg text-start px-4 py-2">
-                                <p>
-                                    <span class="text-[#ACA4A4]">Genre:</span>
-                                    <span class="text-white font-normal">{{game_info[1]}}</span>
-                                </p>
-                                <p>
-                                    <span class="text-[#ACA4A4]">Rating:</span>
-                                    <span class="text-white font-normal">{{rating}}</span>
-                                </p>
-                                <p>
-                                    <span class="text-[#ACA4A4]">Release Year:</span>
-                                    <span class="text-white font-normal">{{game_info[18]}}</span>
-                                </p>
-                                <p>
-                                    <span class="text-[#ACA4A4]">Developer:</span>
-                                    <span class="text-white font-normal">{{game_info[5]}}</span>
-                                </p>
-                                <p>
-                                    <span class="text-[#ACA4A4]">Publisher name:</span>
-                                    <span class="text-white font-normal">{{publisher_name}}</span>
-                                </p>
-                            </h1>
-                        </div>
-
-                    </div>
-                </div>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <div
+                class="text-center py-12 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl border border-blue-800/50"
+              >
+                <i class="fas fa-star text-7xl text-blue-400 mb-5"></i>
+                <p class="text-blue-200 text-xl">No reviews yet</p>
+                <p class="text-blue-400 text-md">
+                  Be the first to share your thoughts about this game!
+                </p>
+              </div>
+              {% endif %}
             </div>
-            <div class="relative flex flex-row gap-4 ml-[19rem] gap-4 p-2">
-
-                <button type="button"
-                    class="w-full lg:w-[200px] h-[45px] font-bold bg-gradient-to-r from-[#4C7BE1] to-[#4C7BE5] text-white rounded-lg"
-                    data-game_name="{{ game_info[0] }}" onclick="AddToWishlist(this)">
-                    Add to WishList
-                </button>
-
-
-                <button type="button" id="ViewReviewButton" data-modal-target="ViewReviewModal"
-                    data-modal-toggle="ViewReviewModal"
-                    class="w-full lg:w-[200px] h-[45px] font-bold bg-gradient-to-r from-[#4C7BE1] to-[#4C7BE5] text-white rounded-lg">
-                    Read Reviews
-
-                </button>
-
-                <div id="ViewReviewModal" tabindex="-1" aria-hidden="true"
-                    class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40">
-                    <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
-                        <!-- Modal content -->
-                        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-                            <!-- Modal header -->
-                            <div class="flex justify-between mb-4 rounded-t sm:mb-5">
-                                <div class="text-lg text-gray-900 md:text-xl dark:text-white">
-                                    <h3 class="font-semibold">
-                                        Reviews for {{game_info[0]}}
-                                    </h3>
-                                </div>
-
-                                <div>
-                                    <button type="button"
-                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
-                                        data-modal-toggle="ViewReviewModal">
-                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                        <span class="sr-only">Close modal</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Search Bar -->
-
-
-                            <!-- Display list of active buyers -->
-                            <div class="mt-4">
-                                <div class="relative">
-                                    <div class="mb-4">
-                                        <select id="price" name="price"
-                                            class="block rounded-lg w-full lg:w-[200px] h-[40px] bg-gradient-to-r from-[#3E7C7F] to-[#1E7C9F] text-black text-center"
-                                            data-game_name_review="{{game_info[0]}}"
-                                            onchange="handleDropDownChangeReview(this)" required>
-                                            <option value="" disabled selected>Review type</option>
-                                            <option value="positive">Positive only</option>
-                                            <option value="negative">Negative only</option>
-                                            <option value="all">All</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="SortingTest">
-                                    <ul id="buyerList" class="list-disc pl-5 space-y-4">
-                                        <!-- Added spacing between list items -->
-                                        {% for review in reviews %}
-                                        <li
-                                            class="flex items-center justify-between mb-4 p-3 border border-gray-300 rounded-lg bg-transparent">
-                                            <!-- Removed white background -->
-                                            <!-- Request details -->
-                                            <div class="flex flex-col space-y-1">
-                                                <span class="text-gray-700 font-medium text-bold text-white">{{
-                                                    review[0] }}
-                                                    {% if review[2]=='yes' %}
-                                                    recommends this game
-
-                                                    {% elif review[2]=='no'%}
-                                                    doesn't recommend this game
-                                                    {% endif %}
-                                                </span>
-
-                                                <span class="text-gray-700 font-small text-white">"{{ review[1]
-                                                    }}"</span>
-
-
-                                            </div>
-
-
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </div>
-            {% if game_info[14]=='0' %}
-            <div
-                class="relative flex flex-col justify-between items-start mt-10 bg-gradient-to-r from-[#57565F] to-[#57565F] w-full opacity-90 lg:w-[800px] p-6 lg:p-8 shadow-lg rounded-lg mx-auto mb-[5rem]">
-                <h1 class="text-lg lg:text-2xl font-bold text-white">{{game_info[0]}}
-                    {% if bought_check=='1' %}
-                    (Game already in your library)
-                    {% endif %}
-                </h1>
-                <h1 class="text-lg lg:text-m font-regular text-white italic"> </h1>
-
-                <div
-                    class="absolute top-[70px] right-[-40px] flex items-center gap-4 bg-black text-white font-bold py-2 px-3 rounded-lg shadow-lg">
-                    <div class="text-white text-lg">
-                        {{game_info[15]}}$
-                    </div>
-
-                    {% if bought_check=='1' %}
-                    <button class="bg-orange-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md"
-                        data-game_name_cart="{{game_info[0]}}" data-game_sale_status="{{game_info[14]}}" disabled>
-                        Not Available
-                    </button>
-                    {% else %}
-                    <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md"
-                        data-game_name_cart="{{game_info[0]}}" data-game_sale_status="{{game_info[14]}}"
-                        onclick="AddtoCart(this)">
-                        Add To Cart
-                    </button>
-                    {% endif %}
-                </div>
-
-            </div>
-            {% elif game_info[14]=='1' %}
-            <div
-                class="relative flex flex-col justify-between items-start mt-10 bg-gradient-to-r from-[#57565F] to-[#57565F] w-full opacity-90 lg:w-[800px] p-6 lg:p-8 shadow-lg rounded-lg mx-auto mb-[5rem]">
-                <h1 class="text-lg lg:text-2xl font-bold text-white">{{game_info[0]}}
-                    {% if bought_check=='1' %}
-                    (Game already in your library)
-                    {% endif %}
-                </h1>
-                <h1 class="text-lg lg:text-m font-regular text-white italic">Special Offer: offer active for <span
-                        id="countdown" class="text-lg lg:text-m font-regular italic" style="color: skyblue;"></span>
-
-                </h1>
-
-                <!-- Black Box -->
-                <div
-                    class="absolute top-[100px] right-[-60px] flex items-center gap-4 bg-black text-white font-bold py-2 px-4 rounded-lg shadow-lg">
-                    <!-- Price with Strikethrough and New Price -->
-                    <div class="flex flex-col items-center">
-                        <span class="line-through text-gray-400 text-sm">${{game_info[3]}}</span>
-                        <!-- Strikethrough Price -->
-                        <span class="text-white text-lg font-bold">{{game_info[15]}}$</span> <!-- New Price -->
-                    </div>
-
-                    <!-- 10% Discount Badge -->
-                    <div class="bg-[#335c1b] text-[#3ae310] text-sm font-bold py-1 px-2 rounded-lg shadow-md">
-                        {{game_info[17]}}%
-                    </div>
-
-                    <!-- Add to Cart Button -->
-                    {% if bought_check=='1' %}
-                    <button class="bg-orange-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md"
-                        data-game_name_cart="{{game_info[0]}}" data-game_sale_status="{{game_info[14]}}" disabled>
-                        Not Available
-                    </button>
-                    {% else %}
-                    <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md"
-                        data-game_name_cart="{{game_info[0]}}" data-game_sale_status="{{game_info[14]}}"
-                        onclick="AddtoCart(this)">
-                        Add To Cart
-                    </button>
-                    {% endif %}
-                    </a>
-                </div>
-            </div>
-            {% endif %}
-            <div id="ViewWishlistedGamesModal" tabindex="-1" aria-hidden="true"
-                class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 justify-center items-center flex">
-                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5 w-full sm:w-1/2 lg:w-1/3">
-                    <!-- Modal content -->
-                    <div class="relative">
-                        <!-- Modal header -->
-                        <div class="flex justify-between mb-4 rounded-t sm:mb-5">
-                            <div class="text-lg text-gray-900 md:text-xl dark:text-white">
-                                <h3 class="font-semibold">
-                                    {{buyer_username}}'s Wishlist:
-                                </h3>
-                            </div>
-                            <button type="button"
-                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
-                                data-modal-toggle="ViewWishlistedGamesModal">
-                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="sr-only">Close modal</span>
-                            </button>
-                        </div>
-
-                        <!-- Search Bar -->
-                        <div class="mb-4">
-                            <input type="text" id="searchInput_wishlistedgames" placeholder="Search games..."
-                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
-                        </div>
-
-                        <!-- Game List -->
-                        <div class="mt-4">
-                            <div class="flex justify-between font-semibold mb-4">
-                                <div class="w-1/4 text-left">Game Name</div>
-                                <div class="w-1/4 text-left">Current Price</div>
-                                <div class="w-1/4 text-left">Action</div>
-                            </div>
-                            <ul id="buyerList" class="list-none">
-                                {% for wishlist in wishlist_user %}
-                                <li class="flex justify-between  mb-4">
-                                    <span class="w-1/4">{{ wishlist[1] }}</span>
-                                    <!-- Game Name -->
-                                    <!-- Status -->
-                                    {% if wishlist[4]=='1' %}
-                                    <div class="flex items-center gap-x-1">
-                                        <span class="line-through">{{ wishlist[2] }}$</span>
-                                        <span>{{ wishlist[3] }}$</span>
-                                    </div>
-
-                                    {% else %}
-                                    <span class="w-1/4 ">{{ wishlist[3] }}$</span>
-                                    {% endif %}
-                                    <div class="w-1/4 text-left">
-
-                                        <button type="button"
-                                            class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-1.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
-                                            data-username="{{wishlist[0]}}" data-game_name_wishlist="{{ wishlist[1] }}"
-                                            onclick="RemoveFromWishList(this)">
-                                            Remove
-                                        </button>
-                                        <!--end of unused feature(for now)-->
-
-
-
-                                        <button type="button"
-                                            class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-900"
-                                            data-username="{{wishlist[0]}}" data-game_name="{{ wishlist[1] }}"
-                                            data-game_name_cart="{{ wishlist[1] }}"
-                                            data-game_sale_status="{{wishlist[4]}}" onclick="AddtoCart(this)">
-                                            Add to Cart
-                                        </button>
-
-                                    </div> <!-- Action -->
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-        </section>
-        <!-- Update Password Modal -->
-        <div id="UpdatePasswordModal" tabindex="-1" aria-hidden="true"
-            class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40">
-            <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
-                <!-- Modal content -->
-                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-                    <!-- Modal header -->
-                    <div class="flex justify-between mb-4 rounded-t sm:mb-5">
-                        <div class="text-lg text-gray-900 md:text-xl dark:text-white">
-                            <h3 class="font-semibold">
-                                Update Password
-                            </h3>
-                        </div>
-                        
-                    </div>
-
-                    <!-- Modal body: Update password form -->
-                    <form id="updatePasswordForm" action="/update_password" method="POST" class="space-y-4">
-                        <div>
-                            <label for="current-password"
-                                class="block text-sm font-medium text-gray-900 dark:text-white">Current Password</label>
-                            <input type="password" id="current-password" name="current_password" required
-                                class="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        </div>
-                        <div>
-                            <label for="new-password"
-                                class="block text-sm font-medium text-gray-900 dark:text-white">New
-                                Password</label>
-                            <input type="password" id="new-password" name="new_password" required
-                                class="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        </div>
-                        <div>
-                            <label for="confirm-password"
-                                class="block text-sm font-medium text-gray-900 dark:text-white">Confirm New
-                                Password</label>
-                            <input type="password" id="confirm-password" name="confirm_password" required
-                                class="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        </div>
-
-                        <!-- Error and Success Messages -->
-                        <div id="password-error" class="text-red-600 hidden">Passwords do not match.</div>
-                        <div id="password-success" class="text-green-600 hidden">Password updated successfully!</div>
-
-                        <div class="mt-4 flex justify-end space-x-2">
-                            <button type="button" class="px-4 py-2 bg-gray-600 text-white rounded-lg"
-                                data-modal-toggle="UpdatePasswordModal">Cancel</button>
-                            <button type="submit" id="submit-password"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-lg">Update</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
 
-        <div id="popup-modal" tabindex="-1"
-            class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40">
-            <div class="relative p-4 w-full max-w-md max-h-full">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <button type="button"
-                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-hide="popup-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                    <div class="p-4 md:p-5 text-center">
-                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Modal Title</h3>
-                        <div class="modal-body"></div>
-                        <button data-modal-hide="popup-modal" type="button"
-                            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                            Close
-                        </button>
-                    </div>
-                </div>
+      <!-- Update Password Modal -->
+      <div
+        id="UpdatePasswordModal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+        >
+          <div
+            class="glassmorphism rounded-3xl shadow-2xl border border-blue-500/40 p-6 sm:p-8"
+          >
+            <div
+              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-blue-500/30"
+            >
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-lock text-blue-400 text-xl sm:text-2xl"></i>
+                <h3
+                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-300 to-cyan-400 bg-clip-text text-transparent"
+                >
+                  Update Password
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-blue-700/50 to-transparent hover:from-blue-600/70 rounded-full p-2 transition-all duration-300"
+                data-modal-hide="UpdatePasswordModal"
+              >
+                <i class="fas fa-times w-5 h-5"></i>
+              </button>
             </div>
+            <form
+              id="updatePasswordForm"
+              action="/update_password"
+              method="POST"
+              class="space-y-4"
+            >
+              <div>
+                <label
+                  for="current-password"
+                  class="block text-sm font-semibold text-gray-100"
+                  >Current Password</label
+                >
+                <input
+                  type="password"
+                  id="current-password"
+                  name="current_password"
+                  required
+                  class="mt-2 w-full px-4 py-2 bg-blue-900/50 border border-blue-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
+                  placeholder="Enter current password"
+                />
+              </div>
+              <div>
+                <label
+                  for="new-password"
+                  class="block text-sm font-semibold text-gray-100"
+                  >New Password</label
+                >
+                <input
+                  type="password"
+                  id="new-password"
+                  name="new_password"
+                  required
+                  class="mt-2 w-full px-4 py-2 bg-blue-900/50 border border-blue-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
+                  placeholder="Enter new password"
+                />
+              </div>
+              <div>
+                <label
+                  for="confirm-password"
+                  class="block text-sm font-semibold text-gray-100"
+                  >Confirm New Password</label
+                >
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirm_password"
+                  required
+                  class="mt-2 w-full px-4 py-2 bg-blue-900/50 border border-blue-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
+                  placeholder="Confirm new password"
+                />
+              </div>
+              <div
+                id="password-error"
+                class="text-red-400 text-sm font-medium hidden"
+              >
+                Passwords do not match.
+              </div>
+              <div
+                id="password-success"
+                class="text-blue-400 text-sm font-medium hidden"
+              >
+                Password updated successfully!
+              </div>
+              <div class="mt-6 flex justify-end space-x-4">
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  data-modal-hide="UpdatePasswordModal"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  id="submit-password"
+                  class="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 hover:scale-105"
+                >
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
+
+      <!-- Wishlist Modal -->
+      <div
+        id="ViewWishlistedGamesModal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/80 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-6 sm:p-8 w-full max-w-6xl h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-purple-950/95 to-purple-900/95 rounded-3xl shadow-2xl border border-purple-800/50 p-8 sm:p-10 backdrop-blur-2xl"
+          >
+            <div
+              class="flex justify-between items-center pb-6 mb-6 border-b-2 border-purple-800/50"
+            >
+              <div class="flex items-center space-x-4">
+                <i class="fas fa-heart text-pink-500 text-2xl sm:text-3xl"></i>
+                <h3
+                  class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent"
+                >
+                  {{buyer_username}}'s Wishlist
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-purple-800/70 to-transparent hover:from-purple-700/80 rounded-full p-3 transition-all duration-300"
+                data-modal-hide="ViewWishlistedGamesModal"
+              >
+                <i class="fas fa-times w-6 h-6"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <div class="mb-6">
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none"
+                >
+                  <i class="fas fa-search text-pink-500"></i>
+                </div>
+                <input
+                  type="text"
+                  id="searchInput_wishlistedgames"
+                  placeholder="Search games..."
+                  class="block w-full pl-14 pr-5 py-3 bg-purple-950/70 border border-purple-800/50 rounded-2xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                />
+              </div>
+            </div>
+            <div
+              class="mt-6 max-h-[36rem] overflow-y-auto pr-4 custom-scrollbar"
+            >
+              {% if wishlist_user %}
+              <ul id="buyerList" class="list-none space-y-4">
+                {% for wishlist in wishlist_user %}
+                <li
+                  class="flex justify-between items-center p-6 bg-gradient-to-r from-purple-900 to-purple-950 rounded-2xl border border-purple-800/50 hover:border-purple-700/60 transition-all duration-300"
+                >
+                  <div class="flex items-center space-x-5">
+                    <div
+                      class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-purple-950 to-purple-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base"
+                    >
+                      {{ wishlist[1] }}
+                    </div>
+                    <div>
+                      <span class="text-white font-semibold text-lg"
+                        >{{ wishlist[1] }}</span
+                      >
+                      {% if wishlist[4]=='1' %}
+                      <div class="flex items-center space-x-3 mt-1">
+                        <span
+                          class="bg-purple-800 text-white text-xs px-3 py-1 rounded-lg"
+                          >{{ wishlist[5] }}% OFF</span
+                        >
+                        <span class="text-pink-500 font-bold text-lg"
+                          >${{ wishlist[3] }}</span
+                        >
+                      </div>
+                      {% else %}
+                      <p class="text-pink-500 font-bold text-lg mt-1">
+                        ${{ wishlist[3] }}
+                      </p>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="flex space-x-3">
+                    <button
+                      type="button"
+                      class="text-white bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      data-username="{{wishlist[0]}}"
+                      data-game_name_wishlist="{{ wishlist[1] }}"
+                      onclick="RemoveFromWishList(this)"
+                    >
+                      Remove
+                    </button>
+                    <button
+                      type="button"
+                      class="text-white bg-gradient-to-r from-purple-700 to-pink-700 hover:from-purple-800 hover:to-pink-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      data-username="{{wishlist[0]}}"
+                      data-game_name_cart="{{ wishlist[1] }}"
+                      data-game_sale_status="{{wishlist[4]}}"
+                      onclick="AddtoCart(this)"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <div
+                class="text-center py-12 bg-gradient-to-r from-purple-950 to-purple-900 rounded-2xl border border-purple-800/50"
+              >
+                <i class="fas fa-heart text-7xl text-pink-500 mb-5"></i>
+                <p class="text-purple-200 text-xl">Your wishlist is empty</p>
+                <p class="text-purple-400 text-md">
+                  Add some games to your wishlist to see them here!
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generic Popup Modal -->
+      <div
+        id="popup-modal"
+        tabindex="-1"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div class="relative p-4 sm:p-6 w-full max-w-md h-auto animate-slideIn">
+          <div
+            class="glassmorphism rounded-3xl shadow-2xl border border-blue-500/40 p-6 sm:p-8"
+          >
+            <button
+              type="button"
+              class="absolute top-4 end-4 text-gray-200 bg-gradient-to-r from-blue-700/50 to-transparent hover:from-blue-600/70 rounded-full p-2 transition-all duration-300"
+              data-modal-hide="popup-modal"
+            >
+              <i class="fas fa-times w-5 h-5"></i>
+            </button>
+            <div class="text-center">
+              <i
+                class="fas fa-exclamation-circle mx-auto mb-4 text-blue-400 text-4xl sm:text-5xl"
+              ></i>
+              <h3 class="mb-4 text-lg sm:text-xl font-bold text-gray-100">
+                Modal Title
+              </h3>
+              <div class="modal-body text-gray-200 text-sm sm:text-base"></div>
+              <button
+                data-modal-hide="popup-modal"
+                type="button"
+                class="mt-4 text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
-
-    <footer
-        class="flex flex-col lg:flex-row sm:justify-between lg:justify-center items-center text-neutral-content p-6 lg:p-10 gap-6 lg:gap-[50rem]">
-        <!-- Logo and Description -->
-        <aside class="flex flex-col items-center text-center lg:text-left lg:items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80" class="mb-4">
-                <defs>
-                    <linearGradient id="colorful-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color: blue; stop-opacity: 1" />
-                        <stop offset="33%" style="stop-color: pink; stop-opacity: 1" />
-                        <stop offset="66%" style="stop-color: purple; stop-opacity: 1" />
-                        <stop offset="100%" style="stop-color: violet; stop-opacity: 1" />
-                    </linearGradient>
-                </defs>
-                <path d="M30 20 h20 a15 15 0 0 1 0 30 h-20 z 
-                         M30 50 h20 a15 15 0 0 1 0 30 h-20 z" fill="url(#colorful-gradient)" />
-            </svg>
-
-            <p class="text-sm lg:text-base">
-            <h1 class="font-bold text-lg lg:text-xl">
-                <i class="fa-regular fa-copyright"></i> Bashpo
-            </h1>
-            Find everything you love, in one place.
-            </p>
-        </aside>
-
-        <!-- Social Links -->
-        <nav class="text-center lg:text-left">
-            <h6 class="footer-title text-sm lg:text-base font-bold mb-4">Find Us on Socials</h6>
-            <div class="flex justify-center lg:justify-start gap-4">
-                <a href="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        class="fill-current">
-                        <path
-                            d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z">
-                        </path>
-                    </svg>
-                </a>
-                <a href="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        class="fill-current">
-                        <path
-                            d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z">
-                        </path>
-                    </svg>
-                </a>
-                <a href="">
-                    <i class="fa-brands fa-instagram text-xl"></i>
-                </a>
-                <a href="">
-                    <i class="fa-brands fa-x-twitter text-xl"></i>
-                </a>
-                <a href="">
-                    <i class="fa-brands fa-tiktok text-xl"></i>
-                </a>
-                <a href="">
-                    <i class="fa-brands fa-discord text-xl"></i>
-                </a>
+    <footer class="relative glassmorphism border-t border-white/10 mt-12">
+      <div class="container mx-auto px-4 py-12">
+        <div
+          class="flex flex-col lg:flex-row justify-between items-center gap-8"
+        >
+          <div
+            class="flex flex-col items-center lg:items-start text-center lg:text-left"
+          >
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="relative group">
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 rounded-xl blur opacity-75"
+                ></div>
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-14 h-10 rounded-xl z-10"
+                  loading="lazy"
+                />
+              </div>
+              <div>
+                <h1
+                  class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text text-transparent"
+                >
+                  Bashpo
+                </h1>
+                <p class="text-xs text-gray-400">Your Gaming Hub</p>
+              </div>
             </div>
-        </nav>
+            <p class="text-gray-400 max-w-md">
+              Discover your favorite games, all in one place. Join the ultimate
+              gaming experience.
+            </p>
+          </div>
+          <div class="text-center lg:text-right">
+            <h6 class="text-white font-bold mb-4">Connect with Us</h6>
+            <div class="flex justify-center lg:justify-end gap-4">
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                ><i class="fab fa-youtube text-white"></i
+              ></a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                ><i class="fab fa-facebook text-white"></i
+              ></a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-purple-500 hover:to-indigo-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                ><i class="fab fa-instagram text-white"></i
+              ></a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                ><i class="fab fa-x-twitter text-white"></i
+              ></a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                ><i class="fab fa-tiktok text-white"></i
+              ></a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                ><i class="fab fa-discord text-white"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 mt-8 pt-6 text-center">
+          <p class="text-gray-400 text-sm">
+            <i class="fa-regular fa-copyright mr-1"></i> 2025 Bashpo. All rights
+            reserved.
+          </p>
+        </div>
+      </div>
     </footer>
-</body>
-<script>
-    // Function to handle the "Update Password" modal
-    function showUpdatePasswordModal() {
-        const modal = document.getElementById('UpdatePasswordModal');
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Prevent body scrolling when modal is open
-    }
 
-    // Close the modal and reset the form if clicked outside of it
-    function initializeModal_update_password() {
-        const modal = document.getElementById('UpdatePasswordModal');
-        const closeModalButton = modal.querySelector('[data-modal-toggle="UpdatePasswordModal"]');
+    <script>
+      let player;
 
-        closeModalButton.addEventListener('click', function () {
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
-        });
-
-        modal.addEventListener('click', function (event) {
-            if (event.target === modal) {
-                modal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        });
-    }
-
-    // Handle form submission for password update
-    document.getElementById('updatePasswordForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const currentPassword = document.getElementById('current-password').value;
-        const newPassword = document.getElementById('new-password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-
-        // Check if new passwords match
-        if (newPassword !== confirmPassword) {
-            document.getElementById('password-error').classList.remove('hidden');
-            document.getElementById('password-success').classList.add('hidden');
-        } else {
-            // Send the password update request (if the new passwords match)
-            fetch('/update_password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ current_password: currentPassword, new_password: newPassword })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('password-success').classList.remove('hidden');
-                        document.getElementById('password-error').classList.add('hidden');
-                        // Redirect to the homepage after a delay
-                        setTimeout(() => {
-                            window.location.href = '/logout';
-                        }, 2000);
-                    } else {
-                        alert(data.error || 'Something went wrong!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Something went wrong!');
-                });
-        }
-    });
-
-    // Initialize the modal functionality
-    window.addEventListener('DOMContentLoaded', function () {
-        initializeModal_update_password();
-    });
-
-    function handleDropdownChange(selectElement) {
-        const selectedValue = selectElement.value;
-        selectElement.value = ""; // This resets the dropdown to the placeholder option
-
-        if (selectedValue === "logout") {
-            logout(); // Call the logout function
-        } else if (selectedValue === "AddMonitorWallet") {
-
-            window.location.href = '/AddMonitorWallet';  // changes will be made
-
-
-        } else if (selectedValue === "update_pass") {
-            showUpdatePasswordModal(); // Redirect to update password page
-        }
-        else if (selectedValue === "view_profile") {
-            window.location.href = '/ViewMyProfile'; // Redirect to update password page
-        }
-    }
-    function AddToWishlist(button) {
-        const game_name = button.getAttribute('data-game_name')
-
-        fetch('/AddtoWishlist', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player("game-trailer", {
+          events: {
+            onStateChange: (event) => {
+              if (event.data === YT.PlayerState.ENDED) {
+                player.seekTo(0);
+                player.pauseVideo();
+              }
             },
-            body: JSON.stringify({ game_name: game_name })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    const modalTitle = document.querySelector('#popup-modal h3');
-                    const modalBody = document.querySelector('#popup-modal .modal-body');
-
-                    modalTitle.innerHTML = data.message;
-
-
-                    // Show the modal
-                    const modal = document.getElementById('popup-modal');
-                    modal.classList.remove('hidden');
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
-
-
-                } else {
-                    alert(data.error); // Display error message
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong!');
-            });
-    }
-    function AddtoCart(button) {
-        const game_name = button.getAttribute('data-game_name_cart')
-        const was_it_on_sale = button.getAttribute('data-game_sale_status')
-
-        fetch('/AddtoCart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+            onReady: (event) => {
+              event.target.mute();
             },
-            body: JSON.stringify({ game_name: game_name, was_it_on_sale: was_it_on_sale })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    const modalTitle = document.querySelector('#popup-modal h3');
-                    const modalBody = document.querySelector('#popup-modal .modal-body');
-
-                    modalTitle.innerHTML = data.message;
-
-
-                    // Show the modal
-                    const modal = document.getElementById('popup-modal');
-                    modal.classList.remove('hidden');
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
-                } else {
-                    alert(data.error); // Display error message
-                }
-
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong!');
-            });
-
-    }
-
-    function initializeSearch_wishlistedgames() {
-        const searchInput = document.getElementById('searchInput_wishlistedgames');
-        const userList = document.querySelectorAll('#ViewWishlistedGamesModal ul li');
-
-        searchInput.addEventListener('input', function () {
-            const filter = searchInput.value.toLowerCase();
-
-            userList.forEach((userItem) => {
-                const username = userItem.querySelector('span').textContent.toLowerCase();
-
-                // Show or hide the user based on the search input
-                if (username.includes(filter)) {
-                    userItem.style.display = ''; // Show
-                } else {
-                    userItem.style.display = 'none'; // Hide
-                }
-            });
+          },
         });
-    }
-    // Function to initialize modal functionality
-    function initializeModal_wishlistedgames() {
-        const openModalButton = document.getElementById('ViewWishlistedGamesButton');
-        const modal = document.getElementById('ViewWishlistedGamesModal');
-        const closeModalButton = modal.querySelector('[data-modal-toggle="ViewWishlistedGamesModal"]');
+      }
 
+      function toggleDescription() {
+        const description = document.getElementById("game-description");
+        const toggleButton = document.getElementById("toggle-description");
+        description.classList.toggle("expanded");
+        toggleButton.textContent = description.classList.contains("expanded")
+          ? "See Less"
+          : "See More";
+      }
 
+      function initializeCarousel() {
+        const carousel = document.getElementById("auto-carousel");
+        const items = carousel.querySelectorAll(".carousel-item");
+        const indicators = carousel.querySelectorAll(
+          "[data-carousel-slide-to]"
+        );
+        const prevBtn = carousel.querySelector("[data-carousel-prev]");
+        const nextBtn = carousel.querySelector("[data-carousel-next]");
+        let currentIndex = 0;
+        let intervalId;
 
+        function showSlide(index) {
+          items.forEach((item, i) => {
+            item.classList.toggle("hidden", i !== index);
+            item.setAttribute(
+              "data-carousel-item",
+              i === index ? "active" : ""
+            );
+            indicators[i].setAttribute(
+              "aria-current",
+              i === index ? "true" : "false"
+            );
+            indicators[i].classList.toggle("bg-blue-500", i === index);
+            indicators[i].classList.toggle("bg-white/50", i !== index);
+          });
+        }
 
-        // Open the modal when the button is clicked
-        openModalButton.addEventListener('click', function () {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex'); // Ensure flex is added when shown
-            document.body.style.overflow = 'hidden';
-        });
+        function nextSlide() {
+          currentIndex = (currentIndex + 1) % items.length;
+          showSlide(currentIndex);
+        }
 
-        closeModalButton.addEventListener('click', function () {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex'); // Remove flex when hidden
-            document.body.style.overflow = '';
+        function prevSlide() {
+          currentIndex = (currentIndex - 1 + items.length) % items.length;
+          showSlide(currentIndex);
+        }
+
+        function startAutoPlay() {
+          intervalId = setInterval(nextSlide, 5000);
+        }
+
+        function stopAutoPlay() {
+          clearInterval(intervalId);
+        }
+
+        prevBtn.addEventListener("click", prevSlide);
+        nextBtn.addEventListener("click", nextSlide);
+        indicators.forEach((indicator, i) => {
+          indicator.addEventListener("click", () => {
+            currentIndex = i;
+            showSlide(currentIndex);
+          });
         });
 
-        // Close the modal if the user clicks outside of the modal content (overlay click)
-        modal.addEventListener('click', function (event) {
-            if (event.target === modal) {
-                modal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        });
-    }
-    window.addEventListener('DOMContentLoaded', function () {
-        initializeSearch_wishlistedgames();
-        initializeModal_wishlistedgames();
+        carousel.addEventListener("mouseenter", stopAutoPlay);
+        carousel.addEventListener("mouseleave", startAutoPlay);
 
+        showSlide(currentIndex);
+        startAutoPlay();
+      }
 
-    }); document.addEventListener("DOMContentLoaded", function () {
-        // Get the deadline dynamically from the backend via Jinja
-        const deadline = new Date("{{ game_info[16] }}"); // Dynamically passed from backend
+      function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          document.body.style.overflow = "hidden";
+          const closeOnOutsideClick = (event) => {
+            if (event.target === modal) closeModal(modalId);
+          };
+          modal.addEventListener("click", closeOnOutsideClick);
+          modal._closeOnOutsideClick = closeOnOutsideClick;
+        }
+      }
 
-        // Function to update the countdown
-        function updateCountdown() {
-            const now = new Date();
-            const timeRemaining = deadline - now;
+      function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+          if (modal._closeOnOutsideClick) {
+            modal.removeEventListener("click", modal._closeOnOutsideClick);
+            delete modal._closeOnOutsideClick;
+          }
+        }
+      }
 
-            if (timeRemaining >= 0) {
-                // Calculate hours, minutes, and seconds
-                const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+      function handleDropdownChange(selectElement) {
+        const value = selectElement.value;
+        selectElement.value = "";
+        if (value === "logout") window.location.href = "/logout";
+        else if (value === "AddMonitorWallet")
+          window.location.href = "/AddMonitorWallet";
+        else if (value === "update_pass") openModal("UpdatePasswordModal");
+        else if (value === "view_profile")
+          window.location.href = "/ViewMyProfile";
+      }
 
-                // Display the countdown
-                document.getElementById("countdown").textContent =
-                    `${hours}h ${minutes}m ${seconds}s`;
+      async function AddToWishlist(button) {
+        const game_name = button.getAttribute("data-game_name");
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = "Adding...";
+
+        try {
+          const response = await fetch("/AddtoWishlist", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-cache",
+            },
+            body: JSON.stringify({ game_name }),
+          });
+          const data = await response.json();
+          const modalTitle = document.querySelector("#popup-modal h3");
+          const modalBody = document.querySelector("#popup-modal .modal-body");
+          modalTitle.innerHTML = data.message || "Added to Wishlist";
+          modalBody.innerHTML = "";
+          openModal("popup-modal");
+          if (data.success) {
+            await updateWishlistCount();
+            setTimeout(() => closeModal("popup-modal"), 2000);
+          } else {
+            modalBody.innerHTML = data.error || "Failed to add to wishlist.";
+            setTimeout(() => closeModal("popup-modal"), 3000);
+          }
+        } catch (error) {
+          console.error("Wishlist Error:", error);
+          const modalTitle = document.querySelector("#popup-modal h3");
+          const modalBody = document.querySelector("#popup-modal .modal-body");
+          modalTitle.innerHTML = "Wishlist Error";
+          modalBody.innerHTML = `Failed to add ${game_name} to wishlist. Please try again later.`;
+          openModal("popup-modal");
+          setTimeout(() => closeModal("popup-modal"), 3000);
+        } finally {
+          button.disabled = false;
+          button.textContent = originalText;
+        }
+      }
+
+      async function AddtoCart(button) {
+        const game_name = button.getAttribute("data-game_name_cart");
+        const was_it_on_sale = button.getAttribute("data-game_sale_status");
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = "Adding...";
+
+        try {
+          const response = await fetch("/AddtoCart", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-cache",
+            },
+            body: JSON.stringify({ game_name, was_it_on_sale }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log("AddtoCart Response:", data); // Debug log
+          const modalTitle = document.querySelector("#popup-modal h3");
+          const modalBody = document.querySelector("#popup-modal .modal-body");
+
+          if (data.success === true) {
+            modalTitle.innerHTML = data.message || "Added to Cart";
+            modalBody.innerHTML = "";
+            openModal("popup-modal");
+            await updateCartCount();
+            setTimeout(() => closeModal("popup-modal"), 2000);
+          } else {
+            modalTitle.innerHTML = "Failed to Add to Cart";
+            modalBody.innerHTML =
+              data.error || "Failed to add to cart. Please try again.";
+            openModal("popup-modal");
+            setTimeout(() => closeModal("popup-modal"), 3000);
+          }
+        } catch (error) {
+          console.error("Add to Cart Error:", error);
+          const modalTitle = document.querySelector("#popup-modal h3");
+          const modalBody = document.querySelector("#popup-modal .modal-body");
+          modalTitle.innerHTML = "Cart Error";
+          modalBody.innerHTML = `Failed to add ${game_name} to cart. Please try again later.`;
+          openModal("popup-modal");
+          setTimeout(() => closeModal("popup-modal"), 3000);
+        } finally {
+          button.disabled = false;
+          button.textContent = originalText;
+        }
+      }
+
+      async function updateCartCount() {
+        try {
+          const response = await fetch("/get_cart_count", {
+            method: "GET",
+            headers: { "Cache-Control": "no-cache" },
+          });
+          const data = await response.json();
+          const cartContainer = document.querySelector("[data-cart-status]");
+          if (cartContainer && data.success) {
+            if (data.cart_count === 0) {
+              cartContainer.innerHTML = `
+                            <div class="relative group flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400">
+                                <i class="fas fa-cart-shopping"></i>
+                                <span id="cart-count" class="font-medium">Cart is Empty</span>
+                                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Browse games to fill your cart!</div>
+                            </div>`;
             } else {
-                // If the countdown is over
-                clearInterval(countdownInterval); // Stop the countdown
-
-
-                // Wait for 10 seconds before reloading the page
-                setTimeout(function () {
-
-                }, 10000); // 10 seconds
+              cartContainer.innerHTML = `
+                            <a href="/ViewCart" class="relative group">
+                                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                                <div class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300">
+                                    <i class="fas fa-cart-shopping text-blue-400"></i>
+                                    <span id="cart-count" class="font-medium">Cart (${data.cart_count})</span>
+                                </div>
+                            </a>`;
             }
+          }
+        } catch (error) {
+          console.error("Update Cart Count Error:", error);
         }
+      }
 
-        // Update the countdown every second
-        const countdownInterval = setInterval(updateCountdown, 1000);
-
-        // Initial call to display the countdown immediately
-        updateCountdown();
-    });
-
-
-    function showViewReviewModal() {
-        const modal = document.getElementById('ViewReviewModal');
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Prevent body scrolling when modal is open
-    }
-
-    // Function to initialize modal functionality
-    function initializeModal_ViewReview() {
-        const openModalButton = document.getElementById('ViewReviewButton');
-        const modal = document.getElementById('ViewReviewModal');
-        const closeModalButton = modal.querySelector('[data-modal-toggle="ViewReviewModal"]');
-
-        // Open the modal when the button is clicked
-        openModalButton.addEventListener('click', function () {
-            modal.classList.remove('hidden'); // Show the modal
-            document.body.style.overflow = 'hidden'; // Prevent body scrolling when modal is open
-        });
-
-        // Close the modal when the close button (X) is clicked
-        closeModalButton.addEventListener('click', function () {
-            modal.classList.add('hidden'); // Hide the modal
-            document.body.style.overflow = ''; // Re-enable body scrolling
-        });
-
-        // Close the modal if the user clicks outside of the modal content (overlay click)
-        modal.addEventListener('click', function (event) {
-            if (event.target === modal) {
-                modal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        });
-    }
-    window.addEventListener('DOMContentLoaded', function () {
-        initializeModal_ViewReview();
-
-
-
-    });
-
-    function handleDropDownChangeReview(selectElement) {
-        const selectedValue = selectElement.value;
-        const game_name = selectElement.getAttribute('data-game_name_review')
-        console.log(selectedValue, game_name)
-
-        if (selectedValue === "positive") {
-            review_filter(game_name, selectedValue);
-        } else if (selectedValue === "negative") {
-
-            review_filter(game_name, selectedValue);
-
-
+      async function updateWishlistCount() {
+        try {
+          const response = await fetch("/get_wishlist", {
+            method: "GET",
+            headers: { "Cache-Control": "no-cache" },
+          });
+          const data = await response.json();
+          const wishlistCount = document.getElementById("wishlist-count");
+          if (wishlistCount && data.wishlist_games) {
+            wishlistCount.textContent = `Wishlist (${data.wishlist_games.length})`;
+          }
+        } catch (error) {
+          console.error("Update Wishlist Count Error:", error);
         }
-        else if (selectedValue === "all") {
+      }
 
-            review_filter(game_name, selectedValue);
-
-
-        }
-    }
-    function review_filter(game_name, condition) {
-        const game_name_filter = game_name
-        const query_filter = condition
-        const SortingTest = document.getElementById('SortingTest')
-        console.log(query_filter)
-        if (game_name) {
-            fetch('/ReviewFilterApi', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ game_name: game_name_filter, query_filter: query_filter })
-            })
-                .then(response => {
-
-                })
-                .then(() => {
-
-                    fetch("/ReviewFilterReturner", {
-                        method: "GET"
-                    })
-                        .then(response => {
-                            return response.text();
-                        })
-                        .then(html => {
-                            SortingTest.innerHTML = html
-                        })
-
-                }
-                )
-        }
-    }
-
-    const searchInput = document.getElementById('default-search');
-    const dropdown = document.getElementById('autocomplete-dropdown');
-
-    // Event listener for search input
-    searchInput.addEventListener('input', function () {
-        const query = this.value.trim();
-        console.log(query)
-        if (query.length > 2) { // Only search after 2 characters
-            // Send query to Flask backend
-            fetch('/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query: query }),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    dropdown.innerHTML = ''; // Clear previous results
-                    if (data.results.length > 0) {
-                        dropdown.classList.remove('hidden');
-                        data.results.forEach((game) => {
-                            const item = document.createElement('div');
-                            item.classList.add(
-                                'p-4', // Increase padding for more space
-                                'flex',
-                                'items-center',
-                                'hover:bg-gray-100',
-                                'cursor-pointer',
-                                'rounded-lg' // Rounded corners for better aesthetics
-                            );
-
-                            // Add game logo
-                            const logo = document.createElement('img');
-                            logo.src = game.logo; // Backend now sends the correct full URL for logos
-                            logo.alt = game.name;
-                            logo.classList.add('!w-20', '!h-10', 'rounded-md', 'mr-1');
-
-                            // Add game name
-                            const name = document.createElement('span');
-                            name.textContent = game.name;
-
-                            // Append logo and name to item
-                            item.appendChild(logo);
-                            item.appendChild(name);
-
-                            // Make item clickable
-                            item.addEventListener('click', () => {
-                                window.location.href = `/ViewGamePage/${encodeURIComponent(game.name)}`;
-                            });
-
-                            // Append item to dropdown
-                            dropdown.appendChild(item);
-                        });
-                    } else {
-                        dropdown.classList.add('hidden'); // Hide dropdown if no results
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error fetching search results:', error);
-                    dropdown.classList.add('hidden');
-                });
-        } else {
-            dropdown.classList.add('hidden'); // Hide dropdown if input is too short
-        }
-    });
-
-    // Close dropdown if clicked outside
-    document.addEventListener('click', function (event) {
-        if (!searchInput.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.classList.add('hidden');
-        }
-    });
-    document.addEventListener('DOMContentLoaded', () => {
-        // Function to show modal
-        const showModal = (modalId) => {
-            const modal = document.getElementById(modalId);
-            console.log(modalId)
-            if (modal) {
-                modal.classList.remove('hidden');
-            }
-        };
-
-        // Function to hide modal
-        const hideModal = (modal) => {
-            if (modal) {
-                modal.classList.add('hidden');
-                location.reload();
-            }
-        };
-
-        // Event listener for toggle buttons
-        document.querySelectorAll('[data-modal-toggle]').forEach(button => {
-            button.addEventListener('click', () => {
-                const modalId = button.getAttribute('data-modal-target');
-                showModal(modalId);
+      function initializeSearch_wishlistedgames() {
+        const searchInput = document.getElementById(
+          "searchInput_wishlistedgames"
+        );
+        if (searchInput) {
+          searchInput.addEventListener("input", () => {
+            const filter = searchInput.value.toLowerCase();
+            const items = document.querySelectorAll("#buyerList li");
+            items.forEach((item) => {
+              const gameName = item
+                .querySelector("span")
+                .textContent.toLowerCase();
+              item.style.display = gameName.includes(filter) ? "" : "none";
             });
-        });
+          });
+        }
+      }
 
-        // Event listener for close buttons
-        document.querySelectorAll('[data-modal-hide]').forEach(button => {
-            button.addEventListener('click', () => {
-                const modal = button.closest('.fixed'); // Get the closest modal
-                hideModal(modal);
-                location.reload();
-            });
-        });
+      async function refreshWishlistModal() {
+        try {
+          const response = await fetch("/get_wishlist", {
+            method: "GET",
+            headers: { "Cache-Control": "no-cache" },
+          });
+          const data = await response.json();
+          const wishlistContainer = document
+            .getElementById("ViewWishlistedGamesModal")
+            .querySelector(".max-h-[36rem]");
+          if (wishlistContainer && data.wishlist_games) {
+            if (data.wishlist_games.length === 0) {
+              wishlistContainer.innerHTML = `
+                            <div class="text-center py-12 bg-gradient-to-r from-purple-950 to-purple-900 rounded-2xl border border-purple-800/50">
+                                <i class="fas fa-heart text-7xl text-pink-500 mb-5"></i>
+                                <p class="text-purple-200 text-xl">Your wishlist is empty</p>
+                                <p class="text-purple-400 text-md">Add some games to your wishlist to see them here!</p>
+                            </div>`;
+            } else {
+              wishlistContainer.innerHTML = `
+                            <ul id="buyerList" class="list-none space-y-4">
+                                ${data.wishlist_games
+                                  .map(
+                                    (wishlist) => `
+                                    <li class="flex justify-between items-center p-6 bg-gradient-to-r from-purple-900 to-purple-950 rounded-2xl border border-purple-800/50 hover:border-purple-700/60 transition-all duration-300">
+                                        <div class="flex items-center space-x-5">
+                                            <div class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-purple-950 to-purple-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base">${
+                                              wishlist[1]
+                                            }</div>
+                                            <div>
+                                                <span class="text-white font-semibold text-lg">${
+                                                  wishlist[1]
+                                                }</span>
+                                                ${
+                                                  wishlist[4] === "1"
+                                                    ? `
+                                                    <div class="flex items-center space-x-3 mt-1">
+                                                        <span class="bg-purple-800 text-white text-xs px-3 py-1 rounded-lg">${wishlist[5]}% OFF</span>
+                                                        <span class="text-pink-500 font-bold text-lg">$${wishlist[3]}</span>
+                                                    </div>`
+                                                    : `<p class="text-pink-500 font-bold text-lg mt-1">$${wishlist[3]}</p>`
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="flex space-x-3">
+                                            <button type="button" class="text-white bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
+                                              wishlist[0]
+                                            }" data-game_name_wishlist="${
+                                      wishlist[1]
+                                    }" onclick="RemoveFromWishList(this)">Remove</button>
+                                            <button type="button" class="text-white bg-gradient-to-r from-purple-700 to-pink-700 hover:from-purple-800 hover:to-pink-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
+                                              wishlist[0]
+                                            }" data-game_name_cart="${
+                                      wishlist[1]
+                                    }" data-game_sale_status="${
+                                      wishlist[4]
+                                    }" onclick="AddtoCart(this)">Add to Cart</button>
+                                        </div>
+                                    </li>`
+                                  )
+                                  .join("")}
+                            </ul>`;
+            }
+            initializeSearch_wishlistedgames();
+          }
+        } catch (error) {
+          console.error("Refresh Wishlist Modal Error:", error);
+        }
+      }
 
-        // Optional: Close the modal when clicking outside of it
-        document.querySelectorAll('.fixed').forEach(modal => {
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    hideModal(modal);
-                }
-            });
-        });
-    });
-    function RemoveFromWishList(button) {
-        const game_name = button.getAttribute('data-game_name_wishlist')
-        const listItem = button.closest('li');
+      async function RemoveFromWishList(button) {
+        const game_name = button.getAttribute("data-game_name_wishlist");
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = "Removing...";
 
-        fetch('/RemoveFromWishlist', {
-            method: 'POST',
+        try {
+          const response = await fetch("/RemoveFromWishlist", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+              "Content-Type": "application/json",
+              "Cache-Control": "no-cache",
             },
-            body: JSON.stringify({ game_name: game_name })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    const modalTitle = document.querySelector('#popup-modal h3');
-                    const modalBody = document.querySelector('#popup-modal .modal-body');
+            body: JSON.stringify({ game_name }),
+          });
+          const data = await response.json();
+          const modalTitle = document.querySelector("#popup-modal h3");
+          const modalBody = document.querySelector("#popup-modal .modal-body");
+          modalTitle.innerHTML = data.message || "Removed from Wishlist";
+          modalBody.innerHTML = "";
+          openModal("popup-modal");
+          if (data.success) {
+            await updateWishlistCount();
+            await refreshWishlistModal();
+            setTimeout(() => closeModal("popup-modal"), 2000);
+          } else {
+            modalBody.innerHTML =
+              data.error || "Failed to remove from wishlist.";
+            setTimeout(() => closeModal("popup-modal"), 3000);
+          }
+        } catch (error) {
+          console.error("Remove Wishlist Error:", error);
+          const modalTitle = document.querySelector("#popup-modal h3");
+          const modalBody = document.querySelector("#popup-modal .modal-body");
+          modalTitle.innerHTML = "Wishlist Error";
+          modalBody.innerHTML =
+            "Failed to remove from wishlist. Please try again later.";
+          openModal("popup-modal");
+          setTimeout(() => closeModal("popup-modal"), 3000);
+        } finally {
+          button.disabled = false;
+          button.textContent = originalText;
+        }
+      }
 
-                    modalTitle.innerHTML = data.message;
+      async function handleDropDownChangeReview(selectElement) {
+        const selectedValue = selectElement.value;
+        const game_name = selectElement.getAttribute("data-game_name_review");
+        if (selectedValue) {
+          await review_filter(game_name, selectedValue);
+          selectElement.value = ""; // Reset dropdown
+        }
+      }
 
+      async function review_filter(game_name, condition) {
+        try {
+          // Send filter request
+          const filterResponse = await fetch("/ReviewFilterApi", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-cache",
+            },
+            body: JSON.stringify({ game_name, query_filter: condition }),
+          });
 
-                    // Show the modal
-                    const modal = document.getElementById('popup-modal');
-                    modal.classList.remove('hidden'); // Display success message
-                    listItem.remove();
+          if (!filterResponse.ok) {
+            throw new Error(`Review Filter Error: ${filterResponse.status}`);
+          }
 
+          // Fetch filtered reviews
+          const response = await fetch("/ReviewFilterReturner", {
+            method: "GET",
+            headers: { "Cache-Control": "no-cache" },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Review Fetch Error: ${response.status}`);
+          }
+
+          const data = await response.json(); // Expect JSON response
+          console.log("Review Filter Response:", data); // Debug log
+
+          const reviewContainer = document.getElementById("SortingTest");
+          if (reviewContainer) {
+            if (data.reviews && data.reviews.length > 0) {
+              reviewContainer.innerHTML = `
+                <ul id="buyerList" class="list-none space-y-4">
+                  ${data.reviews
+                    .map(
+                      (review) => `
+                      <li class="flex justify-between items-center p-6 bg-gradient-to-r from-blue-900 to-blue-950 rounded-2xl border border-blue-800/50 hover:border-blue-700/60 transition-all duration-300">
+                        <div class="flex items-center space-x-5">
+                          <div class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-blue-950 to-blue-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base">
+                            ${review[0]}
+                          </div>
+                          <div>
+                            <span class="text-white font-semibold text-lg">
+                              ${review[0]} ${
+                        review[2] === "yes"
+                          ? "recommends this game"
+                          : "doesn't recommend this game"
+                      }
+                            </span>
+                            <p class="text-blue-300 text-sm">"${review[1]}"</p>
+                          </div>
+                        </div>
+                      </li>`
+                    )
+                    .join("")}
+                </ul>`;
+            } else {
+              reviewContainer.innerHTML = `
+                <div class="text-center py-12 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl border border-blue-800/50">
+                  <i class="fas fa-star text-7xl text-blue-400 mb-5"></i>
+                  <p class="text-blue-200 text-xl">No reviews yet</p>
+                  <p class="text-blue-400 text-md">
+                    Be the first to share your thoughts about this game!
+                  </p>
+                </div>`;
+            }
+          }
+        } catch (error) {
+          console.error("Review Filter Error:", error);
+          const reviewContainer = document.getElementById("SortingTest");
+          if (reviewContainer) {
+            reviewContainer.innerHTML = `
+              <div class="text-center py-12 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl border border-blue-800/50">
+                <i class="fas fa-exclamation-circle text-7xl text-blue-400 mb-5"></i>
+                <p class="text-blue-200 text-xl">Error loading reviews</p>
+                <p class="text-blue-400 text-md">Please try again later.</p>
+              </div>`;
+          }
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeCarousel();
+        initializeSearch_wishlistedgames();
+        updateCartCount();
+        updateWishlistCount();
+
+        document
+          .getElementById("ViewWishlistedGamesButton")
+          .addEventListener("click", async () => {
+            await refreshWishlistModal();
+            openModal("ViewWishlistedGamesModal");
+          });
+
+        document
+          .getElementById("ViewReviewButton")
+          .addEventListener("click", () => openModal("ViewReviewModal"));
+
+        document.querySelectorAll("[data-modal-hide]").forEach((button) => {
+          button.addEventListener("click", () =>
+            closeModal(button.getAttribute("data-modal-hide"))
+          );
+        });
+
+        document
+          .getElementById("updatePasswordForm")
+          .addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const currentPassword =
+              document.getElementById("current-password").value;
+            const newPassword = document.getElementById("new-password").value;
+            const confirmPassword =
+              document.getElementById("confirm-password").value;
+
+            if (newPassword !== confirmPassword) {
+              document
+                .getElementById("password-error")
+                .classList.remove("hidden");
+              document
+                .getElementById("password-success")
+                .classList.add("hidden");
+            } else {
+              try {
+                const response = await fetch("/update_password", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    current_password: currentPassword,
+                    new_password: newPassword,
+                  }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                  document
+                    .getElementById("password-success")
+                    .classList.remove("hidden");
+                  document
+                    .getElementById("password-error")
+                    .classList.add("hidden");
+                  setTimeout(() => {
+                    closeModal("UpdatePasswordModal");
+                    window.location.href = "/logout";
+                  }, 2000);
                 } else {
-                    alert(data.error); // Display error message
+                  const modalTitle = document.querySelector("#popup-modal h3");
+                  const modalBody = document.querySelector(
+                    "#popup-modal .modal-body"
+                  );
+                  modalTitle.innerHTML = "Password Update Error";
+                  modalBody.innerHTML =
+                    data.error || "Failed to update password.";
+                  openModal("popup-modal");
+                  setTimeout(() => closeModal("popup-modal"), 3000);
                 }
+              } catch (error) {
+                console.error("Password Update Error:", error);
+                const modalTitle = document.querySelector("#popup-modal h3");
+                const modalBody = document.querySelector(
+                  "#popup-modal .modal-body"
+                );
+                modalTitle.innerHTML = "Password Update Error";
+                modalBody.innerHTML =
+                  "Failed to update password. Please try again later.";
+                openModal("popup-modal");
+                setTimeout(() => closeModal("popup-modal"), 3000);
+              }
+            }
+          });
+
+        const searchInput = document.getElementById("default-search");
+        const dropdown = document.getElementById("autocomplete-dropdown");
+        searchInput.addEventListener("input", function () {
+          const query = this.value.trim();
+          if (query.length > 2) {
+            fetch("/search", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ query }),
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong!');
-            });
+              .then((response) => response.json())
+              .then((data) => {
+                dropdown.innerHTML = "";
+                if (data.results.length > 0) {
+                  dropdown.classList.remove("hidden");
+                  data.results.forEach((game) => {
+                    const item = document.createElement("div");
+                    item.classList.add(
+                      "p-4",
+                      "flex",
+                      "items-center",
+                      "hover:bg-blue-900/50",
+                      "cursor-pointer",
+                      "rounded-lg"
+                    );
+                    const logo = document.createElement("img");
+                    logo.src = game.logo;
+                    logo.alt = game.name;
+                    logo.classList.add("w-16", "h-10", "rounded-md", "mr-4");
+                    const name = document.createElement("span");
+                    name.textContent = game.name;
+                    item.appendChild(logo);
+                    item.appendChild(name);
+                    item.addEventListener(
+                      "click",
+                      () =>
+                        (window.location.href = `/ViewGamePage/${encodeURIComponent(
+                          game.name
+                        )}`)
+                    );
+                    dropdown.appendChild(item);
+                  });
+                } else {
+                  dropdown.classList.add("hidden");
+                }
+              })
+              .catch((error) => {
+                console.error("Search Error:", error);
+                dropdown.classList.add("hidden");
+              });
+          } else {
+            dropdown.classList.add("hidden");
+          }
+        });
 
-    }
+        document.addEventListener("click", (event) => {
+          if (
+            !searchInput.contains(event.target) &&
+            !dropdown.contains(event.target)
+          ) {
+            dropdown.classList.add("hidden");
+          }
+        });
 
-    function logout() {
-        window.location.href = '/logout'; // Redirect to logout route
-    }
-</script>
+        document.getElementById("user-name").addEventListener("focus", () => {
+          document
+            .querySelector(".fa-chevron-down")
+            .classList.add("rotate-180");
+        });
 
+        document.getElementById("user-name").addEventListener("blur", () => {
+          document
+            .querySelector(".fa-chevron-down")
+            .classList.remove("rotate-180");
+        });
 
+        const deadline = new Date("{{ game_info[16] }}");
+        function updateCountdown() {
+          const now = new Date();
+          const timeRemaining = deadline - now;
+          if (timeRemaining >= 0) {
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor(
+              (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            document.getElementById(
+              "countdown"
+            ).textContent = `${hours}h ${minutes}m ${seconds}s`;
+          } else {
+            clearInterval(countdownInterval);
+          }
+        }
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+      });
+    </script>
+  </body>
 </html>
