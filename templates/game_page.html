@@ -565,7 +565,6 @@
                 <option value="negative">Negative only</option>
                 <option value="all">All</option>
               </select>
-
             </div>
             <div
               id="SortingTest"
@@ -1120,7 +1119,6 @@
             await updateWishlistCount();
             setTimeout(() => closeModal("popup-modal"), 2000);
           } else {
-            modalBody.innerHTML = data.error || "Failed to add to wishlist.";
             setTimeout(() => closeModal("popup-modal"), 3000);
           }
         } catch (error) {
@@ -1153,27 +1151,24 @@
             },
             body: JSON.stringify({ game_name, was_it_on_sale }),
           });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-
+          console.log(
+            "AddtoCart Response Status:",
+            response.status,
+            "URL:",
+            response.url
+          );
           const data = await response.json();
-          console.log("AddtoCart Response:", data); // Debug log
+          console.log("AddtoCart Response Data:", data);
           const modalTitle = document.querySelector("#popup-modal h3");
           const modalBody = document.querySelector("#popup-modal .modal-body");
-
-          if (data.success === true) {
-            modalTitle.innerHTML = data.message || "Added to Cart";
-            modalBody.innerHTML = "";
-            openModal("popup-modal");
+          modalTitle.innerHTML = data.message || "Added to Cart";
+          modalBody.innerHTML = "";
+          openModal("popup-modal");
+          if (data.success) {
             await updateCartCount();
             setTimeout(() => closeModal("popup-modal"), 2000);
           } else {
-            modalTitle.innerHTML = "Failed to Add to Cart";
-            modalBody.innerHTML =
-              data.error || "Failed to add to cart. Please try again.";
-            openModal("popup-modal");
+            modalTitle.innerHTML = "Cart Error";
             setTimeout(() => closeModal("popup-modal"), 3000);
           }
         } catch (error) {
@@ -1201,20 +1196,20 @@
           if (cartContainer && data.success) {
             if (data.cart_count === 0) {
               cartContainer.innerHTML = `
-                            <div class="relative group flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400">
-                                <i class="fas fa-cart-shopping"></i>
-                                <span id="cart-count" class="font-medium">Cart is Empty</span>
-                                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Browse games to fill your cart!</div>
-                            </div>`;
+          <div class="relative group flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400">
+            <i class="fas fa-cart-shopping"></i>
+            <span id="cart-count" class="font-medium">Cart is Empty</span>
+            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Browse games to fill your cart!</div>
+          </div>`;
             } else {
               cartContainer.innerHTML = `
-                            <a href="/ViewCart" class="relative group">
-                                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                                <div class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300">
-                                    <i class="fas fa-cart-shopping text-blue-400"></i>
-                                    <span id="cart-count" class="font-medium">Cart (${data.cart_count})</span>
-                                </div>
-                            </a>`;
+          <a href="/ViewCart" class="relative group">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+            <div class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300">
+              <i class="fas fa-cart-shopping text-blue-400"></i>
+              <span id="cart-count" class="font-medium">Cart (${data.cart_count})</span>
+            </div>
+          </a>`;
             }
           }
         } catch (error) {
@@ -1269,55 +1264,55 @@
           if (wishlistContainer && data.wishlist_games) {
             if (data.wishlist_games.length === 0) {
               wishlistContainer.innerHTML = `
-                            <div class="text-center py-12 bg-gradient-to-r from-purple-950 to-purple-900 rounded-2xl border border-purple-800/50">
-                                <i class="fas fa-heart text-7xl text-pink-500 mb-5"></i>
-                                <p class="text-purple-200 text-xl">Your wishlist is empty</p>
-                                <p class="text-purple-400 text-md">Add some games to your wishlist to see them here!</p>
-                            </div>`;
+          <div class="text-center py-12 bg-gradient-to-r from-purple-950 to-purple-900 rounded-2xl border border-purple-800/50">
+            <i class="fas fa-heart text-7xl text-pink-500 mb-5"></i>
+            <p class="text-purple-200 text-xl">Your wishlist is empty</p>
+            <p class="text-purple-400 text-md">Add some games to your wishlist to see them here!</p>
+          </div>`;
             } else {
               wishlistContainer.innerHTML = `
-                            <ul id="buyerList" class="list-none space-y-4">
-                                ${data.wishlist_games
-                                  .map(
-                                    (wishlist) => `
-                                    <li class="flex justify-between items-center p-6 bg-gradient-to-r from-purple-900 to-purple-950 rounded-2xl border border-purple-800/50 hover:border-purple-700/60 transition-all duration-300">
-                                        <div class="flex items-center space-x-5">
-                                            <div class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-purple-950 to-purple-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base">${
-                                              wishlist[1]
-                                            }</div>
-                                            <div>
-                                                <span class="text-white font-semibold text-lg">${
-                                                  wishlist[1]
-                                                }</span>
-                                                ${
-                                                  wishlist[4] === "1"
-                                                    ? `
-                                                    <div class="flex items-center space-x-3 mt-1">
-                                                        <span class="bg-purple-800 text-white text-xs px-3 py-1 rounded-lg">${wishlist[5]}% OFF</span>
-                                                        <span class="text-pink-500 font-bold text-lg">$${wishlist[3]}</span>
-                                                    </div>`
-                                                    : `<p class="text-pink-500 font-bold text-lg mt-1">$${wishlist[3]}</p>`
-                                                }
-                                            </div>
-                                        </div>
-                                        <div class="flex space-x-3">
-                                            <button type="button" class="text-white bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
-                                              wishlist[0]
-                                            }" data-game_name_wishlist="${
-                                      wishlist[1]
-                                    }" onclick="RemoveFromWishList(this)">Remove</button>
-                                            <button type="button" class="text-white bg-gradient-to-r from-purple-700 to-pink-700 hover:from-purple-800 hover:to-pink-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
-                                              wishlist[0]
-                                            }" data-game_name_cart="${
-                                      wishlist[1]
-                                    }" data-game_sale_status="${
-                                      wishlist[4]
-                                    }" onclick="AddtoCart(this)">Add to Cart</button>
-                                        </div>
-                                    </li>`
-                                  )
-                                  .join("")}
-                            </ul>`;
+          <ul id="buyerList" class="list-none space-y-4">
+            ${data.wishlist_games
+              .map(
+                (wishlist) => `
+                <li class="flex justify-between items-center p-6 bg-gradient-to-r from-purple-900 to-purple-950 rounded-2xl border border-purple-800/50 hover:border-purple-700/60 transition-all duration-300">
+                  <div class="flex items-center space-x-5">
+                    <div class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-purple-950 to-purple-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base">${
+                      wishlist[1]
+                    }</div>
+                    <div>
+                      <span class="text-white font-semibold text-lg">${
+                        wishlist[1]
+                      }</span>
+                      ${
+                        wishlist[4] === "1"
+                          ? `
+                          <div class="flex items-center space-x-3 mt-1">
+                            <span class="bg-purple-800 text-white text-xs px-3 py-1 rounded-lg">${wishlist[5]}% OFF</span>
+                            <span class="text-pink-500 font-bold text-lg">$${wishlist[3]}</span>
+                          </div>`
+                          : `<p class="text-pink-500 font-bold text-lg mt-1">$${wishlist[3]}</p>`
+                      }
+                    </div>
+                  </div>
+                  <div class="flex space-x-3">
+                    <button type="button" class="text-white bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
+                      wishlist[0]
+                    }" data-game_name_wishlist="${
+                  wishlist[1]
+                }" onclick="RemoveFromWishList(this)">Remove</button>
+                    <button type="button" class="text-white bg-gradient-to-r from-purple-700 to-pink-700 hover:from-purple-800 hover:to-pink-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
+                      wishlist[0]
+                    }" data-game_name_cart="${
+                  wishlist[1]
+                }" data-game_sale_status="${
+                  wishlist[4]
+                }" onclick="AddtoCart(this)">Add to Cart</button>
+                  </div>
+                </li>`
+              )
+              .join("")}
+          </ul>`;
             }
             initializeSearch_wishlistedgames();
           }
@@ -1376,13 +1371,12 @@
         const game_name = selectElement.getAttribute("data-game_name_review");
         if (selectedValue) {
           await review_filter(game_name, selectedValue);
-          selectElement.value = ""; // Reset dropdown
+          selectElement.value = "";
         }
       }
 
       async function review_filter(game_name, condition) {
         try {
-          // Send filter request
           const filterResponse = await fetch("/ReviewFilterApi", {
             method: "POST",
             headers: {
@@ -1396,7 +1390,6 @@
             throw new Error(`Review Filter Error: ${filterResponse.status}`);
           }
 
-          // Fetch filtered reviews
           const response = await fetch("/ReviewFilterReturner", {
             method: "GET",
             headers: { "Cache-Control": "no-cache" },
@@ -1406,46 +1399,46 @@
             throw new Error(`Review Fetch Error: ${response.status}`);
           }
 
-          const data = await response.json(); // Expect JSON response
-          console.log("Review Filter Response:", data); // Debug log
+          const data = await response.json();
+          console.log("Review Filter Response:", data);
 
           const reviewContainer = document.getElementById("SortingTest");
           if (reviewContainer) {
             if (data.reviews && data.reviews.length > 0) {
               reviewContainer.innerHTML = `
-                <ul id="buyerList" class="list-none space-y-4">
-                  ${data.reviews
-                    .map(
-                      (review) => `
-                      <li class="flex justify-between items-center p-6 bg-gradient-to-r from-blue-900 to-blue-950 rounded-2xl border border-blue-800/50 hover:border-blue-700/60 transition-all duration-300">
-                        <div class="flex items-center space-x-5">
-                          <div class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-blue-950 to-blue-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base">
-                            ${review[0]}
-                          </div>
-                          <div>
-                            <span class="text-white font-semibold text-lg">
-                              ${review[0]} ${
-                        review[2] === "yes"
-                          ? "recommends this game"
-                          : "doesn't recommend this game"
-                      }
-                            </span>
-                            <p class="text-blue-300 text-sm">"${review[1]}"</p>
-                          </div>
-                        </div>
-                      </li>`
-                    )
-                    .join("")}
-                </ul>`;
+          <ul id="buyerList" class="list-none space-y-4">
+            ${data.reviews
+              .map(
+                (review) => `
+                <li class="flex justify-between items-center p-6 bg-gradient-to-r from-blue-900 to-blue-950 rounded-2xl border border-blue-800/50 hover:border-blue-700/60 transition-all duration-300">
+                  <div class="flex items-center space-x-5">
+                    <div class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-blue-950 to-blue-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base">
+                      ${review[0]}
+                    </div>
+                    <div>
+                      <span class="text-white font-semibold text-lg">
+                        ${review[0]} ${
+                  review[2] === "yes"
+                    ? "recommends this game"
+                    : "doesn't recommend this game"
+                }
+                      </span>
+                      <p class="text-blue-300 text-sm">"${review[1]}"</p>
+                    </div>
+                  </div>
+                </li>`
+              )
+              .join("")}
+          </ul>`;
             } else {
               reviewContainer.innerHTML = `
-                <div class="text-center py-12 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl border border-blue-800/50">
-                  <i class="fas fa-star text-7xl text-blue-400 mb-5"></i>
-                  <p class="text-blue-200 text-xl">No reviews yet</p>
-                  <p class="text-blue-400 text-md">
-                    Be the first to share your thoughts about this game!
-                  </p>
-                </div>`;
+          <div class="text-center py-12 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl border border-blue-800/50">
+            <i class="fas fa-star text-7xl text-blue-400 mb-5"></i>
+            <p class="text-blue-200 text-xl">No reviews yet</p>
+            <p class="text-blue-400 text-md">
+              Be the first to share your thoughts about this game!
+            </p>
+          </div>`;
             }
           }
         } catch (error) {
@@ -1453,11 +1446,11 @@
           const reviewContainer = document.getElementById("SortingTest");
           if (reviewContainer) {
             reviewContainer.innerHTML = `
-              <div class="text-center py-12 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl border border-blue-800/50">
-                <i class="fas fa-exclamation-circle text-7xl text-blue-400 mb-5"></i>
-                <p class="text-blue-200 text-xl">Error loading reviews</p>
-                <p class="text-blue-400 text-md">Please try again later.</p>
-              </div>`;
+        <div class="text-center py-12 bg-gradient-to-r from-blue-950 to-blue-900 rounded-2xl border border-blue-800/50">
+          <i class="fas fa-exclamation-circle text-7xl text-blue-400 mb-5"></i>
+          <p class="text-blue-200 text-xl">Error loading reviews</p>
+          <p class="text-blue-400 text-md">Please try again later.</p>
+        </div>`;
           }
         }
       }
