@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Game Data</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/icon.png') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+              manrope: ["Manrope", "sans-serif"],
+            },
+            letterSpacing: { "5pct": "0.05em" },
+            keyframes: {
+              slideIn: {
+                "0%": { transform: "translateY(50px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              pulseGlow: {
+                "0%, 100%": { boxShadow: "0 0 10px rgba(75,0,130,0.5)" },
+                "50%": { boxShadow: "0 0 20px rgba(75,0,130,0.8)" },
+              },
+              fadeOut: {
+                "0%": { opacity: "1", transform: "scale(1)" },
+                "100%": { opacity: "0", transform: "scale(0.95)" },
+              },
+            },
+            animation: {
+              slideIn: "slideIn 0.4s ease-out forwards",
+              pulseGlow: "pulseGlow 2s ease-in-out infinite",
+              fadeOut: "fadeOut 0.3s ease-out forwards",
+            },
+          },
+        },
+      };
+    </script>
+    <script
+      src="https://kit.fontawesome.com/8584240c12.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .user-dropdown {
+        background: linear-gradient(
+          135deg,
+          rgba(51, 65, 85, 0.9),
+          rgba(30, 41, 59, 0.9)
+        );
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding-right: 2rem;
+        padding-left: 1rem;
+        text-align: left;
+        line-height: 44px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .user-dropdown:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+      }
+      .user-dropdown option {
+        background: rgba(30, 41, 59, 0.95);
+        color: #fff;
+        padding: 8px 12px;
+      }
+      .user-dropdown option:hover {
+        background: rgba(147, 51, 234, 0.8);
+      }
+      .user-dropdown-arrow {
+        transition: transform 0.3s ease;
+      }
+      .user-dropdown:focus + .user-dropdown-arrow i {
+        transform: rotate(180deg);
+      }
+      .user-dropdown-option i {
+        margin-right: 8px;
+        width: 20px;
+        text-align: center;
+        display: inline-block;
+      }
+      .user-dropdown-option::before {
+        content: attr(data-fallback);
+        display: inline-block;
+        width: 20px;
+        text-align: center;
+        margin-right: 8px;
+      }
+      .fa-solid ~ .user-dropdown-option::before {
+        content: none;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+      }
+      .form-input {
+        transition: all 0.3s ease;
+      }
+      .form-input:hover,
+      .form-input:focus {
+        border-color: rgba(147, 51, 234, 0.5);
+        box-shadow: 0 0 10px rgba(147, 51, 234, 0.3);
+      }
+      .submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
+      }
+      @media (max-width: 640px) {
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-inter bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen"
+  >
+    <!-- Header -->
+    <header
+      id="navbar"
+      class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-emerald-500/20"
+    >
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <!-- Logo Section -->
+          <div class="flex items-center space-x-4">
+            <div class="relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <a href="/" class="relative block">
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-12 h-8 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105"
+                />
+              </a>
+            </div>
+            <div class="hidden lg:block">
+              <h1
+                class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent"
+              >
+                Bashpo
+              </h1>
+              <p class="text-xs text-gray-400">Gaming Platform</p>
+            </div>
+          </div>
+
+          <!-- Navigation & Actions -->
+          <div class="flex items-center space-x-4">
+            <!-- User Balance Display -->
+            <div
+              class="flex items-center space-x-2 bg-gradient-to-r from-emerald-600/20 to-teal-600/20 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-sm"
+            >
+              <i class="fas fa-wallet text-emerald-400"></i>
+              <span class="text-white font-medium"
+                >${{ balance | round(2) }}</span
+              >
+            </div>
+
+            <!-- User Dropdown -->
+            <div class="relative w-[200px]">
+              <select
+                id="user-name"
+                name="user_name"
+                class="user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 appearance-none cursor-pointer"
+                onchange="handleDropdownChange(this)"
+                required
+              >
+                <option
+                  value=""
+                  disabled
+                  selected
+                  class="bg-slate-800 text-gray-300 user-dropdown-option"
+                  data-fallback="👤"
+                >
+                  <i class="fas fa-user"></i> {{ username }}
+                </option>
+                <option
+                  value="view_profile"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="👤"
+                >
+                  <i class="fas fa-user"></i> View Profile
+                </option>
+                <option
+                  value="update_pass"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="🔒"
+                >
+                  <i class="fas fa-lock"></i> Update Password
+                </option>
+                <option
+                  value="logout"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="⬅️"
+                >
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-2 flex items-center pointer-events-none user-dropdown-arrow"
+              >
+                <i class="fas fa-chevron-down text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Update Password Modal -->
+    <div
+      id="UpdatePasswordModal"
+      tabindex="-1"
+      aria-hidden="true"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40"
+    >
+      <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
+        <!-- Modal content -->
+        <div
+          class="relative p-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl border border-white/20 animate-slideIn"
+        >
+          <!-- Modal header -->
+          <div
+            class="flex justify-between items-center pb-4 mb-4 rounded-t border-b border-white/20"
+          >
+            <div class="text-lg text-white md:text-xl">
+              <h3
+                class="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+              >
+                <i class="fas fa-lock mr-2"></i>Update Password
+              </h3>
+            </div>
+            <button
+              type="button"
+              class="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              data-modal-toggle="UpdatePasswordModal"
+            >
+              <i class="fas fa-times w-5 h-5"></i>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
+
+          <!-- Modal body: Update password form -->
+          <form
+            id="updatePasswordForm"
+            action="/update_password"
+            method="POST"
+            class="space-y-4"
+          >
+            <div>
+              <label
+                for="current-password"
+                class="block text-sm font-medium text-gray-300"
+                >Current Password</label
+              >
+              <input
+                type="password"
+                id="current-password"
+                name="current_password"
+                required
+                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+            <div>
+              <label
+                for="new-password"
+                class="block text-sm font-medium text-gray-300"
+                >New Password</label
+              >
+              <input
+                type="password"
+                id="new-password"
+                name="new_password"
+                required
+                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+            <div>
+              <label
+                for="confirm-password"
+                class="block text-sm font-medium text-gray-300"
+                >Confirm New Password</label
+              >
+              <input
+                type="password"
+                id="confirm-password"
+                name="confirm_password"
+                required
+                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+
+            <!-- Error and Success Messages -->
+            <div id="password-error" class="text-red-500 hidden">
+              Passwords do not match.
+            </div>
+            <div id="password-success" class="text-green-500 hidden">
+              Password updated successfully!
+            </div>
+
+            <div class="mt-4 flex justify-end space-x-2">
+              <button
+                type="button"
+                id="cancel-password"
+                class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition duration-300"
+                data-modal-toggle="UpdatePasswordModal"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                id="submit-password"
+                class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:scale-105 transition duration-300"
+              >
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="container mx-auto px-4 py-12 mt-20">
+      <div class="max-w-3xl mx-auto">
+        <div
+          class="relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-2xl animate-slideIn"
+        >
+          <div class="flex items-center space-x-3 mb-6">
+            <div
+              class="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center"
+            >
+              <i class="fas fa-gamepad text-white text-xl"></i>
+            </div>
+            <h1
+              class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-manrope"
+            >
+              Upload Game Data
+            </h1>
+          </div>
+          <form id="developerForm" class="space-y-6">
+            <div>
+              <label
+                for="game_name"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-gamepad text-purple-400"></i>
+                <span>Game Name</span>
+              </label>
+              <input
+                type="text"
+                id="game_name"
+                name="game_name"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value="{{ game_name }}"
+                readonly
+              />
+            </div>
+            <div>
+              <label
+                for="dev_username"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-user text-blue-400"></i>
+                <span>Developer Username</span>
+              </label>
+              <input
+                type="text"
+                id="dev_username"
+                name="dev_username"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter Developer Name"
+                value="{{ dev_username }}"
+                readonly
+              />
+            </div>
+            <div>
+              <label
+                for="game_genre"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-tag text-green-400"></i>
+                <span>Game Genre</span>
+              </label>
+              <input
+                type="text"
+                id="game_genre"
+                name="game_genre"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter game genre"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="game_description"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-align-left text-pink-400"></i>
+                <span>Game Description (keep it concise)</span>
+              </label>
+              <input
+                type="text"
+                id="game_description"
+                name="game_description"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter game description"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="release_year"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-calendar-alt text-teal-400"></i>
+                <span>Release Year</span>
+              </label>
+              <input
+                type="number"
+                id="release_year"
+                name="release_year"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter release year"
+                min="0"
+                max="9999"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="base_price"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-dollar-sign text-emerald-400"></i>
+                <span>Base Price (0–120 USD)</span>
+              </label>
+              <input
+                type="number"
+                id="base_price"
+                name="base_price"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter price in dollars (0–120)"
+                min="0"
+                max="120"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="yt_embed"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fab fa-youtube text-red-400"></i>
+                <span>YouTube Trailer Embed Code</span>
+              </label>
+              <input
+                type="text"
+                id="yt_embed"
+                name="yt_embed"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter link portion after = sign (e.g., mr15Xzb1Ook)"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="img_logo"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-image text-purple-400"></i>
+                <span>Game Logo (max 500x500)</span>
+              </label>
+              <input
+                id="img_logo"
+                type="file"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 file:bg-gradient-to-r file:from-purple-600 file:to-pink-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
+                accept="image/png, image/jpeg"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="img_ss1"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-camera text-blue-400"></i>
+                <span>First In-Game Screenshot (max 1080p)</span>
+              </label>
+              <input
+                id="img_ss1"
+                type="file"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 file:bg-gradient-to-r file:from-purple-600 file:to-pink-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
+                accept="image/png, image/jpeg"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="img_ss2"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-camera text-blue-400"></i>
+                <span>Second In-Game Screenshot (max 1080p)</span>
+              </label>
+              <input
+                id="img_ss2"
+                type="file"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 file:bg-gradient-to-r file:from-purple-600 file:to-pink-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
+                accept="image/png, image/jpeg"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="game_file"
+                class="flex items-center space-x-2 text-sm font-medium text-gray-300"
+              >
+                <i class="fas fa-file-archive text-green-400"></i>
+                <span>Game File (compressed, .rar or .zip)</span>
+              </label>
+              <input
+                id="game_file"
+                type="file"
+                class="form-input mt-2 w-full px-4 py-3 rounded-lg bg-slate-700 text-white border border-gray-600 file:bg-gradient-to-r file:from-purple-600 file:to-pink-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
+                accept=".rar,.zip"
+                required
+              />
+            </div>
+            <div id="error-message" class="text-red-500 text-center hidden">
+              Please fill in all fields.
+            </div>
+            <div class="mt-8 text-center">
+              <button
+                type="button"
+                class="submit-button px-6 py-3 w-full sm:w-64 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold font-manrope transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                onclick="uploadGameData(event)"
+              >
+                <i class="fas fa-upload mr-2"></i> Upload Game Data
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      id="footer"
+      class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10"
+    >
+      <div class="container mx-auto px-4 py-12">
+        <div
+          class="flex flex-col lg:flex-row justify-between items-center gap-8"
+        >
+          <div
+            class="flex flex-col items-center lg:items-start text-center lg:text-left"
+          >
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="relative group">
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"
+                ></div>
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-14 h-10 rounded-xl relative z-10"
+                />
+              </div>
+              <div>
+                <h1
+                  class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                >
+                  Bashpo
+                </h1>
+                <p class="text-xs text-gray-400">Gaming Platform</p>
+              </div>
+            </div>
+            <p class="text-gray-400 max-w-md">
+              Find everything you love, in one place. Your ultimate gaming
+              destination.
+            </p>
+          </div>
+          <div class="text-center lg:text-right">
+            <h6 class="text-white font-bold mb-4 font-manrope">
+              Find Us on Socials
+            </h6>
+            <div class="flex justify-center lg:justify-end gap-4">
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-youtube text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-facebook text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-instagram text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-x-twitter text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-tiktok text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-discord text-white"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 mt-8 pt-6 text-center">
+          <p class="text-gray-400 text-sm">
+            <i class="fa-regular fa-copyright mr-1"></i>
+            2025 Bashpo. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      async function uploadGameData(event) {
+        event.preventDefault();
+        const game_name = document.getElementById("game_name").value;
+        const dev_username = document.getElementById("dev_username").value;
+        const game_genre = document.getElementById("game_genre").value;
+        const game_description =
+          document.getElementById("game_description").value;
+        const release_year = document.getElementById("release_year").value;
+        const base_price = document.getElementById("base_price").value;
+        const logoFile = document.getElementById("img_logo").files[0];
+        const screenshot1 = document.getElementById("img_ss1").files[0];
+        const screenshot2 = document.getElementById("img_ss2").files[0];
+        const game_file = document.getElementById("game_file").files[0];
+        const yt_embed = document.getElementById("yt_embed").value;
+
+        console.log("Logo file:", logoFile);
+        console.log("Screenshot 1 file:", screenshot1);
+        console.log("Screenshot 2 file:", screenshot2);
+
+        const base64Logo = logoFile ? await fileToBase64(logoFile) : null;
+        const base64Screenshot1 = screenshot1
+          ? await fileToBase64(screenshot1)
+          : null;
+        const base64Screenshot2 = screenshot2
+          ? await fileToBase64(screenshot2)
+          : null;
+        const base64GameFiles = game_file
+          ? await fileToBase64(game_file)
+          : null;
+
+        const formData = {
+          game_name: game_name,
+          dev_username: dev_username,
+          game_genre: game_genre,
+          game_description: game_description,
+          release_year: release_year,
+          base_price: base_price,
+          logo: base64Logo,
+          screenshot1: base64Screenshot1,
+          screenshot2: base64Screenshot2,
+          game_file: base64GameFiles,
+          yt_embed: yt_embed,
+        };
+
+        try {
+          const response = await fetch("/uploadgamedata", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert(result.message);
+            window.location.href = "/";
+          } else {
+            alert(result.error);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An unexpected error occurred. Please try again.");
+        }
+      }
+
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(",")[1]);
+          reader.onerror = (error) => {
+            console.error("File reading error:", error);
+            reject(error);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function showUpdatePasswordModal() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function initializeModal_update_password() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        const closeModalButton = modal.querySelector(
+          '[data-modal-toggle="UpdatePasswordModal"]'
+        );
+
+        closeModalButton.addEventListener("click", function () {
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        });
+
+        modal.addEventListener("click", function (event) {
+          if (event.target === modal) {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+          }
+        });
+      }
+
+      document
+        .getElementById("updatePasswordForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const currentPassword =
+            document.getElementById("current-password").value;
+          const newPassword = document.getElementById("new-password").value;
+          const confirmPassword =
+            document.getElementById("confirm-password").value;
+
+          if (newPassword !== confirmPassword) {
+            document
+              .getElementById("password-error")
+              .classList.remove("hidden");
+            document.getElementById("password-success").classList.add("hidden");
+          } else {
+            fetch("/update_password", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  document
+                    .getElementById("password-success")
+                    .classList.remove("hidden");
+                  document
+                    .getElementById("password-error")
+                    .classList.add("hidden");
+                  setTimeout(() => {
+                    window.location.href = "/logout";
+                  }, 2000);
+                } else {
+                  alert(data.error || "Something went wrong!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          }
+        });
+
+      function handleDropdownChange(selectElement) {
+        const selectedValue = selectElement.value;
+        selectElement.value = "";
+
+        if (selectedValue === "logout") {
+          logout();
+        } else if (selectedValue === "update_pass") {
+          showUpdatePasswordModal();
+        } else if (selectedValue === "view_profile") {
+          window.location.href = "/ViewBuyerProfile/" + "{{ username }}";
+        }
+      }
+
+      function logout() {
+        window.location.href = "/logout";
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        initializeModal_update_password();
+      });
+    </script>
+  </body>
+</html>

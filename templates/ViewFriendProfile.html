@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{friendusername}}'s Profile - Bashpo</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/icon.png') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+            },
+            letterSpacing: { "5pct": "0.05em" },
+            keyframes: {
+              slideIn: {
+                "0%": { transform: "translateY(50px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              pulseGlow: {
+                "0%, 100%": { boxShadow: "0 0 10px rgba(75,0,130,0.5)" },
+                "50%": { boxShadow: "0 0 20px rgba(75,0,130,0.8)" },
+              },
+              fadeOut: {
+                "0%": { opacity: "1", transform: "scale(1)" },
+                "100%": { opacity: "0", transform: "scale(0.95)" },
+              },
+            },
+            animation: {
+              slideIn: "slideIn 0.4s ease-out forwards",
+              pulseGlow: "pulseGlow 2s ease-in-out infinite",
+              fadeOut: "fadeOut 0.3s ease-out forwards",
+            },
+          },
+        },
+      };
+    </script>
+    <script
+      src="https://kit.fontawesome.com/8584240c12.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Istok+Web:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .user-dropdown {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 41, 59, 0.9),
+          rgba(51, 65, 85, 0.9)
+        );
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding-right: 2rem;
+        padding-left: 1rem;
+        text-align: left;
+        line-height: 44px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .user-dropdown:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(100, 116, 139, 0.3);
+      }
+      .user-dropdown option {
+        background: rgba(30, 41, 59, 0.95);
+        color: #fff;
+        padding: 8px 12px;
+      }
+      .user-dropdown option:hover {
+        background: rgba(100, 116, 139, 0.8);
+      }
+      .user-dropdown-arrow {
+        transition: transform 0.3s ease;
+      }
+      .user-dropdown:focus + .user-dropdown-arrow i {
+        transform: rotate(180deg);
+      }
+      .user-dropdown-option i {
+        margin-right: 8px;
+        width: 20px;
+        text-align: center;
+        display: inline-block;
+      }
+      .user-dropdown-option::before {
+        content: attr(data-fallback);
+        display: inline-block;
+        width: 20px;
+        text-align: center;
+        margin-right: 8px;
+      }
+      .fa-solid ~ .user-dropdown-option::before {
+        content: none;
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-inter bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen"
+  >
+    <!-- Header -->
+    <header
+      id="navbar"
+      class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10"
+    >
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <!-- Logo Section -->
+          <div class="flex items-center space-x-4">
+            <div class="relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <a href="/" class="relative block">
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-12 h-10 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105"
+                />
+              </a>
+            </div>
+            <div class="hidden lg:block">
+              <h1
+                class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+              >
+                Bashpo
+              </h1>
+              <p class="text-xs text-gray-400">Gaming Platform</p>
+            </div>
+          </div>
+
+          <!-- Navigation & Actions -->
+          <div class="flex items-center space-x-4">
+            <!-- User Balance Display -->
+            <div
+              class="hidden lg:flex items-center space-x-2 bg-gradient-to-r from-emerald-600/20 to-blue-600/20 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-sm"
+            >
+              <i class="fas fa-wallet text-emerald-400"></i>
+              <span class="text-white font-medium"
+                >${{ balance | round(2) }}</span
+              >
+            </div>
+
+            <!-- User Dropdown -->
+            <div class="relative w-[200px]">
+              <select
+                id="user-name"
+                name="user_name"
+                class="user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-opacity-50 appearance-none cursor-pointer"
+                onchange="handleDropdownChange(this)"
+                required
+              >
+                <option
+                  value=""
+                  disabled
+                  selected
+                  class="bg-slate-800 text-gray-300 user-dropdown-option"
+                  data-fallback="👤"
+                >
+                  <i class="fas fa-user"></i> {{ buyer_username }}
+                </option>
+                <option
+                  value="view_profile"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="👤"
+                >
+                  <i class="fas fa-user"></i> View Profile
+                </option>
+                <option
+                  value="AddMonitorWallet"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="💳"
+                >
+                  <i class="fas fa-wallet"></i> Manage Wallet
+                </option>
+                <option
+                  value="update_pass"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="🔒"
+                >
+                  <i class="fas fa-lock"></i> Update Password
+                </option>
+                <option
+                  value="logout"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="⬅️"
+                >
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-2 flex items-center pointer-events-none user-dropdown-arrow"
+              >
+                <i class="fas fa-chevron-down text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Update Password Modal -->
+    <div
+      id="UpdatePasswordModal"
+      tabindex="-1"
+      aria-hidden="true"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40"
+    >
+      <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
+        <!-- Modal content -->
+        <div
+          class="relative p-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl border border-white/20"
+        >
+          <!-- Modal header -->
+          <div
+            class="flex justify-between items-center pb-4 mb-4 rounded-t border-b border-white/20"
+          >
+            <div class="text-lg text-white md:text-xl">
+              <h3
+                class="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+              >
+                <i class="fas fa-lock mr-2"></i>Update Password
+              </h3>
+            </div>
+            <button
+              type="button"
+              class="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              data-modal-toggle="UpdatePasswordModal"
+            >
+              <i class="fas fa-times w-5 h-5"></i>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
+
+          <!-- Modal body: Update password form -->
+          <form
+            id="updatePasswordForm"
+            action="/update_password"
+            method="POST"
+            class="space-y-4"
+          >
+            <div>
+              <label
+                for="current-password"
+                class="block text-sm font-medium text-gray-300"
+                >Current Password</label
+              >
+              <input
+                type="password"
+                id="current-password"
+                name="current_password"
+                required
+                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+            <div>
+              <label
+                for="new-password"
+                class="block text-sm font-medium text-gray-300"
+                >New Password</label
+              >
+              <input
+                type="password"
+                id="new-password"
+                name="new_password"
+                required
+                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+            <div>
+              <label
+                for="confirm-password"
+                class="block text-sm font-medium text-gray-300"
+                >Confirm New Password</label
+              >
+              <input
+                type="password"
+                id="confirm-password"
+                name="confirm_password"
+                required
+                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+              />
+            </div>
+
+            <!-- Error and Success Messages -->
+            <div id="password-error" class="text-red-500 hidden">
+              Passwords do not match.
+            </div>
+            <div id="password-success" class="text-green-500 hidden">
+              Password updated successfully!
+            </div>
+
+            <div class="mt-4 flex justify-end space-x-2">
+              <button
+                type="button"
+                id="cancel-password"
+                class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition duration-300"
+                data-modal-toggle="UpdatePasswordModal"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                id="submit-password"
+                class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:scale-105 transition duration-300"
+              >
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Hero Section -->
+      <section
+        class="relative min-h-screen bg-[url('{{ url_for('static', filename='img/bg-1.jpg') }}')] bg-cover bg-center"
+      >
+        <div class="absolute inset-0 backdrop-blur-md bg-black/50"></div>
+        <div class="relative z-10 container mx-auto px-4 py-8">
+          <!-- Profile Header -->
+          <div class="text-center mb-8">
+            <div class="relative inline-block mb-6">
+              <div
+                class="w-32 h-32 mx-auto bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 rounded-full flex items-center justify-center shadow-2xl"
+              >
+                <i class="fas fa-user text-6xl text-white"></i>
+              </div>
+              <div
+                class="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg"
+              >
+                <i class="fas fa-user-friends text-white text-sm"></i>
+              </div>
+            </div>
+            <h1
+              class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent mb-4"
+            >
+              {{friendusername}}'s Profile
+            </h1>
+          </div>
+
+          <!-- Profile Content -->
+          <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <!-- Profile Information Card -->
+              <div
+                class="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-2xl"
+              >
+                <div class="flex items-center space-x-3 mb-6">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center"
+                  >
+                    <i class="fas fa-info-circle text-white text-xl"></i>
+                  </div>
+                  <h2 class="text-2xl font-bold text-white">
+                    Profile Information
+                  </h2>
+                </div>
+
+                <div class="space-y-6">
+                  <div
+                    class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10"
+                  >
+                    <div class="flex items-center space-x-3">
+                      <i class="fas fa-user text-blue-400"></i>
+                      <span class="text-gray-300">Username</span>
+                    </div>
+                    <span class="text-white font-semibold"
+                      >{{friendusername}}</span
+                    >
+                  </div>
+
+                  <div
+                    class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10"
+                  >
+                    <div class="flex items-center space-x-3">
+                      <i class="fas fa-envelope text-purple-400"></i>
+                      <span class="text-gray-300">Email</span>
+                    </div>
+                    <span class="text-white font-semibold"
+                      >{{friend_email}}</span
+                    >
+                  </div>
+
+                  <div
+                    class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10"
+                  >
+                    <div class="flex items-center space-x-3">
+                      <i class="fas fa-shield-alt text-green-400"></i>
+                      <span class="text-gray-300">Account Status</span>
+                    </div>
+                    <span
+                      class="font-semibold {% if friend_account_status == 'ACTIVE' %}text-green-400{% elif friend_account_status == 'TERMINATED' %}text-red-400{% else %}text-gray-400{% endif %}"
+                    >
+                      {{friend_account_status}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions Card -->
+              <div
+                class="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-2xl"
+              >
+                <div class="flex items-center space-x-3 mb-6">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl flex items-center justify-center"
+                  >
+                    <i class="fas fa-gamepad text-white text-xl"></i>
+                  </div>
+                  <h2 class="text-2xl font-bold text-white">Gaming Library</h2>
+                </div>
+
+                <div class="text-center">
+                  <div class="mb-6">
+                    <div
+                      class="w-20 h-20 mx-auto bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mb-4"
+                    >
+                      <i class="fas fa-trophy text-white text-2xl"></i>
+                    </div>
+                    <p class="text-gray-300 mb-2">
+                      Discover what games {{friendusername}} owns
+                    </p>
+                    <p class="text-sm text-gray-400">
+                      View your friend's games collection and achievements,
+                      maybe you'd like something that your friend likes as well!
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    id="ViewOwnedGamesButton"
+                    data-modal-target="ViewOwnedGamesModal"
+                    data-modal-toggle="ViewOwnedGamesModal"
+                    class="relative group w-full"
+                  >
+                    <div
+                      class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+                    ></div>
+                    <div
+                      class="relative bg-gradient-to-r from-slate-800 to-slate-700 px-8 py-4 rounded-xl border border-white/20 text-white hover:scale-105 transition-all duration-300"
+                    >
+                      <i class="fas fa-gamepad mr-2"></i>
+                      View {{friendusername}}'s Owned Games
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Owned Games Modal -->
+      <div
+        id="ViewOwnedGamesModal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40"
+      >
+        <div class="relative p-4 w-full max-w-4xl h-full md:h-auto">
+          <!-- Modal content -->
+          <div
+            class="relative p-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl border border-white/20"
+          >
+            <!-- Modal header -->
+            <div
+              class="flex justify-between items-center pb-4 mb-4 rounded-t border-b border-white/20"
+            >
+              <div class="text-lg text-white md:text-xl">
+                <h3
+                  class="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                >
+                  <i class="fas fa-gamepad mr-2"></i>{{friendusername}}'s Game
+                  Library
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                data-modal-toggle="ViewOwnedGamesModal"
+              >
+                <i class="fas fa-times w-5 h-5"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+
+            <!-- Search bar -->
+            <div class="mb-4">
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                >
+                  <i class="fas fa-search text-gray-400"></i>
+                </div>
+                <input
+                  type="text"
+                  id="searchInput_games"
+                  class="block w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+                  placeholder="Search games..."
+                />
+              </div>
+            </div>
+
+            <!-- Modal body -->
+            <div class="max-h-96 overflow-y-auto">
+              {% if friends_games %}
+              <ul class="space-y-3">
+                {% for o_game in friends_games %}
+                <li
+                  class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+                >
+                  <div class="flex items-center space-x-4">
+                    <div
+                      class="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center flex-shrink-0"
+                    >
+                      <i class="fas fa-gamepad text-2xl text-gray-400"></i>
+                    </div>
+                    <div>
+                      <span class="text-white font-medium owned_games"
+                        >{{o_game[0]}}</span
+                      >
+                      <p class="text-gray-400 text-sm">Owned Game</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span
+                      class="px-3 py-1 bg-green-600/20 text-green-400 rounded-full text-sm font-medium"
+                    >
+                      <i class="fas fa-check mr-1"></i>Owned
+                    </span>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <div class="text-center py-8">
+                <i class="fas fa-gamepad text-6xl text-gray-600 mb-4"></i>
+                <p class="text-gray-400 text-lg">No games found</p>
+                <p class="text-gray-500 text-sm">
+                  {{friendusername}} hasn't purchased any games yet!
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      id="footer"
+      class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10"
+    >
+      <div class="container mx-auto px-4 py-12">
+        <div
+          class="flex flex-col lg:flex-row justify-between items-center gap-8"
+        >
+          <div
+            class="flex flex-col items-center lg:items-start text-center lg:text-left"
+          >
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="relative group">
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"
+                ></div>
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-14 h-10 rounded-xl relative z-10"
+                />
+              </div>
+              <div>
+                <h1
+                  class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                >
+                  Bashpo
+                </h1>
+                <p class="text-xs text-gray-400">Gaming Platform</p>
+              </div>
+            </div>
+            <p class="text-gray-400 max-w-md">
+              Find everything you love, in one place. Your ultimate gaming
+              destination.
+            </p>
+          </div>
+          <div class="text-center lg:text-right">
+            <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
+            <div class="flex justify-center lg:justify-end gap-4">
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-youtube text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-facebook text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-instagram text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-x-twitter text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-tiktok text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-discord text-white"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 mt-8 pt-6 text-center">
+          <p class="text-gray-400 text-sm">
+            <i class="fa-regular fa-copyright mr-1"></i>
+            2025 Bashpo. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Function to handle the "Update Password" modal
+      function showUpdatePasswordModal() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      // Close the modal and reset the form if clicked outside of it
+      function initializeModal_update_password() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        const closeModalButton = modal.querySelector(
+          '[data-modal-toggle="UpdatePasswordModal"]'
+        );
+        const cancelButton = document.getElementById("cancel-password");
+
+        closeModalButton.addEventListener("click", function () {
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        });
+
+        cancelButton.addEventListener("click", function () {
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        });
+
+        modal.addEventListener("click", function (event) {
+          if (event.target === modal) {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+          }
+        });
+      }
+
+      // Handle form submission for password update
+      document
+        .getElementById("updatePasswordForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const currentPassword =
+            document.getElementById("current-password").value;
+          const newPassword = document.getElementById("new-password").value;
+          const confirmPassword =
+            document.getElementById("confirm-password").value;
+
+          // Check if new passwords match
+          if (newPassword !== confirmPassword) {
+            document
+              .getElementById("password-error")
+              .classList.remove("hidden");
+            document.getElementById("password-success").classList.add("hidden");
+          } else {
+            // Send the password update request
+            fetch("/update_password", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  document
+                    .getElementById("password-success")
+                    .classList.remove("hidden");
+                  document
+                    .getElementById("password-error")
+                    .classList.add("hidden");
+                  setTimeout(() => {
+                    window.location.href = "/logout";
+                  }, 2000);
+                } else {
+                  alert(data.error || "Something went wrong!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          }
+        });
+
+      // Search functionality for owned games
+      function initializeSearch_ownedgames() {
+        const searchInput = document.getElementById("searchInput_games");
+        const userList = document.querySelectorAll(
+          "#ViewOwnedGamesModal ul li"
+        );
+
+        if (searchInput && userList.length > 0) {
+          searchInput.addEventListener("input", function () {
+            const filter = searchInput.value.toLowerCase();
+
+            userList.forEach((userItem) => {
+              const gameNameElement = userItem.querySelector(".owned_games");
+              if (gameNameElement) {
+                const gameName = gameNameElement.textContent.toLowerCase();
+
+                if (gameName.includes(filter)) {
+                  userItem.style.display = "";
+                } else {
+                  userItem.style.display = "none";
+                }
+              }
+            });
+          });
+        }
+      }
+
+      // Initialize modal functionality for owned games
+      function initializeModal_OwnedGames() {
+        const openModalButton = document.getElementById("ViewOwnedGamesButton");
+        const modal = document.getElementById("ViewOwnedGamesModal");
+        const closeModalButton = modal.querySelector(
+          '[data-modal-toggle="ViewOwnedGamesModal"]'
+        );
+
+        if (openModalButton && modal && closeModalButton) {
+          openModalButton.addEventListener("click", function () {
+            modal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+          });
+
+          closeModalButton.addEventListener("click", function () {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              modal.classList.add("hidden");
+              document.body.style.overflow = "";
+            }
+          });
+        }
+      }
+
+      // Function to handle dropdown changes
+      function handleDropdownChange(selectElement) {
+        const selectedValue = selectElement.value;
+        selectElement.value = "";
+
+        if (selectedValue === "logout") {
+          window.location.href = "/logout";
+        } else if (selectedValue === "AddMonitorWallet") {
+          window.location.href = "/AddMonitorWallet";
+        } else if (selectedValue === "update_pass") {
+          showUpdatePasswordModal();
+        } else if (selectedValue === "view_profile") {
+          window.location.href = "/ViewMyProfile";
+        }
+      }
+
+      // Initialize everything when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeModal_update_password();
+        initializeSearch_ownedgames();
+        initializeModal_OwnedGames();
+      });
+
+      // Dynamic navbar and footer color based on time
+      function updateNavbarColor() {
+        const navbar = document.getElementById("navbar");
+        const footer = document.getElementById("footer");
+        const currentHour = new Date().getHours();
+
+        if (currentHour >= 6 && currentHour < 18) {
+          navbar.classList.remove("bg-black/20");
+          navbar.classList.add("bg-base-100");
+          footer.classList.remove("bg-slate-900/90");
+          footer.classList.add("bg-neutral");
+        } else {
+          navbar.classList.remove("bg-base-100");
+          navbar.classList.add("bg-black/20");
+          footer.classList.remove("bg-neutral");
+          footer.classList.add("bg-slate-900/90");
+        }
+      }
+      updateNavbarColor();
+    </script>
+  </body>
+</html>

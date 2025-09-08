@@ -1,0 +1,5 @@
+Flask==3.1.0
+Flask_APScheduler==1.13.1
+sslcommerz==0.1
+sslcommerz-lib==1.0
+gunicorn

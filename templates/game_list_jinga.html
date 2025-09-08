@@ -1,0 +1,67 @@
+<div class="game-grid max-w-7xl mx-auto">
+  {% if game_list_sort %} {% for games in game_list_sort %}
+  <a
+    href="/ViewGamePage/{{games[0] | urlencode}}"
+    class="card relative group animate-fadeIn"
+  >
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+    ></div>
+    <div
+      class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/20 p-4 h-full flex flex-col"
+    >
+      <img
+        src="{{ url_for('static', filename=games[3]) }}"
+        alt="{{games[0]}} Logo"
+        class="w-full h-48 object-cover rounded-xl mb-4 video-trigger"
+        data-yt-src="https://www.youtube.com/embed/{{games[7]}}?autoplay=1&mute=1"
+        loading="lazy"
+      />
+      <div class="flex flex-col flex-grow">
+        <h3 class="text-lg font-bold text-white">{{games[0]}}</h3>
+        <p class="text-sm text-blue-300">{{games[1]}}</p>
+        <div class="mt-auto">
+          {% if games[5] == '1' %}
+          <div class="flex items-center justify-between">
+            <span class="bg-blue-800 text-white text-xs px-3 py-1 rounded-lg"
+              >{{games[6]}}% OFF</span
+            >
+            <div class="flex items-center gap-2">
+              <span class="text-gray-400 line-through text-sm"
+                >${{games[4]}}</span
+              >
+              <span class="text-blue-400 font-bold">${{games[2]}}</span>
+            </div>
+          </div>
+          {% else %}
+          <p class="text-blue-400 font-bold text-right">${{games[2]}}</p>
+          {% endif %}
+          <div class="mt-4 flex justify-between gap-2">
+            <button
+              type="button"
+              class="flex-1 text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+              data-game_name_cart="{{games[0]}}"
+              data-game_sale_status="{{games[5]}}"
+              onclick="AddtoCart(event, this)"
+            >
+              Add to Cart
+            </button>
+            <button
+              type="button"
+              class="flex-1 text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+              data-game_name_wishlist="{{games[0]}}"
+              onclick="AddToWishlist(event, this)"
+            >
+              Wishlist
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  {% endfor %} {% else %}
+  <div class="text-center text-gray-400 col-span-full py-8">
+    No games found for this filter.
+  </div>
+  {% endif %}
+</div>

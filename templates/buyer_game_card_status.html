@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Status</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon.png') }}">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  {% if response == True or response == False %}
+  <script>
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 5000);
+  </script>
+{% elif response == "walletTrue" or response == "walletFalse" %}
+  <script>
+    setTimeout(() => {
+      window.location.href = "/AddMonitorWallet";
+    }, 5000);
+  </script>
+  {% elif response == "devTrue" or response == "devFalse" %}
+  <script>
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 5000);
+  </script>
+{% endif %}
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body class="bg-[url('{{ url_for('static', filename='img/bg-1.jpg') }}')] bg-cover bg-center min-h-screen flex items-center justify-center p-4">
+  <div class="bg-[rgba(30,29,55,0.9)] text-white max-w-xl w-full p-8 rounded-xl shadow-lg text-center">
+    {% if response==True %}
+      <h1 class="text-3xl font-bold text-green-400 mb-4">Payment Successful!</h1>
+      <p class="text-lg mb-2">Your payment for the game(s) has been received.</p>
+    {% elif response==False %}
+      <h1 class="text-3xl font-bold text-red-500 mb-4">Payment Failed</h1>
+      <p class="text-lg mb-2">Unfortunately, the payment did not go through or was cancelled.</p>
+      {% elif response=="walletTrue" %}
+      <h1 class="text-3xl font-bold text-red-500 mb-4">Adding Funds to Wallet Successful!</h1>
+      <p class="text-lg mb-2">Wallet successfully added via credit card.</p>
+      {% elif response=="walletFalse" %}
+      <h1 class="text-3xl font-bold text-red-500 mb-4">Adding Funds to Wallet Failed</h1>
+      <p class="text-lg mb-2">Wallet failed to be added via credit card due to failure or cancellation.</p>
+      {% elif response=="devFalse" %}
+      <h1 class="text-3xl font-bold text-red-500 mb-4">Publishing Fee Payment Failed!</h1>
+      <p class="text-lg mb-2">Publishing fee payment via credit card was unsuccessful due to failure or cancellation.</p>
+      {% elif response=="devTrue" %}
+      <h1 class="text-3xl font-bold text-red-500 mb-4">Publishing Fee Payment Successful!</h1>
+      <p class="text-lg mb-2">Publishing fee paymemnt received. Thank you for choosing Bashpo.</p>
+    {% endif %}
+    <p class="text-sm mt-4 text-gray-300">You will be redirected in 5 seconds...</p>
+    <div class="mt-6">
+      <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 px-6 py-2 text-white font-semibold rounded-lg transition">Return Now</a>
+    </div>
+  </div>
+</body>
+</html>

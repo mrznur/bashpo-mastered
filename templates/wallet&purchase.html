@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wallet Balance and Purchase History</title>
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/icon.png') }}"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+              manrope: ["Manrope", "sans-serif"],
+            },
+            keyframes: {
+              slideIn: {
+                "0%": { transform: "translateY(50px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+            },
+            animation: {
+              slideIn: "slideIn 0.4s ease-out forwards",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- DaisyUI -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <!-- FontAwesome -->
+    <script
+      src="https://kit.fontawesome.com/8584240c12.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Styles -->
+    <style>
+      .user-dropdown {
+        background: linear-gradient(
+          135deg,
+          rgba(51, 65, 85, 0.9),
+          rgba(30, 41, 59, 0.9)
+        );
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding-right: 2rem;
+        text-align: center;
+        line-height: 44px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .user-dropdown:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+      }
+
+      .user-dropdown option {
+        background: rgba(30, 41, 59, 0.95);
+        color: #fff;
+        padding: 8px 12px;
+      }
+
+      .user-dropdown option:hover {
+        background: rgba(147, 51, 234, 0.8);
+      }
+
+      .user-dropdown-arrow {
+        transition: transform 0.3s ease;
+      }
+
+      .user-dropdown:focus + .user-dropdown-arrow i {
+        transform: rotate(180deg);
+      }
+
+      footer {
+        position: relative;
+        z-index: 1;
+      }
+
+      .action-button {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
+      }
+
+      .modal-content {
+        animation: slideIn 0.3s ease-out;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #10b981, #6ee7b7);
+        border-radius: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #059669, #34d399);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-inter bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 min-h-screen"
+  >
+    <!-- Header -->
+    <header
+      id="navbar"
+      class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-emerald-500/20"
+    >
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+              <a href="/" class="relative block">
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-12 h-8 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105"
+                />
+              </a>
+            </div>
+            <div class="hidden lg:block">
+              <h1
+                class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent"
+              >
+                Bashpo Wallet
+              </h1>
+              <p class="text-xs text-gray-400">Manage Your Funds</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <!-- Cart & Wishlist -->
+            <div class="flex items-center space-x-2" data-cart-status>
+              {% if cart_status=='1' %}
+              <a href="/ViewCart" class="relative group">
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
+                >
+                  <i class="fas fa-cart-shopping text-green-400"></i>
+                  <span class="font-medium">Cart ({{cart_value}})</span>
+                </div>
+              </a>
+              {% else %}
+              <div
+                class="flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400 relative group"
+              >
+                <i class="fas fa-cart-shopping"></i>
+                <span class="font-medium">Cart is Empty</span>
+                <div
+                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                >
+                  Add games to your cart to get started!
+                </div>
+              </div>
+              {% endif %}
+              <button
+                type="button"
+                id="ViewWishlistedGamesButton"
+                data-modal-target="ViewWishlistedGamesModal"
+                class="relative group"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
+                >
+                  <i class="fas fa-heart text-pink-500"></i>
+                  <span id="wishlist-count" class="font-medium"
+                    >Wishlist ({{wishlist_value}})</span
+                  >
+                </div>
+              </button>
+            </div>
+
+            <div
+              class="flex items-center space-x-2 bg-gradient-to-r from-emerald-600/20 to-teal-600/20 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-sm"
+            >
+              <i class="fas fa-wallet text-emerald-400"></i>
+              <span class="text-white font-medium"
+                >${{ balance | round(2) }}</span
+              >
+            </div>
+            <a href="/buyer_dashboard" class="relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+              ></div>
+            </a>
+            <!-- User Dropdown -->
+            <div class="relative w-[200px]">
+              <select
+                id="user-name"
+                name="user_name"
+                class="ml-0 user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 appearance-none cursor-pointer text-left pl-3"
+                onchange="handleDropdownChange(this)"
+                required
+              >
+                <option
+                  value=""
+                  disabled
+                  selected
+                  class="bg-slate-800 text-gray-300 user-dropdown-option"
+                  data-fallback="👤"
+                >
+                  <i class="fas fa-user"></i> {{ buyer_username }}
+                </option>
+                <option
+                  value="view_profile"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="👤"
+                >
+                  <i class="fas fa-user"></i> View Profile
+                </option>
+                <option
+                  value="update_pass"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="🔒"
+                >
+                  <i class="fas fa-lock"></i> Update Password
+                </option>
+                <option
+                  value="logout"
+                  class="bg-slate-800 text-white user-dropdown-option"
+                  data-fallback="⬅️"
+                >
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-2 flex items-center pointer-events-none user-dropdown-arrow"
+              >
+                <i class="fas fa-chevron-down text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Update Password Modal -->
+    <div
+      id="UpdatePasswordModal"
+      tabindex="-1"
+      aria-hidden="true"
+      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+    >
+      <div
+        class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+      >
+        <div
+          class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+        >
+          <div
+            class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+          >
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-lock text-emerald-400 text-xl sm:text-2xl"></i>
+              <h3
+                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+              >
+                Update Password
+              </h3>
+            </div>
+            <button
+              type="button"
+              class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+              data-modal-hide="UpdatePasswordModal"
+            >
+              <i class="fas fa-times w-5 h-5"></i>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
+          <form
+            id="updatePasswordForm"
+            action="/update_password"
+            method="POST"
+            class="space-y-4"
+          >
+            <div>
+              <label
+                for="current-password"
+                class="block text-sm font-semibold text-gray-100"
+                >Current Password</label
+              >
+              <input
+                type="password"
+                id="current-password"
+                name="current_password"
+                required
+                class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                placeholder="Enter current password"
+              />
+            </div>
+            <div>
+              <label
+                for="new-password"
+                class="block text-sm font-semibold text-gray-100"
+                >New Password</label
+              >
+              <input
+                type="password"
+                id="new-password"
+                name="new_password"
+                required
+                class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                placeholder="Enter new password"
+              />
+            </div>
+            <div>
+              <label
+                for="confirm-password"
+                class="block text-sm font-semibold text-gray-100"
+                >Confirm New Password</label
+              >
+              <input
+                type="password"
+                id="confirm-password"
+                name="confirm_password"
+                required
+                class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                placeholder="Confirm new password"
+              />
+            </div>
+            <div
+              id="password-error"
+              class="text-red-400 text-sm font-medium hidden"
+            >
+              Passwords do not match.
+            </div>
+            <div
+              id="password-success"
+              class="text-green-400 text-sm font-medium hidden"
+            >
+              Password updated successfully!
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+              <button
+                type="button"
+                class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                data-modal-hide="UpdatePasswordModal"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                id="submit-password"
+                class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+              >
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Section -->
+    <section class="relative z-10">
+      <div
+        class="mx-auto justify-items-center relative bg-[url('{{ url_for('static', filename='img/bg-1.jpg') }}')] bg-cover bg-center w-full sm:h-[auto] lg:h-[800px]"
+      >
+        <h1
+          class="font-bold text-3xl lg:text-5xl font-manrope tracking-widest text-center text-white bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text"
+        >
+          Wallet Balance and Purchase History
+        </h1>
+        <div
+          class="flex flex-col my-5 mx-3 lg:mx-auto h-[auto] lg:w-[1200px] bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-5 border border-white/20"
+        >
+          <div>
+            <h1
+              class="my-5 text-center text-xl lg:text-4xl font-bold text-white"
+            >
+              Current Balance ${{ balance | round(2) }}
+            </h1>
+          </div>
+          <div
+            class="my-5 mx-auto lg:flex lg:flex-col justify-center items-center gap-5"
+          >
+            <div class="flex gap-5">
+              <button
+                type="button"
+                id="open-credit-card-modal"
+                class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                >
+                  Add to Wallet via Credit Card
+                </div>
+              </button>
+              <button
+                type="button"
+                id="open-gift-card-modal"
+                class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                >
+                  Add to Wallet via Gift Card
+                </div>
+              </button>
+            </div>
+            <div class="flex gap-5 mt-5">
+              <button
+                type="button"
+                id="open-activate-product-modal"
+                class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                >
+                  Activate a Product
+                </div>
+              </button>
+              <button
+                type="button"
+                id="open-purchase-history-modal"
+                class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                ></div>
+                <div
+                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                >
+                  View Purchase History
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modals -->
+      <div
+        id="creditCardModal"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+          >
+            <div
+              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+            >
+              <div class="flex items-center space-x-3">
+                <i
+                  class="fas fa-credit-card text-emerald-400 text-xl sm:text-2xl"
+                ></i>
+                <h3
+                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                >
+                  Add to Wallet via Credit Card
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                data-modal-hide="creditCardModal"
+              >
+                <i class="fas fa-times w-5 h-5"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <form
+              id="WalletCreditCardForm"
+              action="/WallettoCreditCard"
+              method="POST"
+              class="space-y-4"
+            >
+              <div>
+                <label
+                  for="wallet"
+                  class="block text-sm font-semibold text-gray-100"
+                  >Enter Amount</label
+                >
+                <input
+                  type="number"
+                  id="wallet"
+                  name="wallet"
+                  min="1"
+                  step="0.01"
+                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  placeholder="Enter amount in $$"
+                  required
+                />
+              </div>
+              <div class="mt-6 flex justify-end space-x-4">
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  data-modal-hide="creditCardModal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="giftCardModal"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+          >
+            <div
+              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+            >
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-gift text-emerald-400 text-xl sm:text-2xl"></i>
+                <h3
+                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                >
+                  Add to Wallet via Gift Card
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                data-modal-hide="giftCardModal"
+              >
+                <i class="fas fa-times w-5 h-5"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <form
+              id="RedeemGiftCardForm"
+              action="/RedeemGiftCard"
+              method="POST"
+              class="space-y-4"
+            >
+              <div>
+                <label
+                  for="gift-code"
+                  class="block text-sm font-semibold text-gray-100"
+                  >Gift Card Code</label
+                >
+                <input
+                  type="text"
+                  id="gift-code"
+                  name="gift_code"
+                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  placeholder="Enter gift card code"
+                  required
+                />
+              </div>
+              <div class="mt-6 flex justify-end space-x-4">
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  data-modal-hide="giftCardModal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                  id="submitWalletCode"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="activateProductModal"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+          >
+            <div
+              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+            >
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-key text-emerald-400 text-xl sm:text-2xl"></i>
+                <h3
+                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                >
+                  Activate a Product
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                data-modal-hide="activateProductModal"
+              >
+                <i class="fas fa-times w-5 h-5"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <form
+              id="ActivateProductKeyForm"
+              action="/ActivateProductKey"
+              method="POST"
+              class="space-y-4"
+            >
+              <div>
+                <label
+                  for="product-key"
+                  class="block text-sm font-semibold text-gray-100"
+                  >Product Key</label
+                >
+                <input
+                  type="text"
+                  id="product-key"
+                  name="product_key"
+                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  placeholder="Enter activation key"
+                  required
+                />
+              </div>
+              <div class="mt-6 flex justify-end space-x-4">
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  data-modal-hide="activateProductModal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                  id="submitProductKey"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="updateCreditCardModal"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+          >
+            <div
+              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+            >
+              <div class="flex items-center space-x-3">
+                <i
+                  class="fas fa-credit-card text-emerald-400 text-xl sm:text-2xl"
+                ></i>
+                <h3
+                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                >
+                  Update Credit Card Info
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                data-modal-hide="updateCreditCardModal"
+              >
+                <i class="fas fa-times w-5 h-5"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <form
+              id="UpdateCreditCardForm"
+              action="/UpdateCreditCard"
+              method="POST"
+              class="space-y-4"
+            >
+              <div>
+                <label
+                  for="new-card-number"
+                  class="block text-sm font-semibold text-gray-100"
+                  >New Card Number</label
+                >
+                <input
+                  type="text"
+                  id="new-card-number"
+                  name="card_number"
+                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  placeholder="1234 5678 9012 3456"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="new-expiry-date"
+                  class="block text-sm font-semibold text-gray-100"
+                  >New Expiry Date</label
+                >
+                <input
+                  type="text"
+                  id="new-expiry-date"
+                  name="expiry_date"
+                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  placeholder="MM/YY"
+                  required
+                />
+              </div>
+              <div
+                id="card-success"
+                class="text-green-400 text-sm font-medium hidden"
+              >
+                Card info updated successfully!
+              </div>
+              <div class="mt-6 flex justify-end space-x-4">
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  data-modal-hide="updateCreditCardModal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="purchaseHistoryModal"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+          >
+            <div
+              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+            >
+              <div class="flex items-center space-x-3">
+                <i
+                  class="fas fa-history text-emerald-400 text-xl sm:text-2xl"
+                ></i>
+                <h3
+                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                >
+                  Purchase History
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                data-modal-hide="purchaseHistoryModal"
+              >
+                <i class="fas fa-times w-5 h-5"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <div class="mt-4 max-h-80 overflow-y-auto pr-3 custom-scrollbar">
+              <div
+                class="flex justify-between font-semibold mb-4 text-gray-100"
+              >
+                <div class="w-1/3 text-left">Game Name</div>
+                <div class="w-1/3 text-left">Amount Paid</div>
+                <div class="w-1/3 text-left">Action</div>
+              </div>
+              <ul id="buyerList" class="list-none space-y-3">
+                {% for game in game_info %}
+                <li
+                  class="flex justify-between items-center p-4 bg-gradient-to-r from-emerald-800/50 to-emerald-900/50 rounded-xl border border-emerald-500/30 hover:border-emerald-400/50 transition-all duration-300"
+                >
+                  <span class="w-1/3 text-gray-100 font-medium"
+                    >{{ game[0] }}</span
+                  >
+                  <span class="w-1/3 text-gray-100">
+                    {% if game[2]=='Digital' %}
+                    <span>{{ game[1] }} $</span>
+                    {% elif game[2]=='Product_key' %}
+                    <span>Product Key</span>
+                    {% endif %}
+                  </span>
+                  <div class="w-1/3 text-left">
+                    {% if game[2]=='Digital' %}
+                    <button
+                      type="button"
+                      class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      data-game_name_refund="{{ game[0] }}"
+                      data-price="{{game[1]}}"
+                      onclick="RefundGame(this)"
+                    >
+                      Refund Game
+                    </button>
+                    {% elif game[2]=='Product_key' %}
+                    <button
+                      type="button"
+                      class="text-white bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      data-game_name_refund="{{ game[0] }}"
+                    >
+                      Refund Unavailable
+                    </button>
+                    {% endif %}
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="mt-6 flex justify-end">
+              <button
+                type="button"
+                class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                data-modal-hide="purchaseHistoryModal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wishlist Modal -->
+      <div
+        id="ViewWishlistedGamesModal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div
+          class="relative p-6 sm:p-8 w-full max-w-6xl h-auto animate-slideIn"
+        >
+          <div
+            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-8 sm:p-10 backdrop-blur-2xl"
+          >
+            <!-- Header -->
+            <div
+              class="flex justify-between items-center pb-6 mb-6 border-b-2 border-emerald-500/30"
+            >
+              <div class="flex items-center space-x-4">
+                <i class="fas fa-heart text-pink-500 text-2xl sm:text-3xl"></i>
+                <h3
+                  class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                >
+                  {{buyer_username}}'s Wishlist
+                </h3>
+              </div>
+              <button
+                type="button"
+                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-3 transition-all duration-300"
+                data-modal-hide="ViewWishlistedGamesModal"
+              >
+                <i class="fas fa-times w-6 h-6"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+
+            <!-- Search -->
+            <div class="mb-6">
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none"
+                >
+                  <i class="fas fa-search text-emerald-400"></i>
+                </div>
+                <input
+                  type="text"
+                  id="searchInput_wishlistedgames"
+                  placeholder="Search games..."
+                  class="block w-full pl-14 pr-5 py-3 bg-emerald-900/50 border border-emerald-500/50 rounded-2xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            <!-- Wishlist Content -->
+            <div
+              id="wishlist-container"
+              class="mt-6 max-h-[36rem] overflow-y-auto pr-4 custom-scrollbar"
+            >
+              {% if wishlist_games %}
+              <ul id="wishlistList" class="list-none space-y-4">
+                {% for game in wishlist_games %}
+                <li
+                  class="flex justify-between items-center p-6 bg-gradient-to-r from-emerald-900/50 to-emerald-950/50 rounded-2xl border border-emerald-500/50 hover:border-emerald-400/60 transition-all duration-300"
+                >
+                  <!-- Game Info -->
+                  <div class="flex items-center space-x-5">
+                    <div
+                      class="w-20 h-20 rounded-xl bg-gradient-to-br from-emerald-950 to-emerald-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-sm text-center p-2"
+                    >
+                      {{game[0]}}
+                    </div>
+                    <div>
+                      <span class="text-white font-semibold text-lg"
+                        >{{ game[0] }}</span
+                      >
+                      <p class="text-emerald-300 text-sm">{{ game[1] }}</p>
+                      {% if game[4]=='1' %}
+                      <div class="flex items-center space-x-3 mt-1">
+                        <span
+                          class="bg-emerald-800 text-white text-xs px-3 py-1 rounded-lg"
+                        >
+                          {{ game[5] }}% OFF
+                        </span>
+                        <span class="text-emerald-400 font-bold text-lg"
+                          >${{ game[2] }}</span
+                        >
+                      </div>
+                      {% else %}
+                      <p class="text-emerald-400 font-bold text-lg mt-1">
+                        ${{ game[2] }}
+                      </p>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex space-x-3">
+                    <button
+                      type="button"
+                      class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      data-username="{{buyer_username}}"
+                      data-game_name_wishlist="{{ game[0] }}"
+                      onclick="RemoveFromWishList(this)"
+                    >
+                      Remove
+                    </button>
+                    <button
+                      type="button"
+                      class="text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      data-username="{{buyer_username}}"
+                      data-game_name_wishlist="{{ game[0] }}"
+                      data-was_it_on_sale="{{ game[4] }}"
+                      onclick="AddtoCart(this)"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <!-- Empty Wishlist -->
+              <div
+                class="text-center py-12 bg-gradient-to-r from-emerald-950 to-emerald-900 rounded-2xl border border-emerald-500/50"
+              >
+                <i class="fas fa-heart text-7xl text-pink-500 mb-5"></i>
+                <p class="text-emerald-200 text-xl">Your wishlist is empty</p>
+                <p class="text-emerald-400 text-md">
+                  Add some games to your wishlist to see them here!
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generic Popup -->
+      <div
+        id="popup-modal"
+        tabindex="-1"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      >
+        <div class="relative p-4 sm:p-6 w-full max-w-md h-auto animate-slideIn">
+          <div
+            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+          >
+            <button
+              type="button"
+              class="absolute top-4 end-4 text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+              data-modal-hide="popup-modal"
+            >
+              <i class="fas fa-times w-5 h-5"></i>
+              <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 text-center">
+              <i
+                class="fas fa-exclamation-circle mx-auto mb-4 text-emerald-400 text-4xl sm:text-5xl"
+              ></i>
+              <h3 class="mb-4 text-lg sm:text-xl font-bold text-gray-100">
+                Modal Title
+              </h3>
+              <div class="modal-body text-gray-200 text-sm sm:text-base"></div>
+              <button
+                data-modal-hide="popup-modal"
+                type="button"
+                class="mt-4 text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      id="footer"
+      class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10"
+    >
+      <div class="container mx-auto px-4 py-12">
+        <div
+          class="flex flex-col lg:flex-row justify-between items-center gap-8"
+        >
+          <div
+            class="flex flex-col items-center lg:items-start text-center lg:text-left"
+          >
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="relative group">
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"
+                ></div>
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-14 h-10 rounded-xl relative z-10"
+                />
+              </div>
+              <div>
+                <h1
+                  class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                >
+                  Bashpo
+                </h1>
+                <p class="text-xs text-gray-400">Gaming Platform</p>
+              </div>
+            </div>
+            <p class="text-gray-400 max-w-md">
+              Find everything you love, in one place. Your ultimate gaming
+              destination.
+            </p>
+          </div>
+          <div class="text-center lg:text-right">
+            <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
+            <div class="flex justify-center lg:justify-end gap-4">
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-youtube text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-facebook text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-instagram text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-x-twitter text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-tiktok text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-discord text-white"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 mt-8 pt-6 text-center">
+          <p class="text-gray-400 text-sm">
+            <i class="fa-regular fa-copyright mr-1"></i>
+            2025 Bashpo. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      function showUpdatePasswordModal() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        if (modal) {
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          document.body.style.overflow = "hidden";
+        }
+      }
+
+      function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          document.body.style.overflow = "hidden";
+          const closeOnOutsideClick = (event) => {
+            if (event.target === modal) {
+              closeModal(modalId);
+            }
+          };
+          modal.addEventListener("click", closeOnOutsideClick);
+          modal._closeOnOutsideClick = closeOnOutsideClick;
+        }
+      }
+
+      function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+          if (modal._closeOnOutsideClick) {
+            modal.removeEventListener("click", modal._closeOnOutsideClick);
+            delete modal._closeOnOutsideClick;
+          }
+        }
+      }
+
+      function updateNavbarColor() {
+        const navbar = document.getElementById("navbar");
+        const footer = document.getElementById("footer");
+        if (navbar && footer) {
+          const currentHour = new Date().getHours();
+          if (currentHour >= 6 && currentHour < 18) {
+            navbar.classList.remove("bg-[#010321]");
+            navbar.classList.add("bg-black/20");
+            footer.classList.remove("bg-[#010321]");
+            footer.classList.add("bg-slate-900/90");
+          } else {
+            navbar.classList.remove("bg-black/20");
+            navbar.classList.add("bg-[#010321]");
+            footer.classList.remove("bg-slate-900/90");
+            footer.classList.add("bg-[#010321]");
+          }
+        }
+      }
+
+      function updateWishlistCount() {
+        fetch("/get_wishlist", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const wishlistCount = document.getElementById("wishlist-count");
+            if (wishlistCount && data.wishlist_games) {
+              wishlistCount.textContent = `Wishlist (${data.wishlist_games.length})`;
+            }
+          })
+          .catch((err) => console.error("Error updating wishlist count:", err));
+      }
+
+      function updateCartCount() {
+        fetch("/get_cart_count", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success && data.cart_count >= 0) {
+              const cartElement = document.querySelector(
+                ".flex.items-center.space-x-2[data-cart-status]"
+              );
+              const cartLink = document.querySelector('a[href="/ViewCart"]');
+              const cartSpan = document.querySelector(
+                'a[href="/ViewCart"] .font-medium'
+              );
+              const emptyCartDiv = document.querySelector(
+                ".flex.items-center.space-x-2.text-gray-400"
+              );
+
+              if (data.cart_count > 0) {
+                // Update to show cart with items
+                if (emptyCartDiv) emptyCartDiv.remove();
+                if (!cartLink) {
+                  // Create cart link if it doesn't exist
+                  const newCartLink = document.createElement("a");
+                  newCartLink.href = "/ViewCart";
+                  newCartLink.className = "relative group";
+                  newCartLink.innerHTML = `
+                    <div class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                    <div class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300" data-cart-status>
+                      <i class="fas fa-cart-shopping text-green-400"></i>
+                      <span class="font-medium">Cart (${data.cart_count})</span>
+                    </div>
+                  `;
+                  document
+                    .querySelector(".flex.items-center.space-x-2")
+                    .parentElement.insertBefore(
+                      newCartLink,
+                      document.querySelector(".flex.items-center.space-x-2")
+                    );
+                } else {
+                  cartSpan.textContent = `Cart (${data.cart_count})`;
+                }
+              } else {
+                // Show empty cart if count is 0
+                if (cartLink) cartLink.remove();
+                if (!emptyCartDiv) {
+                  const newEmptyCartDiv = document.createElement("div");
+                  newEmptyCartDiv.className =
+                    "flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400 relative group";
+                  newEmptyCartDiv.innerHTML = `
+                    <i class="fas fa-cart-shopping"></i>
+                    <span class="font-medium">Cart is Empty</span>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      Add games to your cart to get started!
+                    </div>
+                  `;
+                  document
+                    .querySelector(".flex.items-center.space-x-2")
+                    .parentElement.insertBefore(
+                      newEmptyCartDiv,
+                      document.querySelector(".flex.items-center.space-x-2")
+                    );
+                }
+              }
+            }
+          })
+          .catch((err) => console.error("Error updating cart count:", err));
+      }
+
+      function initializeSearch_wishlistedgames() {
+        const searchInput = document.getElementById(
+          "searchInput_wishlistedgames"
+        );
+        const userList = document.querySelectorAll(
+          "#ViewWishlistedGamesModal ul li"
+        );
+        if (searchInput && userList.length) {
+          searchInput.addEventListener("input", function () {
+            const filter = searchInput.value.toLowerCase();
+            userList.forEach((userItem) => {
+              const gameName =
+                userItem.querySelector("span")?.textContent.toLowerCase() || "";
+              if (gameName.includes(filter)) {
+                userItem.style.display = "";
+              } else {
+                userItem.style.display = "none";
+              }
+            });
+          });
+        } else {
+          console.warn("Search input or wishlist items not found");
+        }
+      }
+
+      function RemoveFromWishList(button) {
+        const game_name = button.getAttribute("data-game_name_wishlist");
+        const listItem = button.closest("li");
+        if (!game_name || !listItem) {
+          console.error("Missing game name or list item");
+          return;
+        }
+        fetch("/RemoveFromWishlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ game_name: game_name }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const modal = document.getElementById("popup-modal");
+            const modalTitle = document.querySelector("#popup-modal h3");
+            const modalBody = document.querySelector(
+              "#popup-modal .modal-body"
+            );
+            if (modal && modalTitle && modalBody) {
+              modalTitle.innerHTML = data.message || "Success";
+              modal.classList.remove("hidden");
+              modal.classList.add("flex");
+              if (data.success) {
+                listItem.remove();
+                updateWishlistCount();
+                setTimeout(() => closeModal("popup-modal"), 2000);
+              }
+            } else {
+              alert(data.message || data.error || "Something went wrong!");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Something went wrong!");
+          });
+      }
+
+      function AddtoCart(button) {
+        const game_name = button.getAttribute("data-game_name_wishlist");
+        const was_it_on_sale = button.getAttribute("data-was_it_on_sale");
+        if (!game_name) {
+          console.error("Missing game name");
+          return;
+        }
+        fetch("/AddtoCart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            game_name: game_name,
+            was_it_on_sale: was_it_on_sale,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const modal = document.getElementById("popup-modal");
+            const modalTitle = document.querySelector("#popup-modal h3");
+            const modalBody = document.querySelector(
+              "#popup-modal .modal-body"
+            );
+            if (modal && modalTitle && modalBody) {
+              modalTitle.innerHTML = data.message || "Success";
+              modal.classList.remove("hidden");
+              modal.classList.add("flex");
+              if (data.success) {
+                updateCartCount();
+                setTimeout(() => closeModal("popup-modal"), 2000);
+              }
+            } else {
+              alert(data.message || data.error || "Something went wrong!");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Something went wrong!");
+          });
+      }
+
+      function RefundGame(button) {
+        const game_name = button.getAttribute("data-game_name_refund");
+        const price = button.getAttribute("data-price");
+        if (!game_name || !price) {
+          console.error("Missing game name or price");
+          return;
+        }
+        fetch("/RefundGame", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ game_name: game_name, price: price }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const modal = document.getElementById("popup-modal");
+            const modalTitle = document.querySelector("#popup-modal h3");
+            const modalBody = document.querySelector(
+              "#popup-modal .modal-body"
+            );
+            if (modal && modalTitle && modalBody) {
+              modalTitle.innerHTML = data.message || "Success";
+              modal.classList.remove("hidden");
+              modal.classList.add("flex");
+              if (data.success) {
+                button.closest("li")?.remove();
+                setTimeout(() => {
+                  closeModal("popup-modal");
+                  location.reload();
+                }, 2000);
+              }
+            } else {
+              alert(data.message || data.error || "Something went wrong!");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Something went wrong!");
+          });
+      }
+
+      window.handleDropdownChange = function (select) {
+        const val = select.value;
+        select.value = "";
+        if (val === "logout") window.location.href = "/logout";
+        else if (val === "update_pass") showUpdatePasswordModal();
+        else if (val === "view_profile")
+          window.location.href = "/ViewMyProfile";
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        updateNavbarColor();
+        initializeSearch_wishlistedgames();
+
+        // Initialize modal buttons
+        const modalButtons = [
+          { buttonId: "open-credit-card-modal", modalId: "creditCardModal" },
+          { buttonId: "open-gift-card-modal", modalId: "giftCardModal" },
+          {
+            buttonId: "open-activate-product-modal",
+            modalId: "activateProductModal",
+          },
+          {
+            buttonId: "open-purchase-history-modal",
+            modalId: "purchaseHistoryModal",
+          },
+          {
+            buttonId: "ViewWishlistedGamesButton",
+            modalId: "ViewWishlistedGamesModal",
+          },
+          {
+            buttonId: "updateCreditCardModal",
+            modalId: "updateCreditCardModal",
+          },
+        ];
+        modalButtons.forEach(({ buttonId, modalId }) => {
+          const button = document.getElementById(buttonId);
+          const modal = document.getElementById(modalId);
+          if (button && modal) {
+            button.addEventListener("click", () => openModal(modalId));
+          }
+        });
+
+        // Initialize close buttons
+        document.querySelectorAll("[data-modal-hide]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const modalId = button.getAttribute("data-modal-hide");
+            closeModal(modalId);
+          });
+        });
+
+        // Update Password Form
+        const updatePasswordForm =
+          document.getElementById("updatePasswordForm");
+        if (updatePasswordForm) {
+          updatePasswordForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const currentPassword =
+              document.getElementById("current-password")?.value;
+            const newPassword = document.getElementById("new-password")?.value;
+            const confirmPassword =
+              document.getElementById("confirm-password")?.value;
+            if (newPassword !== confirmPassword) {
+              const error = document.getElementById("password-error");
+              const success = document.getElementById("password-success");
+              if (error) error.classList.remove("hidden");
+              if (success) success.classList.add("hidden");
+            } else {
+              fetch("/update_password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  current_password: currentPassword,
+                  new_password: newPassword,
+                }),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.success) {
+                    const success = document.getElementById("password-success");
+                    const error = document.getElementById("password-error");
+                    if (success) success.classList.remove("hidden");
+                    if (error) error.classList.add("hidden");
+                    setTimeout(() => {
+                      closeModal("UpdatePasswordModal");
+                      window.location.href = "/logout";
+                    }, 2000);
+                  } else {
+                    const modal = document.getElementById("popup-modal");
+                    const modalTitle =
+                      document.querySelector("#popup-modal h3");
+                    const modalBody = document.querySelector(
+                      "#popup-modal .modal-body"
+                    );
+                    if (modal && modalTitle && modalBody) {
+                      modalTitle.innerHTML =
+                        data.error || "Something went wrong!";
+                      modal.classList.remove("hidden");
+                      modal.classList.add("flex");
+                    } else {
+                      alert(data.error || "Something went wrong!");
+                    }
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  alert("Something went wrong!");
+                });
+            }
+          });
+        }
+
+        // Redeem Gift Card Form
+        const redeemGiftCardForm =
+          document.getElementById("RedeemGiftCardForm");
+        if (redeemGiftCardForm) {
+          redeemGiftCardForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const gift_code = document.getElementById("gift-code")?.value;
+            if (!gift_code) return;
+            fetch("/RedeemGiftCard", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ gift_code: gift_code }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                const modal = document.getElementById("popup-modal");
+                const modalTitle = document.querySelector("#popup-modal h3");
+                const modalBody = document.querySelector(
+                  "#popup-modal .modal-body"
+                );
+                if (modal && modalTitle && modalBody) {
+                  modalTitle.innerHTML = data.message || "Success";
+                  modal.classList.remove("hidden");
+                  modal.classList.add("flex");
+                  if (data.success) {
+                    setTimeout(() => {
+                      closeModal("popup-modal");
+                      location.reload();
+                    }, 2000);
+                  }
+                } else {
+                  alert(data.message || data.error || "Something went wrong!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          });
+        }
+
+        // Activate Product Key Form
+        const activateProductKeyForm = document.getElementById(
+          "ActivateProductKeyForm"
+        );
+        if (activateProductKeyForm) {
+          activateProductKeyForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const product_key = document.getElementById("product-key")?.value;
+            if (!product_key) {
+              console.error("Product key is empty!");
+              return;
+            }
+            fetch("/ActivateProductKey", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ product_key: product_key }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                const modal = document.getElementById("popup-modal");
+                const modalTitle = document.querySelector("#popup-modal h3");
+                const modalBody = document.querySelector(
+                  "#popup-modal .modal-body"
+                );
+                if (modal && modalTitle && modalBody) {
+                  modalTitle.innerHTML = data.message || "Success";
+                  modal.classList.remove("hidden");
+                  modal.classList.add("flex");
+                  if (data.success) {
+                    setTimeout(() => {
+                      closeModal("popup-modal");
+                      location.reload();
+                    }, 2000);
+                  }
+                } else {
+                  alert(data.message || data.error || "Something went wrong!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          });
+        }
+
+        // Update Credit Card Form
+        const updateCreditCardForm = document.getElementById(
+          "UpdateCreditCardForm"
+        );
+        if (updateCreditCardForm) {
+          updateCreditCardForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const card_number =
+              document.getElementById("new-card-number")?.value;
+            const expiry_date =
+              document.getElementById("new-expiry-date")?.value;
+            if (!card_number || !expiry_date) return;
+            fetch("/UpdateCreditCard", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                card_number: card_number,
+                expiry_date: expiry_date,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                const modal = document.getElementById("popup-modal");
+                const modalTitle = document.querySelector("#popup-modal h3");
+                const modalBody = document.querySelector(
+                  "#popup-modal .modal-body"
+                );
+                if (modal && modalTitle && modalBody) {
+                  modalTitle.innerHTML = data.message || "Success";
+                  modal.classList.remove("hidden");
+                  modal.classList.add("flex");
+                  if (data.success) {
+                    const cardSuccess = document.getElementById("card-success");
+                    if (cardSuccess) cardSuccess.classList.remove("hidden");
+                    setTimeout(() => {
+                      closeModal("popup-modal");
+                      closeModal("updateCreditCardModal");
+                      window.location.href = "/AddMonitorWallet";
+                    }, 2000);
+                  }
+                } else {
+                  alert(data.message || data.error || "Something went wrong!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          });
+        }
+
+        // Initialize Font Awesome error handling
+        const fontAwesomeScript = document.querySelector(
+          'script[src*="font-awesome"]'
+        );
+        if (fontAwesomeScript) {
+          fontAwesomeScript.addEventListener("error", () => {
+            console.error("Font Awesome failed to load");
+            document
+              .querySelectorAll(".user-dropdown-option i")
+              .forEach((icon) => {
+                icon.style.display = "none";
+              });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

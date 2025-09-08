@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Buyer Account</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/icon.png') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <script
+      src="https://kit.fontawesome.com/8584240c12.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body
+    class="font-inter bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen"
+  >
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10"
+    >
+      <div
+        class="container mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <a href="/" class="flex items-center space-x-4">
+          <img
+            src="{{ url_for('static', filename='img/logo.jpg') }}"
+            alt="Bashpo Logo"
+            class="w-12 h-10 lg:w-16 lg:h-12 rounded-xl"
+          />
+          <div class="hidden lg:block">
+            <h1
+              class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+            >
+              Bashpo
+            </h1>
+            <p class="text-xs text-gray-400">Gaming Platform</p>
+          </div>
+        </a>
+        <div class="flex items-center space-x-4">
+          <a
+            href="/login"
+            class="btn bg-gradient-to-r from-purple-600 to-blue-600 border-none text-white hover:from-purple-700 hover:to-blue-700"
+            >Login</a
+          >
+          <a
+            href="/newacc"
+            class="btn bg-gradient-to-r from-pink-600 to-red-600 border-none text-white hover:from-pink-700 hover:to-red-700"
+            >Sign Up</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Section -->
+    <main class="relative min-h-screen flex items-center justify-center py-12">
+      <div class="container mx-auto px-4 max-w-4xl">
+        <div class="text-center mb-12">
+          <h1
+            class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 bg-clip-text text-transparent mb-4"
+          >
+            Create Buyer Account
+          </h1>
+          <p class="text-gray-300 text-lg">
+            Join Bashpo and start buying games easily
+          </p>
+        </div>
+
+        <!-- Registration Form Card -->
+        <div class="relative group">
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+          ></div>
+          <div
+            class="relative bg-slate-800/90 backdrop-blur-sm border border-white/20 rounded-3xl p-8 lg:p-12"
+          >
+            <form id="buyerForm" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Left Column -->
+              <div class="space-y-6">
+                <div class="form-control">
+                  <label class="label">
+                    <span
+                      class="label-text font-semibold text-white flex items-center"
+                    >
+                      <i class="fas fa-user text-emerald-400 mr-2"></i>
+                      Full Name
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    id="user_name"
+                    name="user_name"
+                    class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                    placeholder="Enter your name"
+                    required
+                  />
+                </div>
+
+                <div class="form-control">
+                  <label class="label">
+                    <span
+                      class="label-text font-semibold text-white flex items-center"
+                    >
+                      <i class="fas fa-envelope text-teal-400 mr-2"></i>
+                      Email
+                    </span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+
+                <div class="form-control">
+                  <label class="label">
+                    <span
+                      class="label-text font-semibold text-white flex items-center"
+                    >
+                      <i class="fas fa-lock text-lime-400 mr-2"></i>
+                      Password
+                    </span>
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-lime-500 focus:ring-2 focus:ring-lime-500/20"
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- Right Column -->
+              <div class="space-y-6">
+                <div class="form-control">
+                  <label class="label">
+                    <span
+                      class="label-text font-semibold text-white flex items-center"
+                    >
+                      <i class="fas fa-map-marker-alt text-cyan-400 mr-2"></i>
+                      Address
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    id="buyer_address"
+                    name="buyer_address"
+                    class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                    placeholder="Enter your address"
+                    required
+                  />
+                </div>
+
+                <div class="form-control">
+                  <label class="label">
+                    <span
+                      class="label-text font-semibold text-white flex items-center"
+                    >
+                      <i class="fas fa-globe text-yellow-400 mr-2"></i>
+                      Store Region
+                    </span>
+                  </label>
+                  <select
+                    id="store_region"
+                    name="store_region"
+                    class="select select-bordered w-full bg-slate-700/50 border-white/20 text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
+                    required
+                  >
+                    <option value="" disabled selected>Select Region</option>
+                    <option value="NA">North America</option>
+                    <option value="LA">Latin America</option>
+                    <option value="EU">Europe</option>
+                    <option value="ASI">Asia</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-yellow-400"
+                      >💡 Region cannot be changed later</span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <!-- Full Width Submit Section -->
+              <div class="lg:col-span-2 text-center mt-6">
+                <div id="error-message" class="alert alert-error hidden mb-4">
+                  <span></span>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-lg bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 border-none text-white px-12 py-4 font-bold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105"
+                  onclick="sendBuyerRegistrationData()"
+                >
+                  Create Account
+                </button>
+                <p class="text-gray-400 mt-4">
+                  Already have an account?
+                  <a
+                    href="/login"
+                    class="text-emerald-400 hover:text-emerald-300 font-medium"
+                    >Sign in here</a
+                  >
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10 mt-20"
+    >
+      <div class="container mx-auto px-4 py-12">
+        <div
+          class="flex flex-col lg:flex-row justify-between items-center gap-8"
+        >
+          <!-- Logo and Description -->
+          <div
+            class="flex flex-col items-center lg:items-start text-center lg:text-left"
+          >
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="relative group">
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-xl blur opacity-75"
+                ></div>
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-16 h-10 rounded-xl relative z-10"
+                />
+              </div>
+              <div>
+                <h1
+                  class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                >
+                  Bashpo
+                </h1>
+                <p class="text-xs text-gray-400">Gaming Platform</p>
+              </div>
+            </div>
+            <p class="text-gray-400 max-w-md">
+              Find everything you love, in one place. Your ultimate gaming
+              destination.
+            </p>
+          </div>
+
+          <!-- Social Links -->
+          <div class="text-center lg:text-right">
+            <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
+            <div class="flex justify-center lg:justify-end gap-4">
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-youtube text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-facebook text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-instagram text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-x-twitter text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-tiktok text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              >
+                <i class="fab fa-discord text-white"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="border-t border-white/10 mt-8 pt-6 text-center">
+          <p class="text-gray-400 text-sm">
+            <i class="fa-regular fa-copyright mr-1"></i>
+            2025 Bashpo. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      async function sendBuyerRegistrationData() {
+        const formData = {
+          user_name: document.getElementById("user_name").value,
+          email: document.getElementById("email").value,
+          password: document.getElementById("password").value,
+          buyer_address: document.getElementById("buyer_address").value,
+          store_region: document.getElementById("store_region").value,
+          card_info: " ",
+        };
+
+        try {
+          const response = await fetch("/create_buyer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+          const result = await response.json();
+          if (response.ok) {
+            alert(result.success);
+            window.location.href = result.redirect_url;
+          } else {
+            alert(result.error);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An unexpected error occurred. Please try again.");
+        }
+      }
+    </script>
+  </body>
+</html>

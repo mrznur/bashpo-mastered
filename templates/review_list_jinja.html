@@ -1,0 +1,21 @@
+{% for review in reviews_sorted %}
+<li class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-lg bg-transparent"> <!-- Removed white background -->
+    <!-- Request details -->
+    <div class="flex flex-col space-y-1">
+        <span class="text-gray-700 font-medium text-bold text-white">{{ review[0] }} 
+            {% if review[2]=='yes' %}
+            recommends this game
+
+            {% elif review[2]=='no'%}
+            doesn't recommend this game 
+            {% endif %}
+        </span>
+
+        <span class="text-gray-700 font-small text-white">"{{ review[1] }}"</span>
+      
+       
+    </div>
+
+ 
+</li>
+{% endfor %}
