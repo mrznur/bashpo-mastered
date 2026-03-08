@@ -112,7 +112,8 @@ def index():
 def login():
     
     if request.method == 'GET':
-        return render_template('index.html')
+        games = get_all_games_for_homepage()
+        return render_template('index.html', games=games)
     
 
     if request.is_json:
@@ -146,7 +147,8 @@ def login():
          
             return jsonify({"error": "Invalid credentials"}), 401  
    
-    return render_template('index.html')
+    games = get_all_games_for_homepage()
+    return render_template('index.html', games=games)
 
 @app.route('/logout')
 def logout():
@@ -410,12 +412,12 @@ def Add_to_Wishlist():
             
             print('wishlisted',already_check)
             if len(already_check)>0:
-                return jsonify({"message": f"{game_name} cannot be added as it already exists in your wishlist."})
+                return jsonify({"success": False, "message": f"{game_name} cannot be added as it already exists in your wishlist."})
             elif len(ALREADY_OWNED)>0:
-                return jsonify({"message": f"{game_name} cannot be added as you already own it."})
+                return jsonify({"success": False, "message": f"{game_name} cannot be added as you already own it."})
             else:
                 add_to_wishlist_query(username,game_name)
-                return jsonify({"message": f"{game_name} added to wishlist!"})
+                return jsonify({"success": True, "message": f"{game_name} added to wishlist!"})
 
 
 @app.route('/AddtoCart',methods=['GET','POST'])
@@ -429,10 +431,50 @@ def Add_to_Cart():
             already_check=in_cart_validation(username,game_name)
             print('wishlisted',already_check)
             if len(already_check)>0:
-                return jsonify({"message": f"{game_name} cannot be added as it already in your cart."})
+                return jsonify({"success": False, "message": f"{game_name} cannot be added as it already in your cart."})
             else:
                 add_to_cart_query(username,game_name,was_it_on_sale)
-            return jsonify({"message": f"{game_name} added to cart!"})
+            return jsonify({"success": True, "message": f"{game_name} added to cart!"})
+
+@app.route('/get_cart_count',methods=['GET'])
+def get_cart_count():
+    username = session['username']
+    with sqlite3.connect('bashpos_--definitely--_secured_database.db') as db:
+        c = db.cursor()
+        c.execute("SELECT COUNT(*) FROM CART_SYSTEM w INNER JOIN GAME_LIST g ON g.game_name=w.game_name WHERE w.username=? and g.game_status='Active'",(username,))
+        cart_count = c.fetchone()[0]
+    return jsonify({"success": True, "cart_count": cart_count})
+
+@app.route('/get_wishlist',methods=['GET'])
+def get_wishlist():
+    buyer_username = session['username']
+    with sqlite3.connect('bashpos_--definitely--_secured_database.db') as db:
+        c = db.cursor()
+        c.execute("SELECT w.username, g.game_name, g.base_price, g.actual_price, g.sale_status, g.sale_percentage FROM WISHLIST w INNER JOIN game_list g ON g.game_name=w.game_name WHERE w.username=? and g.game_status='Active'",(buyer_username,))
+        wishlist_games=c.fetchall()
+        
+        # Convert to list for modification
+        wishlist_games = [list(item) for item in wishlist_games]
+        
+        # Apply regional pricing
+        if session['store_region'] == 'ASI':
+            for item in wishlist_games:
+                item[2] = round(item[2]*.8,2)
+                item[3] = round(item[3]*.8,2)
+        elif session['store_region'] == 'NA':
+            for item in wishlist_games:
+                item[2] = round(item[2]*1,2)
+                item[3] = round(item[3]*1,2)
+        elif session['store_region'] == 'LA':
+            for item in wishlist_games:
+                item[2] = round(item[2]*.9,2)
+                item[3] = round(item[3]*.9,2)
+        elif session['store_region'] == 'EU':
+            for item in wishlist_games:
+                item[2] = round(item[2]*1.1,2)
+                item[3] = round(item[3]*1.1,2)
+                
+    return jsonify({"success": True, "wishlist_games": wishlist_games})
 
 @app.route('/ViewCart',methods=['GET','POST'])
 def View_Cart():
@@ -1179,5 +1221,5 @@ scheduler.start()
 
 if __name__ == "__main__":
     import os
-    port = int(os.environ.get("PORT", 5000))  # use Render's assigned port or 5000 locally
+    port = int(os.environ.get("PORT", 5001))  # use port 5001
     app.run(host="0.0.0.0", port=port)

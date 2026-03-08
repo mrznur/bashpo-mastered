@@ -1,11 +1,40 @@
+# Dependencies
+node_modules/
+package-lock.json
 
+# Build outputs
+dist/
+build/
 
-bashpos_--definitely--_secured_database.db
+# Environment variables
+.env
+.env.local
 
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Flask
+instance/
+.webassets-cache
+
+# Database
 *.db
-*.db
-*.db
-*.db
-
-
-.vercel
+*.sqlite
+*.sqlite3
