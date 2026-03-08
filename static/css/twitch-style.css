@@ -1,0 +1,161 @@
+/* Twitch-Inspired Design System */
+
+:root {
+  --twitch-bg-primary: #0e0e10;
+  --twitch-bg-secondary: #18181b;
+  --twitch-bg-tertiary: #1f1f23;
+  --twitch-bg-hover: #26262c;
+  --twitch-purple: #9147ff;
+  --twitch-purple-hover: #772ce8;
+  --twitch-text-primary: #efeff1;
+  --twitch-text-secondary: #adadb8;
+  --twitch-border: #2d2d35;
+  --twitch-teal: #00c7ac;
+  --twitch-red: #eb0400;
+}
+
+body {
+  background: var(--twitch-bg-primary);
+  color: var(--twitch-text-primary);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Card Styles */
+.card {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  background: var(--twitch-bg-secondary);
+  border: 1px solid var(--twitch-border);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  background: var(--twitch-bg-tertiary);
+}
+
+/* Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--twitch-bg-secondary);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #464649;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5c5c61;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--twitch-text-primary);
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--twitch-purple);
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--twitch-purple-hover);
+}
+
+.btn-secondary {
+  background: var(--twitch-bg-tertiary);
+  color: var(--twitch-text-primary);
+  border: 1px solid var(--twitch-border);
+  transition: background 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--twitch-bg-hover);
+}
+
+/* Skeleton Loader */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--twitch-bg-secondary) 25%,
+    var(--twitch-bg-tertiary) 50%,
+    var(--twitch-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: 0 0; }
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  background: var(--twitch-bg-tertiary);
+  border: 1px solid var(--twitch-border);
+  color: var(--twitch-text-primary);
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--twitch-purple);
+  ring: 2px;
+  ring-color: var(--twitch-purple);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--twitch-text-secondary);
+}
+
+/* Modal */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background: var(--twitch-bg-secondary);
+  border: 1px solid var(--twitch-border);
+}
+
+/* Navbar */
+.navbar {
+  background: var(--twitch-bg-secondary);
+  border-bottom: 1px solid var(--twitch-border);
+}
+
+/* Game Grid */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .game-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+}
