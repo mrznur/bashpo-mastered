@@ -4,98 +4,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Forgot Password</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/8584240c12.js" crossorigin="anonymous"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet">
+    <style>
+      :root {
+        --twitch-bg-primary: #0e0e10;
+        --twitch-bg-secondary: #18181b;
+        --twitch-bg-tertiary: #1f1f23;
+        --twitch-bg-hover: #26262c;
+        --twitch-purple: #9147ff;
+        --twitch-purple-hover: #772ce8;
+        --twitch-text-primary: #efeff1;
+        --twitch-text-secondary: #adadb8;
+        --twitch-border: #2d2d35;
+      }
+      
+      body {
+        background: var(--twitch-bg-primary);
+        color: var(--twitch-text-primary);
+      }
+    </style>
 </head>
 
-<body class="font-inter bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+<body class="font-inter">
     <!-- Header -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <div class="relative group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                    <a href="/" class="relative block">
-                        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-12 h-10 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105">
-                    </a>
-                </div>
-                <div class="hidden lg:block">
-                    <h1 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Bashpo</h1>
-                    <p class="text-xs text-gray-400">Gaming Platform</p>
-                </div>
+    <header class="sticky top-0 z-50 bg-[#18181b] border-b border-[#2d2d35]">
+        <div class="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
+            <div class="inline-block flex-shrink-0">
+                <a href="/" class="block hover:opacity-80 transition-opacity">
+                    <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-12 h-8 rounded">
+                </a>
             </div>
-            <div class="flex items-center space-x-4">
-                <a href="/login" class="btn bg-gradient-to-r from-purple-600 to-blue-600 border-none text-white hover:from-purple-700 hover:to-blue-700">Login</a>
-                <a href="/signup" class="btn bg-gradient-to-r from-pink-600 to-red-600 border-none text-white hover:from-pink-700 hover:to-red-700">Sign Up</a>
+            <div class="absolute left-1/2 transform -translate-x-1/2">
+                <h1 class="text-lg sm:text-2xl lg:text-3xl font-extrabold text-[#efeff1] tracking-wider sm:tracking-widest" style="font-family: 'Manrope', sans-serif">B A S H P O</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+                <a href="/login" class="bg-[#1f1f23] hover:bg-[#26262c] border border-[#2d2d35] text-[#efeff1] font-medium rounded px-3 py-1.5 sm:px-4 sm:py-2 transition-colors text-xs sm:text-sm">Login</a>
             </div>
         </div>
     </header>
 
     <!-- Password Reset Form -->
-    <main class="relative min-h-screen">
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
-        
-        <div class="relative z-10 container mx-auto px-4 py-12">
-            <div class="max-w-2xl mx-auto text-center mb-12">
-                <h1 class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">Reset Password</h1>
-                <p class="text-gray-300 text-lg">Secure your account with a new password</p>
+    <main class="relative bg-[#0e0e10] min-h-screen">
+        <div class="relative z-10 container mx-auto px-4 py-6 sm:py-12">
+            <div class="max-w-2xl mx-auto text-center mb-6 sm:mb-12">
+                <h1 class="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#efeff1] mb-2 sm:mb-4">Reset Password</h1>
+                <p class="text-[#adadb8] text-sm sm:text-lg">Secure your account with a new password</p>
             </div>
 
-            <div class="relative group">
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                <div class="relative bg-slate-800/90 backdrop-blur-sm border border-white/20 rounded-3xl p-8 lg:p-12">
-                    <form id="forgotPasswordForm" class="space-y-6">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-[#18181b] border border-[#2d2d35] rounded p-4 sm:p-8 lg:p-12">
+                    <form id="forgotPasswordForm" class="space-y-4 sm:space-y-6">
                         <!-- Email -->
                         <div class="form-control">
                             <label class="label">
-                                <span class="label-text font-semibold text-white flex items-center">
-                                    <i class="fas fa-envelope text-blue-400 mr-2"></i>
+                                <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                    <i class="fas fa-envelope text-[#9147ff] mr-2"></i>
                                     Email Address
                                 </span>
                             </label>
                             <input type="email" id="user-email" name="user_email" 
-                                class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" 
+                                class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm" 
                                 placeholder="Enter your email address" required>
                         </div>
 
                         <!-- New Password -->
                         <div class="form-control">
                             <label class="label">
-                                <span class="label-text font-semibold text-white flex items-center">
-                                    <i class="fas fa-lock text-purple-400 mr-2"></i>
+                                <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                    <i class="fas fa-lock text-[#9147ff] mr-2"></i>
                                     New Password
                                 </span>
                             </label>
                             <input type="password" id="new-password" name="new_password" 
-                                class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20" 
+                                class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm" 
                                 placeholder="Enter your new password" required>
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="form-control">
                             <label class="label">
-                                <span class="label-text font-semibold text-white flex items-center">
-                                    <i class="fas fa-lock text-pink-400 mr-2"></i>
+                                <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                    <i class="fas fa-lock text-[#9147ff] mr-2"></i>
                                     Confirm New Password
                                 </span>
                             </label>
                             <input type="password" id="confirm-password" name="confirm_password" 
-                                class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20" 
+                                class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm" 
                                 placeholder="Confirm your new password" required>
                         </div>
 
                         <!-- Error Message -->
-                        <div id="error-message" class="alert alert-error hidden">
+                        <div id="error-message" class="bg-[#eb0400] text-white px-4 py-2 rounded text-xs sm:text-sm hidden">
                             <span></span>
                         </div>
 
                         <!-- Reset Button -->
-                        <div class="text-center pt-4">
+                        <div class="text-center pt-2 sm:pt-4">
                             <button type="button" 
-                                class="btn btn-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 border-none text-white hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 px-12 py-4 text-lg font-bold shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105" 
+                                class="w-full sm:w-auto bg-[#9147ff] hover:bg-[#772ce8] text-white font-medium rounded px-8 sm:px-12 py-2 sm:py-3 transition-colors text-sm sm:text-base" 
                                 onclick="ForgetPass()">
                                 <i class="fas fa-key mr-2"></i>
                                 Reset Password
@@ -103,94 +119,91 @@
                         </div>
 
                         <div class="text-center">
-                            <p class="text-gray-400">
+                            <p class="text-[#adadb8] text-xs sm:text-sm">
                                 Remember your password? 
-                                <a href="/" class="text-blue-400 hover:text-blue-300 font-medium">Sign in here</a>
+                                <a href="/" class="text-[#9147ff] hover:text-[#772ce8] font-medium">Sign in here</a>
                             </p>
                         </div>
                     </form>
                 </div>
-            </div>
 
-            <!-- Security Features Section -->
-            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="text-center p-6 bg-slate-800/50 rounded-2xl border border-white/10">
-                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                <!-- Security Features Section -->
+                <div class="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="text-center p-4 sm:p-6 bg-[#18181b] rounded border border-[#2d2d35]">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-[#9147ff] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <i class="fas fa-shield-alt text-white text-xl sm:text-2xl"></i>
+                        </div>
+                        <h3 class="text-[#efeff1] font-bold text-base sm:text-lg mb-2">Secure Process</h3>
+                        <p class="text-[#adadb8] text-xs sm:text-sm">Your password reset is protected with advanced encryption</p>
                     </div>
-                    <h3 class="text-white font-bold text-lg mb-2">Secure Process</h3>
-                    <p class="text-gray-400 text-sm">Your password reset is protected with advanced encryption</p>
-                </div>
-                <div class="text-center p-6 bg-slate-800/50 rounded-2xl border border-white/10">
-                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-clock text-white text-2xl"></i>
+                    <div class="text-center p-4 sm:p-6 bg-[#18181b] rounded border border-[#2d2d35]">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-[#9147ff] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <i class="fas fa-clock text-white text-xl sm:text-2xl"></i>
+                        </div>
+                        <h3 class="text-[#efeff1] font-bold text-base sm:text-lg mb-2">Instant Reset</h3>
+                        <p class="text-[#adadb8] text-xs sm:text-sm">Quick password reset process to get you back in action</p>
                     </div>
-                    <h3 class="text-white font-bold text-lg mb-2">Instant Reset</h3>
-                    <p class="text-gray-400 text-sm">Quick password reset process to get you back in action</p>
-                </div>
-                <div class="text-center p-6 bg-slate-800/50 rounded-2xl border border-white/10">
-                    <div class="w-16 h-16 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-user-shield text-white text-2xl"></i>
+                    <div class="text-center p-4 sm:p-6 bg-[#18181b] rounded border border-[#2d2d35]">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-[#9147ff] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <i class="fas fa-user-shield text-white text-xl sm:text-2xl"></i>
+                        </div>
+                        <h3 class="text-[#efeff1] font-bold text-base sm:text-lg mb-2">Account Protection</h3>
+                        <p class="text-[#adadb8] text-xs sm:text-sm">Keep your gaming account safe and secure</p>
                     </div>
-                    <h3 class="text-white font-bold text-lg mb-2">Account Protection</h3>
-                    <p class="text-gray-400 text-sm">Keep your gaming account safe and secure</p>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10 mt-20">
-        <div class="container mx-auto px-4 py-12">
-            <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
+    <footer class="bg-[#0e0e10] border-t border-[#2d2d35] mt-12 sm:mt-20">
+        <div class="container mx-auto px-4 py-8 sm:py-12">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-6 sm:gap-8">
                 <!-- Logo and Description -->
                 <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
                     <div class="flex items-center space-x-3 mb-4">
-                        <div class="relative group">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-xl blur opacity-75"></div>
-                            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-16 h-10 rounded-xl relative z-10">
-                        </div>
+                        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-12 h-8 sm:w-14 sm:h-10 rounded">
                         <div>
-                            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                            <h1 class="text-lg sm:text-xl font-bold text-[#efeff1]">
                                 Bashpo
                             </h1>
-                            <p class="text-xs text-gray-400">Gaming Platform</p>
+                            <p class="text-xs text-[#adadb8]">Gaming Platform</p>
                         </div>
                     </div>
-                    <p class="text-gray-400 max-w-md">
+                    <p class="text-[#adadb8] max-w-md text-sm sm:text-base">
                         Find everything you love, in one place. Your ultimate gaming destination.
                     </p>
                 </div>
 
                 <!-- Social Links -->
                 <div class="text-center lg:text-right">
-                    <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
-                    <div class="flex justify-center lg:justify-end gap-4">
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-youtube text-white"></i>
+                    <h6 class="text-[#efeff1] font-bold mb-4 text-sm sm:text-base">Find Us on Socials</h6>
+                    <div class="flex justify-center lg:justify-end gap-3 sm:gap-4">
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-youtube text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-facebook text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-facebook text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-instagram text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-instagram text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-x-twitter text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-x-twitter text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-tiktok text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-tiktok text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-discord text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-discord text-[#efeff1]"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
             <!-- Copyright -->
-            <div class="border-t border-white/10 mt-8 pt-6 text-center">
-                <p class="text-gray-400 text-sm">
+            <div class="border-t border-[#2d2d35] mt-6 sm:mt-8 pt-6 text-center">
+                <p class="text-[#adadb8] text-xs sm:text-sm">
                     <i class="fa-regular fa-copyright mr-1"></i>
                     2025 Bashpo. All rights reserved.
                 </p>

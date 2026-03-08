@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -8,6 +8,10 @@
       rel="shortcut icon"
       href="{{ url_for('static', filename='img/icon.png') }}"
     />
+    <script>
+      // Suppress Tailwind CDN warning
+      window.process = { env: { NODE_ENV: "production" } };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -52,44 +56,78 @@
     />
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-      .glassmorphism {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+      /* Twitch-inspired color palette */
+      :root {
+        --twitch-bg-primary: #0e0e10;
+        --twitch-bg-secondary: #18181b;
+        --twitch-bg-tertiary: #1f1f23;
+        --twitch-bg-hover: #26262c;
+        --twitch-purple: #9147ff;
+        --twitch-purple-hover: #772ce8;
+        --twitch-text-primary: #efeff1;
+        --twitch-text-secondary: #adadb8;
+        --twitch-border: #2d2d35;
       }
+
+      body {
+        background: var(--twitch-bg-primary);
+        color: var(--twitch-text-primary);
+      }
+
       .card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition:
+          transform 0.2s ease,
+          background-color 0.2s ease;
+        background: var(--twitch-bg-secondary);
+        border: 1px solid var(--twitch-border);
       }
+
       .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+        background: var(--twitch-bg-tertiary);
       }
+
       .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
+        width: 8px;
       }
+
       .custom-scrollbar::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
+        background: var(--twitch-bg-secondary);
       }
+
       .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: linear-gradient(to bottom, #3b82f6, #93c5fd);
-        border-radius: 8px;
+        background: #464649;
+        border-radius: 4px;
       }
+
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(to bottom, #2563eb, #60a5fa);
+        background: #5c5c61;
       }
+
       h1,
       h2,
       h3 {
-        font-family: "Manrope", "sans-serif";
-        font-weight: 700;
+        font-family: "Inter", "sans-serif";
+        font-weight: 600;
+        color: var(--twitch-text-primary);
       }
+
+      .btn-primary {
+        background: var(--twitch-purple);
+        color: white;
+        transition: background 0.2s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--twitch-purple-hover);
+      }
+
       .skeleton {
         background: linear-gradient(
           90deg,
-          rgba(255, 255, 255, 0.1) 25%,
-          rgba(255, 255, 255, 0.2) 50%,
-          rgba(255, 255, 255, 0.1) 75%
+          var(--twitch-bg-secondary) 25%,
+          var(--twitch-bg-tertiary) 50%,
+          var(--twitch-bg-secondary) 75%
         );
         background-size: 200% 100%;
         animation: skeleton 1.5s ease-in-out infinite;
@@ -123,178 +161,327 @@
       }
     </style>
   </head>
-  <body
-    class="font-inter bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 min-h-screen"
-  >
-    <header class="sticky top-0 z-50 glassmorphism border-b border-blue-500/20">
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="relative group">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-              ></div>
-              <a href="/" class="relative block">
-                <img
-                  src="{{ url_for('static', filename='img/logo.jpg') }}"
-                  alt="Bashpo Logo"
-                  class="w-12 h-8 lg:w-16 lg:h-12 rounded-xl z-10 transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </a>
-            </div>
-            <div class="hidden lg:block">
-              <h1
-                class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
-              >
-                Bashpo
-              </h1>
-              <p class="text-xs text-gray-400">Your Gaming Hub</p>
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2" data-cart-status>
-              {% if cart_status=='1' %}
-              <a href="/ViewCart" class="relative group">
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
-                >
-                  <i class="fas fa-cart-shopping text-blue-400"></i>
-                  <span id="cart-count" class="font-medium"
-                    >Cart ({{cart_value}})</span
-                  >
-                </div>
-              </a>
-              {% else %}
-              <div
-                class="relative group flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400"
-              >
-                <i class="fas fa-cart-shopping"></i>
-                <span id="cart-count" class="font-medium">Cart is Empty</span>
-                <div
-                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-                >
-                  Browse games to fill your cart!
-                </div>
-              </div>
-              {% endif %}
-              <button
-                type="button"
-                id="ViewWishlistedGamesButton"
-                data-modal-target="ViewWishlistedGamesModal"
-                class="relative group"
-              >
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
-                >
-                  <i class="fas fa-heart text-purple-500"></i>
-                  <span id="wishlist-count" class="font-medium"
-                    >Wishlist ({{wishlist_value}})</span
-                  >
-                </div>
-              </button>
-            </div>
-            <div
-              class="flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 px-4 py-2 rounded-xl border border-white/10 glassmorphism"
+  <body class="font-inter bg-[#0e0e10] min-h-screen text-[#efeff1]">
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 bg-[#18181b] border-b border-[#2d2d35]">
+      <div class="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
+          <!-- Logo Section -->
+          <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <a
+              href="/"
+              class="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
             >
-              <i class="fas fa-wallet text-blue-400"></i>
-              <span class="text-white font-medium"
-                >${{ balance | round(2) }}</span
+              <img
+                src="{{ url_for('static', filename='img/logo.jpg') }}"
+                alt="Bashpo Logo"
+                class="w-12 h-8 rounded-lg object-contain"
+                loading="lazy"
+              />
+              <span
+                class="text-base sm:text-lg font-semibold hidden sm:block text-[#efeff1]"
+                >Bashpo</span
               >
+            </a>
+          </div>
+
+          <!-- Desktop Right Section (hidden on mobile) -->
+          <div class="hidden sm:flex items-center gap-2">
+            <!-- Cart -->
+            <a
+              href="/ViewCart"
+              id="desktopCartLink"
+              class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] px-3 py-2 rounded text-sm font-medium transition-all"
+            >
+              <i
+                class="fas fa-shopping-cart {% if cart_status=='1' %}text-blue-400{% else %}text-red-400{% endif %} text-sm"
+              ></i>
+              <span
+                class="{% if cart_status=='1' %}text-blue-400{% else %}text-red-400{% endif %}"
+                >Cart</span
+              >
+              <span
+                class="{% if cart_status=='1' %}bg-blue-500/20 text-blue-400{% else %}bg-red-500/20 text-red-400{% endif %} px-1.5 py-0.5 rounded text-xs font-semibold"
+                >{% if cart_status=='1' %}{{cart_value}}{% else %}0{% endif
+                %}</span
+              >
+            </a>
+
+            <!-- Wishlist -->
+            <button
+              type="button"
+              id="ViewWishlistedGamesButton"
+              class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] px-3 py-2 rounded text-sm font-medium transition-all"
+            >
+              <i class="fas fa-heart text-purple-400 text-sm"></i>
+              <span class="text-purple-400">Wishlist</span>
+              <span
+                class="bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded text-xs font-semibold"
+                >{{wishlist_value}}</span
+              >
+            </button>
+
+            <!-- Balance -->
+            <div
+              class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm border border-[#2d2d35] px-3 py-2 rounded text-sm font-semibold"
+            >
+              <i class="fas fa-wallet text-green-400 text-sm"></i>
+              <span class="text-green-400">${{ balance | round(2) }}</span>
             </div>
-            <div class="relative w-[200px]">
+
+            <!-- User Dropdown -->
+            <div class="relative">
               <select
                 id="user-name"
                 name="user_name"
-                class="glassmorphism w-full h-[44px] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer text-left pl-3"
+                class="bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] text-[#efeff1] text-sm px-3 py-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none pr-8 transition-all"
                 onchange="handleDropdownChange(this)"
                 required
                 aria-label="User menu"
               >
-                <option
-                  value=""
-                  disabled
-                  selected
-                  class="bg-slate-800 text-gray-300"
-                >
-                  <i class="fas fa-user mr-2"></i>{{ buyer_username }}
+                <option value="" disabled selected class="bg-[#1f1f23]">
+                  {{ buyer_username[:8] }}{% if buyer_username|length > 8
+                  %}...{% endif %}
                 </option>
-                <option value="view_profile" class="bg-slate-800 text-white">
-                  <i class="fas fa-user mr-2"></i>View Profile
+                <option value="view_profile" class="bg-[#1f1f23]">
+                  View Profile
                 </option>
-                <option
-                  value="AddMonitorWallet"
-                  class="bg-slate-800 text-white"
-                >
-                  <i class="fas fa-wallet mr-2"></i>Manage Wallet
+                <option value="AddMonitorWallet" class="bg-[#1f1f23]">
+                  Manage Wallet
                 </option>
-                <option value="update_pass" class="bg-slate-800 text-white">
-                  <i class="fas fa-lock mr-2"></i>Update Password
+                <option value="update_pass" class="bg-[#1f1f23]">
+                  Update Password
                 </option>
-                <option value="logout" class="bg-slate-800 text-white">
-                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </option>
+                <option value="logout" class="bg-[#1f1f23]">Logout</option>
               </select>
               <div
                 class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
               >
-                <i
-                  class="fas fa-chevron-down text-white transition-transform duration-300"
-                ></i>
+                <i class="fas fa-chevron-down text-[#efeff1] text-xs"></i>
               </div>
             </div>
+          </div>
+
+          <!-- Mobile Right Section (visible only on mobile) -->
+          <div class="flex sm:hidden items-center gap-2">
+            <!-- Cart Icon -->
+            <a
+              href="/ViewCart"
+              id="mobileCartLink"
+              class="relative flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all"
+            >
+              <i
+                class="fas fa-shopping-cart {% if cart_status=='1' %}text-blue-400{% else %}text-red-400{% endif %} text-base"
+              ></i>
+              <span
+                class="absolute -top-1 -right-1 {% if cart_status=='1' %}bg-[#1f1f23]/50{% else %}bg-red-500{% endif %} text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                >{% if cart_status=='1' %}{{cart_value}}{% else %}0{% endif
+                %}</span
+              >
+            </a>
+
+            <!-- Wishlist Icon -->
+            <button
+              type="button"
+              id="ViewWishlistedGamesButtonMobile"
+              class="relative flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all"
+            >
+              <i class="fas fa-heart text-purple-400 text-base"></i>
+              <span
+                class="absolute -top-1 -right-1 bg-purple-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                >{{wishlist_value}}</span
+              >
+            </button>
+
+            <!-- Menu Button -->
+            <button
+              type="button"
+              id="mobileMenuButton"
+              class="flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all"
+            >
+              <i class="fas fa-bars text-[#efeff1] text-base"></i>
+            </button>
           </div>
         </div>
       </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
-      <!-- Sticky Search Bar -->
+    <!-- Mobile Slide-out Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
       <div
-        class="sticky top-[72px] z-40 bg-gradient-to-br from-slate-900/90 to-blue-950/90 py-4 -mx-4 px-4"
+        id="mobileMenuBackdrop"
+        class="absolute inset-0 bg-black/70 backdrop-blur-sm"
+      ></div>
+
+      <!-- Menu Panel -->
+      <div
+        id="mobileMenuPanel"
+        class="absolute top-0 right-0 h-full w-80 bg-[#18181b] border-l border-[#2d2d35] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
       >
-        <div class="relative max-w-2xl mx-auto">
+        <div class="flex flex-col h-full">
+          <!-- Menu Header -->
           <div
-            class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none"
+            class="flex items-center justify-between p-4 border-b border-[#2d2d35]"
           >
-            <i class="fas fa-search text-blue-400"></i>
+            <h3 class="text-lg font-bold text-[#efeff1]">Menu</h3>
+            <button
+              id="closeMobileMenu"
+              class="flex items-center justify-center w-8 h-8 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+            >
+              <i class="fas fa-times text-[#efeff1]"></i>
+            </button>
+          </div>
+
+          <!-- User Info -->
+          <div class="p-4 border-b border-[#2d2d35]">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-12 h-12 bg-[#9147ff] rounded-full flex items-center justify-center text-white text-xl font-bold"
+              >
+                {{buyer_username[0].upper()}}
+              </div>
+              <div>
+                <p class="text-[#efeff1] font-semibold">{{buyer_username}}</p>
+                <p class="text-[#adadb8] text-sm">Buyer Account</p>
+              </div>
+            </div>
+
+            <!-- Balance Display -->
+            <div class="flex items-center gap-2 bg-[#1f1f23] px-3 py-2 rounded">
+              <i class="fas fa-wallet text-green-400"></i>
+              <span class="text-green-400 font-semibold"
+                >${{ balance | round(2) }}</span
+              >
+            </div>
+          </div>
+
+          <!-- Menu Options -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <nav class="space-y-2">
+              <a
+                href="/ViewMyProfile"
+                class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+              >
+                <span class="text-[#efeff1] font-medium">View Profile</span>
+              </a>
+
+              <a
+                href="/AddMonitorWallet"
+                class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+              >
+                <span class="text-[#efeff1] font-medium">Manage Wallet</span>
+              </a>
+
+              <button
+                onclick="
+                  openModal('UpdatePasswordModal');
+                  closeMobileMenuFunc();
+                "
+                class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+              >
+                <span class="text-[#efeff1] font-medium">Update Password</span>
+              </button>
+
+              <a
+                href="/logout"
+                class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+              >
+                <span class="text-[#efeff1] font-medium">Logout</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById("mobileMenuButton");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const mobileMenuPanel = document.getElementById("mobileMenuPanel");
+      const mobileMenuBackdrop = document.getElementById("mobileMenuBackdrop");
+      const closeMobileMenu = document.getElementById("closeMobileMenu");
+      const wishlistButtonMobile = document.getElementById(
+        "ViewWishlistedGamesButtonMobile",
+      );
+
+      function openMobileMenu() {
+        mobileMenu.classList.remove("hidden");
+        setTimeout(() => {
+          mobileMenuPanel.classList.remove("translate-x-full");
+        }, 10);
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeMobileMenuFunc() {
+        mobileMenuPanel.classList.add("translate-x-full");
+        setTimeout(() => {
+          mobileMenu.classList.add("hidden");
+          document.body.style.overflow = "";
+        }, 300);
+      }
+
+      if (mobileMenuButton) {
+        mobileMenuButton.addEventListener("click", openMobileMenu);
+      }
+      if (closeMobileMenu) {
+        closeMobileMenu.addEventListener("click", closeMobileMenuFunc);
+      }
+      if (mobileMenuBackdrop) {
+        mobileMenuBackdrop.addEventListener("click", closeMobileMenuFunc);
+      }
+
+      // Mobile wishlist button
+      if (wishlistButtonMobile) {
+        wishlistButtonMobile.addEventListener("click", function () {
+          const desktopWishlistBtn = document.getElementById(
+            "ViewWishlistedGamesButton",
+          );
+          if (desktopWishlistBtn) {
+            desktopWishlistBtn.click();
+          }
+        });
+      }
+    </script>
+
+    <main class="container mx-auto px-4 py-8">
+      <!-- Search Bar -->
+      <div
+        class="sticky top-[49px] sm:top-[57px] z-40 bg-[#18181b] border-b border-[#2d2d35] py-3 -mx-4 px-4"
+      >
+        <div class="relative max-w-2xl mx-auto px-4">
+          <div
+            class="absolute inset-y-0 left-7 flex items-center pointer-events-none"
+          >
+            <i class="fas fa-search text-[#adadb8]"></i>
           </div>
           <input
             type="search"
             id="default-search"
-            class="block w-full pl-14 pr-5 py-4 bg-gradient-to-r from-slate-800 to-slate-900 border border-blue-500/50 rounded-2xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300 text-sm"
-            placeholder="Search for Games..."
+            class="block w-full pl-10 pr-4 py-2.5 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all text-sm"
+            placeholder="Search for games..."
             autocomplete="off"
             required
             aria-label="Search games"
           />
           <div
             id="autocomplete-dropdown"
-            class="absolute bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl rounded-xl max-h-80 overflow-y-auto w-full mt-2 border border-blue-500/50 glassmorphism hidden custom-scrollbar"
+            class="absolute bg-[#1f1f23] shadow-xl rounded border border-[#2d2d35] max-h-80 overflow-y-auto w-full mt-2 hidden custom-scrollbar"
           ></div>
         </div>
       </div>
 
       <!-- Carousel -->
-      <section class="mt-12">
-        <h1
-          class="text-3xl lg:text-5xl font-bold font-manrope text-center bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-8"
-        >
-          Featured & Recommended
-        </h1>
+      <section class="mt-8 px-4">
+        <h2 class="text-2xl font-semibold mb-4">Featured Games</h2>
         <div
           id="controls-carousel"
-          class="relative w-full max-w-5xl mx-auto"
+          class="relative w-full max-w-6xl mx-auto"
           data-carousel="static"
         >
           <div
-            class="relative h-[300px] sm:h-[400px] lg:h-[600px] overflow-hidden rounded-2xl border border-white/20"
+            class="relative h-[300px] sm:h-[400px] lg:h-[500px] overflow-hidden rounded"
           >
             <div class="carousel-inner relative w-full h-full">
               <div
@@ -304,7 +491,7 @@
                 <a href="/ViewGamePage/{{featured_games[0][0] | urlencode}}">
                   <img
                     src="{{ url_for('static', filename=featured_games[0][2]) }}"
-                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
+                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                     alt="Featured Game 1"
                     loading="lazy"
                   />
@@ -317,7 +504,7 @@
                 <a href="/ViewGamePage/{{featured_games[1][0] | urlencode}}">
                   <img
                     src="{{ url_for('static', filename=featured_games[1][2]) }}"
-                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
+                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                     alt="Featured Game 2"
                     loading="lazy"
                   />
@@ -330,7 +517,7 @@
                 <a href="/ViewGamePage/{{featured_games[2][0] | urlencode}}">
                   <img
                     src="{{ url_for('static', filename=featured_games[2][2]) }}"
-                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
+                    class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                     alt="Featured Game 3"
                     loading="lazy"
                   />
@@ -338,18 +525,18 @@
               </div>
             </div>
             <div
-              class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3"
+              class="absolute z-30 flex -translate-x-1/2 bottom-4 left-1/2 space-x-2"
             >
               <button
                 type="button"
-                class="w-3 h-3 rounded-full bg-blue-500/50 hover:bg-blue-500"
+                class="w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-colors"
                 aria-current="true"
                 aria-label="Slide 1"
                 data-carousel-slide-to="0"
               ></button>
               <button
                 type="button"
-                class="w-3 h-3 rounded-full bg-white/50 hover:bg-blue-500"
+                class="w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-colors"
                 aria-current="false"
                 aria-label="Slide 2"
                 data-carousel-slide-to="1"
@@ -419,79 +606,77 @@
       </section>
 
       <!-- Sorting Section -->
-      <section class="mt-12">
-        <div
-          class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8"
-        >
-          <h2 class="text-xl lg:text-2xl font-bold text-white">
-            Sort games by:
-          </h2>
-          <div class="relative">
-            <select
-              id="genre"
-              name="genre"
-              class="glassmorphism w-[160px] sm:w-[200px] h-[44px] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer text-left pl-3"
-              onchange="search_filter('game_genre', this.value)"
-              required
-              aria-label="Sort by genre"
-            >
-              <option value="" disabled selected>Genre</option>
-              <option value="Action">Action</option>
-              <option value="Racing">Racing</option>
-              <option value="Strategy">Strategy</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Souls">Souls</option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-chevron-down text-white"></i>
+      <section class="mt-8 px-4">
+        <div class="flex flex-col gap-4 mb-6 max-w-6xl mx-auto">
+          <h2 class="text-xl font-semibold">Browse Games</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
+            <div class="relative">
+              <select
+                id="genre"
+                name="genre"
+                class="bg-[#1f1f23] hover:bg-[#26262c] w-full h-10 text-[#efeff1] rounded border border-[#2d2d35] transition-colors focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none cursor-pointer pl-3 pr-8 text-sm"
+                onchange="search_filter('game_genre', this.value)"
+                required
+                aria-label="Sort by genre"
+              >
+                <option value="" disabled selected>Genre</option>
+                <option value="Action">Action</option>
+                <option value="Racing">Racing</option>
+                <option value="Strategy">Strategy</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Souls">Souls</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-3 flex items-center pointer-events-none"
+              >
+                <i class="fas fa-chevron-down text-[#adadb8] text-xs"></i>
+              </div>
             </div>
-          </div>
-          <div class="relative">
-            <select
-              id="year"
-              name="year"
-              class="glassmorphism w-[160px] sm:w-[200px] h-[44px] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer text-left pl-3"
-              onchange="search_filter('release_year', this.value)"
-              required
-              aria-label="Sort by year"
-            >
-              <option value="" disabled selected>Year</option>
-              <option value="ascending">Ascending</option>
-              <option value="descending">Descending</option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-chevron-down text-white"></i>
+            <div class="relative">
+              <select
+                id="year"
+                name="year"
+                class="bg-[#1f1f23] hover:bg-[#26262c] w-full h-10 text-[#efeff1] rounded border border-[#2d2d35] transition-colors focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none cursor-pointer pl-3 pr-8 text-sm"
+                onchange="search_filter('release_year', this.value)"
+                required
+                aria-label="Sort by year"
+              >
+                <option value="" disabled selected>Year</option>
+                <option value="ascending">Ascending</option>
+                <option value="descending">Descending</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-3 flex items-center pointer-events-none"
+              >
+                <i class="fas fa-chevron-down text-[#adadb8] text-xs"></i>
+              </div>
             </div>
-          </div>
-          <div class="relative">
-            <select
-              id="price"
-              name="price"
-              class="glassmorphism w-[160px] sm:w-[200px] h-[44px] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer text-left pl-3"
-              onchange="search_filter('actual_price', this.value)"
-              required
-              aria-label="Sort by price"
-            >
-              <option value="" disabled selected>Price</option>
-              <option value="low-to-high">Low to High</option>
-              <option value="high-to-low">High to Low</option>
-            </select>
-            <div
-              class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-chevron-down text-white"></i>
+            <div class="relative">
+              <select
+                id="price"
+                name="price"
+                class="bg-[#1f1f23] hover:bg-[#26262c] w-full h-10 text-[#efeff1] rounded border border-[#2d2d35] transition-colors focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none cursor-pointer pl-3 pr-8 text-sm"
+                onchange="search_filter('actual_price', this.value)"
+                required
+                aria-label="Sort by price"
+              >
+                <option value="" disabled selected>Price</option>
+                <option value="low-to-high">Low to High</option>
+                <option value="high-to-low">High to Low</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-3 flex items-center pointer-events-none"
+              >
+                <i class="fas fa-chevron-down text-[#adadb8] text-xs"></i>
+              </div>
             </div>
+            <button
+              onclick="clearFilters()"
+              class="w-full text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded text-sm px-4 h-10 transition-colors"
+            >
+              Clear Filters
+            </button>
           </div>
-          <button
-            onclick="clearFilters()"
-            class="text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
-          >
-            Clear Filters
-          </button>
         </div>
 
         <!-- Game List as Cards -->
@@ -499,47 +684,48 @@
           {% if game_list %} {% for games in game_list %}
           <a
             href="/ViewGamePage/{{games[0] | urlencode}}"
-            class="card relative group animate-fadeIn"
+            class="card block animate-fadeIn"
           >
             <div
-              class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-            ></div>
-            <div
-              class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/20 p-4 h-full flex flex-col"
+              class="bg-[#18181b] rounded border border-[#2d2d35] overflow-hidden h-full flex flex-col"
             >
               <img
                 src="{{ url_for('static', filename=games[3]) }}"
                 alt="{{games[0]}} Logo"
-                class="w-full h-48 object-cover rounded-xl mb-4 video-trigger"
+                class="w-full h-48 object-cover video-trigger"
                 data-yt-src="https://www.youtube.com/embed/{{games[7]}}?autoplay=1&mute=1"
                 loading="lazy"
               />
-              <div class="flex flex-col flex-grow">
-                <h3 class="text-lg font-bold text-white">{{games[0]}}</h3>
-                <p class="text-sm text-blue-300">{{games[1]}}</p>
+              <div class="p-3 flex flex-col flex-grow">
+                <h3 class="text-base font-semibold text-[#efeff1] mb-1">
+                  {{games[0]}}
+                </h3>
+                <p class="text-sm text-[#adadb8] mb-3">{{games[1]}}</p>
                 <div class="mt-auto">
                   {% if games[5] == '1' %}
-                  <div class="flex items-center justify-between">
+                  <div class="flex items-center justify-between mb-3">
                     <span
-                      class="bg-blue-800 text-white text-xs px-3 py-1 rounded-lg"
+                      class="bg-[#9147ff] text-white text-xs px-2 py-1 rounded font-medium"
                       >{{games[6]}}% OFF</span
                     >
                     <div class="flex items-center gap-2">
-                      <span class="text-gray-400 line-through text-sm"
+                      <span class="text-[#adadb8] line-through text-sm"
                         >${{games[4]}}</span
                       >
-                      <span class="text-blue-400 font-bold">${{games[2]}}</span>
+                      <span class="text-[#efeff1] font-semibold"
+                        >${{games[2]}}</span
+                      >
                     </div>
                   </div>
                   {% else %}
-                  <p class="text-blue-400 font-bold text-right">
+                  <p class="text-[#efeff1] font-semibold text-right mb-3">
                     ${{games[2]}}
                   </p>
                   {% endif %}
-                  <div class="mt-4 flex justify-between gap-2">
+                  <div class="flex gap-2">
                     <button
                       type="button"
-                      class="flex-1 text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      class="flex-1 text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded text-sm px-3 py-2 transition-colors"
                       data-game_name_cart="{{games[0]}}"
                       data-game_sale_status="{{games[5]}}"
                       onclick="AddtoCart(event, this)"
@@ -548,11 +734,11 @@
                     </button>
                     <button
                       type="button"
-                      class="flex-1 text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      class="flex-1 text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] border border-[#2d2d35] font-medium rounded text-sm px-3 py-2 transition-colors"
                       data-game_name_wishlist="{{games[0]}}"
                       onclick="AddToWishlist(event, this)"
                     >
-                      Add To Wishlist
+                      Wishlist
                     </button>
                   </div>
                 </div>
@@ -562,18 +748,18 @@
           {% endfor %} {% else %}
           <!-- Skeleton Loaders -->
           {% for i in range(6) %}
-          <div class="card relative animate-skeleton">
+          <div class="card">
             <div
-              class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/20 p-4 h-full flex flex-col"
+              class="bg-[#18181b] rounded border border-[#2d2d35] overflow-hidden h-full flex flex-col"
             >
-              <div class="w-full h-48 rounded-xl mb-4 skeleton"></div>
-              <div class="flex flex-col flex-grow">
-                <div class="h-6 w-3/4 mb-2 skeleton"></div>
-                <div class="h-4 w-1/2 mb-4 skeleton"></div>
+              <div class="w-full h-48 skeleton"></div>
+              <div class="p-3 flex flex-col flex-grow">
+                <div class="h-5 w-3/4 mb-2 skeleton rounded"></div>
+                <div class="h-4 w-1/2 mb-3 skeleton rounded"></div>
                 <div class="mt-auto">
-                  <div class="h-6 w-1/4 ml-auto skeleton"></div>
-                  <div class="mt-4 flex justify-between gap-2">
-                    <div class="h-10 w-full rounded-xl skeleton"></div>
+                  <div class="h-5 w-1/4 ml-auto mb-3 skeleton rounded"></div>
+                  <div class="flex gap-2">
+                    <div class="h-9 flex-1 rounded skeleton"></div>
                     <div class="h-10 w-full rounded-xl skeleton"></div>
                   </div>
                 </div>
@@ -590,35 +776,31 @@
       id="UpdatePasswordModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-300"
       role="dialog"
       aria-labelledby="update-password-title"
     >
-      <div
-        class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
-      >
-        <div
-          class="glassmorphism rounded-3xl shadow-2xl border border-blue-500/40 p-6 sm:p-8"
-        >
+      <div class="relative p-4 w-full max-w-md">
+        <div class="relative bg-[#18181b] rounded border border-[#2d2d35] p-6">
           <div
-            class="flex justify-between items-center pb-4 mb-4 border-b-2 border-blue-500/30"
+            class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
           >
             <div class="flex items-center space-x-3">
-              <i class="fas fa-lock text-blue-400 text-xl sm:text-2xl"></i>
+              <i class="fas fa-lock text-[#9147ff] text-xl"></i>
               <h3
                 id="update-password-title"
-                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-300 to-cyan-400 bg-clip-text text-transparent"
+                class="text-lg font-bold text-[#efeff1]"
               >
                 Update Password
               </h3>
             </div>
             <button
               type="button"
-              class="text-gray-200 bg-gradient-to-r from-blue-700/50 to-transparent hover:from-blue-600/70 rounded-full p-2 transition-all duration-300"
+              class="text-[#adadb8] hover:text-[#efeff1] transition-colors"
               data-modal-hide="UpdatePasswordModal"
               aria-label="Close modal"
             >
-              <i class="fas fa-times w-5 h-5"></i>
+              <i class="fas fa-times text-xl"></i>
             </button>
           </div>
           <form
@@ -630,7 +812,7 @@
             <div>
               <label
                 for="current-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Current Password</label
               >
               <input
@@ -638,7 +820,7 @@
                 id="current-password"
                 name="current_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-blue-900/50 border border-blue-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] transition-colors"
                 placeholder="Enter current password"
                 aria-required="true"
               />
@@ -646,7 +828,7 @@
             <div>
               <label
                 for="new-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >New Password</label
               >
               <input
@@ -654,7 +836,7 @@
                 id="new-password"
                 name="new_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-blue-900/50 border border-blue-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] transition-colors"
                 placeholder="Enter new password"
                 aria-required="true"
               />
@@ -662,7 +844,7 @@
             <div>
               <label
                 for="confirm-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Confirm New Password</label
               >
               <input
@@ -670,27 +852,21 @@
                 id="confirm-password"
                 name="confirm_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-blue-900/50 border border-blue-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] transition-colors"
                 placeholder="Confirm new password"
                 aria-required="true"
               />
             </div>
-            <div
-              id="password-error"
-              class="text-red-400 text-sm font-medium hidden"
-            >
+            <div id="password-error" class="text-[#eb0400] text-sm hidden">
               Passwords do not match.
             </div>
-            <div
-              id="password-success"
-              class="text-blue-400 text-sm font-medium hidden"
-            >
+            <div id="password-success" class="text-[#00c7ac] text-sm hidden">
               Password updated successfully!
             </div>
-            <div class="mt-6 flex justify-end space-x-4">
+            <div class="mt-6 flex justify-end gap-3">
               <button
                 type="button"
-                class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                class="px-4 py-2 bg-[#1f1f23] hover:bg-[#26262c] text-[#efeff1] rounded transition-colors"
                 data-modal-hide="UpdatePasswordModal"
               >
                 Cancel
@@ -698,7 +874,7 @@
               <button
                 type="submit"
                 id="submit-password"
-                class="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 hover:scale-105"
+                class="px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-white rounded transition-colors"
               >
                 Update
               </button>
@@ -713,47 +889,42 @@
       id="ViewWishlistedGamesModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/80 backdrop-blur-xl transition-all duration-500"
+      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 p-4"
     >
-      <div class="relative p-6 sm:p-8 w-full max-w-6xl h-auto animate-slideIn">
+      <div class="relative w-full max-w-6xl max-h-[90vh]">
         <div
-          class="relative bg-gradient-to-t from-purple-950/95 to-purple-900/95 rounded-3xl shadow-2xl border border-purple-800/50 p-8 sm:p-10 backdrop-blur-2xl"
+          class="relative bg-[#18181b] rounded border border-[#2d2d35] p-4 sm:p-6 h-full max-h-[90vh] flex flex-col"
         >
           <!-- Header -->
           <div
-            class="flex justify-between items-center pb-6 mb-6 border-b-2 border-purple-800/50"
+            class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35] flex-shrink-0"
           >
-            <div class="flex items-center space-x-4">
-              <i class="fas fa-heart text-pink-500 text-2xl sm:text-3xl"></i>
-              <h3
-                class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent"
-              >
-                {{buyer_username}}'s Wishlist
-              </h3>
-            </div>
+            <h3 class="text-lg font-semibold text-[#efeff1]">
+              {{buyer_username}}'s Wishlist
+            </h3>
             <button
               type="button"
-              class="text-gray-200 bg-gradient-to-r from-purple-800/70 to-transparent hover:from-purple-700/80 rounded-full p-3 transition-all duration-300"
-              data-modal-toggle="ViewWishlistedGamesModal"
+              class="text-[#adadb8] hover:text-[#efeff1] transition-colors"
+              data-modal-hide="ViewWishlistedGamesModal"
+              aria-label="Close modal"
             >
-              <i class="fas fa-times w-6 h-6"></i>
-              <span class="sr-only">Close modal</span>
+              <i class="fas fa-times text-xl"></i>
             </button>
           </div>
 
           <!-- Search -->
-          <div class="mb-6">
+          <div class="mb-4 flex-shrink-0">
             <div class="relative">
               <div
-                class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none"
+                class="absolute inset-y-0 left-3 flex items-center pointer-events-none"
               >
-                <i class="fas fa-search text-pink-500"></i>
+                <i class="fas fa-search text-[#adadb8] text-sm"></i>
               </div>
               <input
                 type="text"
                 id="searchInput_wishlistedgames"
                 placeholder="Search games..."
-                class="block w-full pl-14 pr-5 py-3 bg-purple-950/70 border border-purple-800/50 rounded-2xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                class="block w-full pl-10 pr-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-sm"
               />
             </div>
           </div>
@@ -761,38 +932,41 @@
           <!-- Wishlist Content -->
           <div
             id="wishlist-container"
-            class="mt-6 max-h-[36rem] overflow-y-auto pr-4 custom-scrollbar"
+            class="flex-1 overflow-y-auto custom-scrollbar"
           >
             {% if wishlist_user %}
-            <ul id="wishlistList" class="list-none space-y-4">
+            <ul id="wishlistList" class="space-y-2">
               {% for wishlist in wishlist_user %}
               <li
-                class="flex justify-between items-center p-6 bg-gradient-to-r from-purple-900 to-purple-950 rounded-2xl border border-purple-800/50 hover:border-purple-700/60 transition-all duration-300"
+                class="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors"
               >
                 <!-- Game Info -->
-                <div class="flex items-center space-x-5">
+                <div class="flex items-center gap-3 flex-1 min-w-0">
                   <div
-                    class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-purple-950 to-purple-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base"
+                    class="w-16 h-16 sm:w-20 sm:h-20 rounded bg-[#26262c] flex items-center justify-center flex-shrink-0 text-[#adadb8] font-semibold text-xs text-center overflow-hidden"
                   >
                     {{wishlist[0]}}
                   </div>
-                  <div>
-                    <span class="text-white font-semibold text-lg"
+                  <div class="flex-1 min-w-0">
+                    <span
+                      class="text-[#efeff1] font-medium text-sm block truncate"
                       >{{ wishlist[0] }}</span
                     >
-                    <p class="text-purple-300 text-sm">{{ wishlist[1] }}</p>
+                    <p class="text-[#adadb8] text-xs truncate">
+                      {{ wishlist[1] }}
+                    </p>
                     {% if wishlist[4]=='1' %}
-                    <div class="flex items-center space-x-3 mt-1">
+                    <div class="flex items-center gap-2 mt-1">
                       <span
-                        class="bg-purple-800 text-white text-xs px-3 py-1 rounded-lg"
+                        class="bg-[#9147ff] text-white text-xs px-2 py-0.5 rounded font-medium"
                         >{{ wishlist[5] }}% OFF</span
                       >
-                      <span class="text-pink-500 font-bold text-lg"
+                      <span class="text-[#efeff1] font-semibold text-sm"
                         >${{ wishlist[3] }}</span
                       >
                     </div>
                     {% else %}
-                    <p class="text-pink-500 font-bold text-lg mt-1">
+                    <p class="text-[#efeff1] font-semibold text-sm mt-1">
                       ${{ wishlist[3] }}
                     </p>
                     {% endif %}
@@ -800,10 +974,10 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="flex space-x-3">
+                <div class="flex gap-2 flex-shrink-0">
                   <button
                     type="button"
-                    class="text-white bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                    class="flex-1 sm:flex-none text-white bg-[#eb0400] hover:bg-[#c20400] font-medium rounded text-xs px-3 py-2 transition-colors"
                     data-username="{{wishlist[0]}}"
                     data-game_name_wishlist="{{ wishlist[1] }}"
                     onclick="RemoveFromWishList(this)"
@@ -812,11 +986,11 @@
                   </button>
                   <button
                     type="button"
-                    class="text-white bg-gradient-to-r from-purple-700 to-pink-700 hover:from-purple-800 hover:to-pink-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                    class="flex-1 sm:flex-none text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded text-xs px-3 py-2 transition-colors whitespace-nowrap"
                     data-username="{{wishlist[0]}}"
-                    data-game_name_wishlist="{{ wishlist[1] }}"
-                    data-was_it_on_sale="{{wishlist[4]}}"
-                    onclick="AddtoCart(this)"
+                    data-game_name_cart="{{ wishlist[1] }}"
+                    data-game_sale_status="{{wishlist[4]}}"
+                    onclick="AddtoCart(event, this)"
                   >
                     Add to Cart
                   </button>
@@ -827,11 +1001,13 @@
             {% else %}
             <!-- Empty Wishlist -->
             <div
-              class="text-center py-12 bg-gradient-to-r from-purple-950 to-purple-900 rounded-2xl border border-purple-800/50"
+              class="text-center py-12 bg-[#1f1f23] rounded border border-[#2d2d35]"
             >
-              <i class="fas fa-heart text-7xl text-pink-500 mb-5"></i>
-              <p class="text-purple-200 text-xl">Your wishlist is empty</p>
-              <p class="text-purple-400 text-md">
+              <i class="fas fa-heart text-5xl text-[#adadb8] mb-4"></i>
+              <p class="text-[#efeff1] text-base mb-1">
+                Your wishlist is empty
+              </p>
+              <p class="text-[#adadb8] text-sm">
                 Add some games to your wishlist to see them here!
               </p>
             </div>
@@ -845,37 +1021,32 @@
     <div
       id="popup-modal"
       tabindex="-1"
-      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-300"
       role="dialog"
       aria-labelledby="popup-title"
     >
-      <div class="relative p-4 sm:p-6 w-full max-w-md h-auto animate-slideIn">
-        <div
-          class="glassmorphism rounded-3xl shadow-2xl border border-blue-500/40 p-6 sm:p-8"
-        >
+      <div class="relative p-4 w-full max-w-md h-auto">
+        <div class="bg-[#18181b] rounded border border-[#2d2d35] p-6">
           <button
             type="button"
-            class="absolute top-4 end-4 text-gray-200 bg-gradient-to-r from-blue-700/50 to-transparent hover:from-blue-600/70 rounded-full p-2 transition-all duration-300"
+            class="absolute top-4 right-4 text-[#adadb8] hover:text-[#efeff1] transition-colors"
             data-modal-hide="popup-modal"
             aria-label="Close modal"
           >
-            <i class="fas fa-times w-5 h-5"></i>
+            <i class="fas fa-times text-xl"></i>
           </button>
           <div class="text-center">
             <i
-              class="fas fa-exclamation-circle mx-auto mb-4 text-blue-400 text-4xl sm:text-5xl"
+              class="fas fa-check-circle mx-auto mb-4 text-[#9147ff] text-5xl"
             ></i>
-            <h3
-              id="popup-title"
-              class="mb-4 text-lg sm:text-xl font-bold text-gray-100"
-            >
+            <h3 id="popup-title" class="mb-4 text-xl font-bold text-[#efeff1]">
               Modal Title
             </h3>
-            <div class="modal-body text-gray-200 text-sm sm:text-base"></div>
+            <div class="modal-body text-[#adadb8] text-sm"></div>
             <button
               data-modal-hide="popup-modal"
               type="button"
-              class="mt-4 text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+              class="mt-4 text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded text-sm px-4 py-2 transition-colors"
             >
               Close
             </button>
@@ -896,7 +1067,14 @@
           title="Game Trailer"
           class="absolute top-0 left-0 w-full h-full rounded-xl"
           frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="
+            accelerometer;
+            autoplay;
+            clipboard-write;
+            encrypted-media;
+            gyroscope;
+            picture-in-picture;
+          "
           allowfullscreen
           loading="lazy"
         ></iframe>
@@ -983,6 +1161,9 @@
     </footer>
 
     <script>
+      console.log("=== BUYER STOREFRONT JAVASCRIPT LOADED ===");
+      console.log("Script timestamp:", new Date().toISOString());
+
       let player;
       let originalGameList = document.getElementById("SortingTest")?.innerHTML;
 
@@ -1000,7 +1181,7 @@
         const carousel = document.getElementById("controls-carousel");
         const items = carousel.querySelectorAll(".carousel-item");
         const indicators = carousel.querySelectorAll(
-          "[data-carousel-slide-to]"
+          "[data-carousel-slide-to]",
         );
         const prevBtn = carousel.querySelector("[data-carousel-prev]");
         const nextBtn = carousel.querySelector("[data-carousel-next]");
@@ -1012,11 +1193,11 @@
             item.classList.toggle("hidden", i !== index);
             item.setAttribute(
               "data-carousel-item",
-              i === index ? "active" : ""
+              i === index ? "active" : "",
             );
             indicators[i].setAttribute(
               "aria-current",
-              i === index ? "true" : "false"
+              i === index ? "true" : "false",
             );
             indicators[i].classList.toggle("bg-blue-500", i === index);
             indicators[i].classList.toggle("bg-white/50", i !== index);
@@ -1135,7 +1316,7 @@
                 </div>
               </div>
             </div>
-          `
+          `,
             )
             .join("");
 
@@ -1155,7 +1336,7 @@
             .then((response) => {
               if (!response.ok)
                 throw new Error(
-                  `SearchFilterReturner failed: ${response.status}`
+                  `SearchFilterReturner failed: ${response.status}`,
                 );
               return response.text();
             })
@@ -1177,7 +1358,7 @@
               SortingTest.classList.add("game-grid", "max-w-7xl", "mx-auto");
               const modalTitle = document.querySelector("#popup-modal h3");
               const modalBody = document.querySelector(
-                "#popup-modal .modal-body"
+                "#popup-modal .modal-body",
               );
               modalTitle.innerHTML = "Sorting Error";
               modalBody.innerHTML =
@@ -1190,7 +1371,7 @@
 
       function initializeSearch_wishlistedgames() {
         const searchInput = document.getElementById(
-          "searchInput_wishlistedgames"
+          "searchInput_wishlistedgames",
         );
         const userList = document.querySelectorAll("#wishlistList li");
         if (searchInput) {
@@ -1213,6 +1394,12 @@
         const was_it_on_sale = button.getAttribute("data-game_sale_status");
         const originalText = button.textContent;
 
+        console.log(
+          "Adding to cart:",
+          game_name,
+          "Sale status:",
+          was_it_on_sale,
+        );
         button.disabled = true;
         button.textContent = "Adding...";
 
@@ -1225,16 +1412,17 @@
             if (!response.ok) {
               return response.text().then((text) => {
                 throw new Error(
-                  `AddtoCart failed: ${response.status}, Response: ${text}`
+                  `AddtoCart failed: ${response.status}, Response: ${text}`,
                 );
               });
             }
             return response.json();
           })
           .then((data) => {
+            console.log("Add to cart response:", data);
             const modalTitle = document.querySelector("#popup-modal h3");
             const modalBody = document.querySelector(
-              "#popup-modal .modal-body"
+              "#popup-modal .modal-body",
             );
 
             modalTitle.innerHTML = data.message || "Added to Cart";
@@ -1245,7 +1433,6 @@
               setTimeout(() => closeModal("popup-modal"), 2000);
               updateCartCount();
             } else {
-
               setTimeout(() => closeModal("popup-modal"), 3000);
             }
           })
@@ -1253,7 +1440,7 @@
             console.error("Add to Cart Error:", error);
             const modalTitle = document.querySelector("#popup-modal h3");
             const modalBody = document.querySelector(
-              "#popup-modal .modal-body"
+              "#popup-modal .modal-body",
             );
             modalTitle.innerHTML = "Cart Error";
             modalBody.innerHTML = `Failed to add ${game_name} to cart. Please try again later.`;
@@ -1273,6 +1460,7 @@
         const game_name = button.getAttribute("data-game_name_wishlist");
         const originalText = button.textContent;
 
+        console.log("Adding to wishlist:", game_name);
         button.disabled = true;
         button.textContent = "Adding...";
 
@@ -1285,16 +1473,17 @@
             if (!response.ok) {
               return response.text().then((text) => {
                 throw new Error(
-                  `AddtoWishlist failed: ${response.status}, Response: ${text}`
+                  `AddtoWishlist failed: ${response.status}, Response: ${text}`,
                 );
               });
             }
             return response.json();
           })
           .then((data) => {
+            console.log("Add to wishlist response:", data);
             const modalTitle = document.querySelector("#popup-modal h3");
             const modalBody = document.querySelector(
-              "#popup-modal .modal-body"
+              "#popup-modal .modal-body",
             );
 
             modalTitle.innerHTML = data.message || "Added to Wishlist";
@@ -1314,7 +1503,7 @@
             console.error("Wishlist Error:", error);
             const modalTitle = document.querySelector("#popup-modal h3");
             const modalBody = document.querySelector(
-              "#popup-modal .modal-body"
+              "#popup-modal .modal-body",
             );
             modalTitle.innerHTML = "Wishlist Error";
             modalBody.innerHTML = `Failed to add ${game_name} to wishlist. Please try again later.`;
@@ -1329,8 +1518,19 @@
 
       function RemoveFromWishList(button) {
         const game_name = button.getAttribute("data-game_name_wishlist");
-        const listItem = button.closest("div");
+        const listItem = button.closest("li");
         const originalText = button.textContent;
+
+        console.log("=== REMOVE FROM WISHLIST ===");
+        console.log("Game name:", game_name);
+        console.log("Button:", button);
+        console.log("List item:", listItem);
+
+        if (!game_name) {
+          console.error("No game_name found on button!");
+          alert("Error: No game name found");
+          return;
+        }
 
         button.disabled = true;
         button.textContent = "Removing...";
@@ -1341,23 +1541,29 @@
           body: JSON.stringify({ game_name }),
         })
           .then((response) => {
+            console.log("Response status:", response.status);
             if (!response.ok)
               throw new Error(`RemoveFromWishlist failed: ${response.status}`);
             return response.json();
           })
           .then((data) => {
+            console.log("Remove response data:", data);
             const modalTitle = document.querySelector("#popup-modal h3");
             const modalBody = document.querySelector(
-              "#popup-modal .modal-body"
+              "#popup-modal .modal-body",
             );
             modalTitle.innerHTML = data.message || "Removed from Wishlist";
             modalBody.innerHTML = "";
             openModal("popup-modal");
 
             if (data.success || data.message) {
-              listItem.remove();
+              if (listItem) {
+                listItem.remove();
+                console.log("List item removed from DOM");
+              }
               setTimeout(() => closeModal("popup-modal"), 2000);
               updateWishlistCount();
+              refreshWishlistModal();
             } else {
               modalBody.innerHTML =
                 data.error || "Failed to remove from wishlist.";
@@ -1368,7 +1574,7 @@
             console.error("Remove Wishlist Error:", error);
             const modalTitle = document.querySelector("#popup-modal h3");
             const modalBody = document.querySelector(
-              "#popup-modal .modal-body"
+              "#popup-modal .modal-body",
             );
             modalTitle.innerHTML = "Wishlist Error";
             modalBody.innerHTML =
@@ -1383,6 +1589,7 @@
       }
 
       function updateCartCount() {
+        console.log("=== UPDATE CART COUNT ===");
         fetch("/get_cart_count", { method: "GET" })
           .then((response) => {
             if (!response.ok)
@@ -1390,26 +1597,79 @@
             return response.json();
           })
           .then((data) => {
-            const cartContainer = document.querySelector("[data-cart-status]");
-            if (cartContainer && data.success) {
-              if (data.cart_count === 0) {
-                cartContainer.innerHTML = `
-                  <div class="relative group flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400">
-                    <i class="fas fa-cart-shopping"></i>
-                    <span id="cart-count" class="font-medium">Cart is Empty</span>
-                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Browse games to fill your cart!</div>
-                  </div>
-                `;
-              } else {
-                cartContainer.innerHTML = `
-                  <a href="/ViewCart" class="relative group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300">
-                      <i class="fas fa-cart-shopping text-blue-400"></i>
-                      <span id="cart-count" class="font-medium">Cart (${data.cart_count})</span>
-                    </div>
-                  </a>
-                `;
+            console.log("Cart count data:", data);
+            if (data.success) {
+              const count = data.cart_count || 0;
+              console.log("New cart count:", count);
+
+              // Update desktop cart badge
+              const desktopCart = document.getElementById("desktopCartLink");
+              console.log("Desktop cart element:", desktopCart);
+              if (desktopCart) {
+                const spans = desktopCart.querySelectorAll("span");
+                console.log("Number of spans found:", spans.length);
+
+                // First span is "Cart" text, second span is badge
+                const textSpan = spans[0];
+                const badgeSpan = spans[1];
+
+                console.log("Text span:", textSpan);
+                console.log("Badge span:", badgeSpan);
+
+                if (badgeSpan) {
+                  badgeSpan.textContent = count;
+                  console.log("Desktop badge updated to:", count);
+                }
+
+                // Update icon and text colors
+                const icon = desktopCart.querySelector("i");
+                if (count === 0) {
+                  if (icon)
+                    icon.className =
+                      "fas fa-shopping-cart text-red-400 text-sm";
+                  if (textSpan) textSpan.className = "text-red-400";
+                  if (badgeSpan)
+                    badgeSpan.className =
+                      "bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded text-xs font-semibold";
+                } else {
+                  if (icon)
+                    icon.className =
+                      "fas fa-shopping-cart text-blue-400 text-sm";
+                  if (textSpan) textSpan.className = "text-blue-400";
+                  if (badgeSpan)
+                    badgeSpan.className =
+                      "bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded text-xs font-semibold";
+                }
+              }
+
+              // Update mobile cart badge
+              const mobileCart = document.getElementById("mobileCartLink");
+              console.log("Mobile cart element:", mobileCart);
+              if (mobileCart) {
+                const badge = mobileCart.querySelector("span.absolute");
+                console.log("Mobile badge element:", badge);
+                if (badge) {
+                  badge.textContent = count;
+                  console.log("Mobile badge updated to:", count);
+                }
+
+                // Update icon and badge colors
+                const icon = mobileCart.querySelector("i");
+                if (count === 0) {
+                  if (icon)
+                    icon.className =
+                      "fas fa-shopping-cart text-red-400 text-base";
+                  if (badge)
+                    badge.className =
+                      "absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center";
+                } else {
+                  if (icon)
+                    icon.className =
+                      "fas fa-shopping-cart text-blue-400 text-base";
+                  if (badge)
+                    badge.className =
+                      "absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center";
+                }
               }
             }
           })
@@ -1417,6 +1677,7 @@
       }
 
       function updateWishlistCount() {
+        console.log("=== UPDATE WISHLIST COUNT ===");
         fetch("/get_wishlist", { method: "GET" })
           .then((response) => {
             if (!response.ok)
@@ -1424,13 +1685,43 @@
             return response.json();
           })
           .then((data) => {
-            const wishlistCount = document.getElementById("wishlist-count");
-            if (wishlistCount && data.wishlist_games) {
-              wishlistCount.textContent = `Wishlist (${data.wishlist_games.length})`;
+            console.log("Wishlist data:", data);
+            if (data.wishlist_games) {
+              const count = data.wishlist_games.length;
+              console.log("New wishlist count:", count);
+
+              // Update desktop wishlist button
+              const wishlistButton = document.getElementById(
+                "ViewWishlistedGamesButton",
+              );
+              console.log("Desktop wishlist button:", wishlistButton);
+              if (wishlistButton) {
+                const badge = wishlistButton.querySelector("span:last-child");
+                console.log("Desktop wishlist badge:", badge);
+                if (badge) {
+                  badge.textContent = count;
+                  console.log("Desktop wishlist badge updated to:", count);
+                }
+              }
+
+              // Update mobile wishlist button
+              const wishlistButtonMobile = document.getElementById(
+                "ViewWishlistedGamesButtonMobile",
+              );
+              console.log("Mobile wishlist button:", wishlistButtonMobile);
+              if (wishlistButtonMobile) {
+                const badge =
+                  wishlistButtonMobile.querySelector("span.absolute");
+                console.log("Mobile wishlist badge:", badge);
+                if (badge) {
+                  badge.textContent = count;
+                  console.log("Mobile wishlist badge updated to:", count);
+                }
+              }
             }
           })
           .catch((error) =>
-            console.error("Update Wishlist Count Error:", error)
+            console.error("Update Wishlist Count Error:", error),
           );
       }
 
@@ -1442,42 +1733,76 @@
             return response.json();
           })
           .then((data) => {
-            const wishlistList = document.getElementById("wishlistList");
-            if (wishlistList && data.wishlist_games) {
-              wishlistList.innerHTML = data.wishlist_games
-                .map(
-                  (wishlist) => `
-                  <li class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-800/50 to-blue-900/50 rounded-xl border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300">
-                    <span class="w-1/3 text-gray-100 font-medium">${
-                      wishlist[1]
-                    }</span>
-                    ${
-                      wishlist[4] === "1"
-                        ? `<span class="w-1/3 text-gray-100 flex items-center gap-x-2"><span class="line-through">${wishlist[2]}$</span><span>${wishlist[3]}$</span></span>`
-                        : `<span class="w-1/3 text-gray-100">${wishlist[3]}$</span>`
-                    }
-                    <div class="w-1/3 text-right space-x-2">
-                      <button type="button" class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
-                        wishlist[0]
-                      }" data-game_name_wishlist="${
-                    wishlist[1]
-                  }" onclick="RemoveFromWishList(this)">Remove</button>
-                      <button type="button" class="text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105" data-username="${
-                        wishlist[0]
-                      }" data-game_name_cart="${
-                    wishlist[1]
-                  }" data-game_sale_status="${
-                    wishlist[4]
-                  }" onclick="AddtoCart(event, this)">Add to Cart</button>
-                    </div>
-                  </li>
-                `
-                )
-                .join("");
+            const wishlistContainer =
+              document.getElementById("wishlist-container");
+            if (wishlistContainer && data.wishlist_games) {
+              if (data.wishlist_games.length === 0) {
+                // Show empty state
+                wishlistContainer.innerHTML = `
+                  <div class="text-center py-12 bg-[#1f1f23] rounded border border-[#2d2d35]">
+                    <i class="fas fa-heart text-5xl text-[#adadb8] mb-4"></i>
+                    <p class="text-[#efeff1] text-base mb-1">Your wishlist is empty</p>
+                    <p class="text-[#adadb8] text-sm">Add some games to your wishlist to see them here!</p>
+                  </div>
+                `;
+              } else {
+                // Show wishlist items
+                const wishlistHTML = data.wishlist_games
+                  .map(
+                    (wishlist) => `
+                    <li class="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors">
+                      <!-- Game Info -->
+                      <div class="flex items-center gap-3 flex-1 min-w-0">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded bg-[#26262c] flex items-center justify-center flex-shrink-0 text-[#adadb8] font-semibold text-xs text-center overflow-hidden">
+                          ${wishlist[0]}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <span class="text-[#efeff1] font-medium text-sm block truncate">${wishlist[0]}</span>
+                          <p class="text-[#adadb8] text-xs truncate">${wishlist[1]}</p>
+                          ${
+                            wishlist[4] === "1"
+                              ? `<div class="flex items-center gap-2 mt-1">
+                                  <span class="bg-[#9147ff] text-white text-xs px-2 py-0.5 rounded font-medium">${wishlist[5]}% OFF</span>
+                                  <span class="text-[#efeff1] font-semibold text-sm">$${wishlist[3]}</span>
+                                </div>`
+                              : `<p class="text-[#efeff1] font-semibold text-sm mt-1">$${wishlist[3]}</p>`
+                          }
+                        </div>
+                      </div>
+
+                      <!-- Actions -->
+                      <div class="flex gap-2 flex-shrink-0">
+                        <button
+                          type="button"
+                          class="flex-1 sm:flex-none text-white bg-[#eb0400] hover:bg-[#c20400] font-medium rounded text-xs px-3 py-2 transition-colors"
+                          data-username="${wishlist[0]}"
+                          data-game_name_wishlist="${wishlist[1]}"
+                          onclick="RemoveFromWishList(this)"
+                        >
+                          Remove
+                        </button>
+                        <button
+                          type="button"
+                          class="flex-1 sm:flex-none text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded text-xs px-3 py-2 transition-colors whitespace-nowrap"
+                          data-username="${wishlist[0]}"
+                          data-game_name_cart="${wishlist[1]}"
+                          data-game_sale_status="${wishlist[4]}"
+                          onclick="(function(e, btn){ AddtoCart(e, btn); })(event, this)"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </li>
+                  `,
+                  )
+                  .join("");
+
+                wishlistContainer.innerHTML = `<ul id="wishlistList" class="space-y-2">${wishlistHTML}</ul>`;
+              }
             }
           })
           .catch((error) =>
-            console.error("Refresh Wishlist Modal Error:", error)
+            console.error("Refresh Wishlist Modal Error:", error),
           );
       }
 
@@ -1552,7 +1877,7 @@
                 .then((response) => {
                   if (!response.ok)
                     throw new Error(
-                      `update_password failed: ${response.status}`
+                      `update_password failed: ${response.status}`,
                     );
                   return response.json();
                 })
@@ -1572,7 +1897,7 @@
                     const modalTitle =
                       document.querySelector("#popup-modal h3");
                     const modalBody = document.querySelector(
-                      "#popup-modal .modal-body"
+                      "#popup-modal .modal-body",
                     );
                     modalTitle.innerHTML = "Password Update Error";
                     modalBody.innerHTML =
@@ -1585,7 +1910,7 @@
                   console.error("Password Update Error:", error);
                   const modalTitle = document.querySelector("#popup-modal h3");
                   const modalBody = document.querySelector(
-                    "#popup-modal .modal-body"
+                    "#popup-modal .modal-body",
                   );
                   modalTitle.innerHTML = "Password Update Error";
                   modalBody.innerHTML =
@@ -1624,7 +1949,7 @@
                       "items-center",
                       "hover:bg-blue-900/50",
                       "cursor-pointer",
-                      "rounded-lg"
+                      "rounded-lg",
                     );
 
                     const logo = document.createElement("img");
@@ -1641,8 +1966,8 @@
                       "click",
                       () =>
                         (window.location.href = `/ViewGamePage/${encodeURIComponent(
-                          game.name
-                        )}`)
+                          game.name,
+                        )}`),
                     );
                     dropdown.appendChild(item);
                   });
@@ -1670,14 +1995,14 @@
 
         document.querySelectorAll("[data-modal-hide]").forEach((button) => {
           button.addEventListener("click", () =>
-            closeModal(button.getAttribute("data-modal-hide"))
+            closeModal(button.getAttribute("data-modal-hide")),
           );
         });
 
         document
           .getElementById("ViewWishlistedGamesButton")
           .addEventListener("click", () =>
-            openModal("ViewWishlistedGamesModal")
+            openModal("ViewWishlistedGamesModal"),
           );
       });
     </script>

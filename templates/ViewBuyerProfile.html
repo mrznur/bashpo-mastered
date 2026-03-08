@@ -109,146 +109,145 @@
   </head>
 
   <body
-    class="font-inter bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen"
+    class="font-inter bg-[#0e0e10] min-h-screen text-[#efeff1]"
   >
     <!-- Header -->
-    <header
-      id="navbar"
-      class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10"
-    >
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
+    <header class="sticky top-0 z-50 bg-[#18181b] border-b border-[#2d2d35]">
+      <div class="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
           <!-- Logo Section -->
-          <div class="flex items-center space-x-4">
-            <div class="relative group">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-              ></div>
-              <a href="/" class="relative block">
-                <img
-                  src="{{ url_for('static', filename='img/logo.jpg') }}"
-                  alt="Bashpo Logo"
-                  class="w-12 h-10 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105"
-                />
-              </a>
+          <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
+              <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo"
+                   class="w-12 h-8 rounded-lg object-contain" loading="lazy">
+              <span class="text-base sm:text-lg font-semibold hidden sm:block text-[#efeff1]">Bashpo</span>
+            </a>
+          </div>
+          
+          <!-- Desktop Right Section (hidden on mobile) -->
+          <div class="hidden sm:flex items-center gap-2">
+            <!-- Balance -->
+            <div class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm border border-[#2d2d35] px-3 py-2 rounded text-sm font-semibold">
+              <i class="fas fa-wallet text-green-400 text-sm"></i>
+              <span class="text-green-400">${{ balance | round(2) }}</span>
             </div>
-            <div class="hidden lg:block">
-              <h1
-                class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-              >
-                Bashpo
-              </h1>
-              <p class="text-xs text-gray-400">Gaming Platform</p>
+            
+            <!-- User Dropdown -->
+            <div class="relative">
+              <select id="user-name" name="user_name"
+                      class="bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] text-[#efeff1] text-sm px-3 py-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none pr-8 transition-all"
+                      onchange="handleDropdownChange(this)" required aria-label="User menu">
+                <option value="" disabled selected class="bg-[#1f1f23]">
+                  {{ username[:8] }}{% if username|length > 8 %}...{% endif %}
+                </option>
+                <option value="view_revenue" class="bg-[#1f1f23]">View Revenue</option>
+                <option value="update_pass" class="bg-[#1f1f23]">Update Password</option>
+                <option value="logout" class="bg-[#1f1f23]">Logout</option>
+              </select>
+              <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <i class="fas fa-chevron-down text-[#efeff1] text-xs"></i>
+              </div>
             </div>
           </div>
 
-          <!-- Navigation & Actions -->
-          <div class="flex items-center space-x-4">
-            <!-- User Balance Display -->
-            <div
-              class="hidden lg:flex items-center space-x-2 bg-gradient-to-r from-emerald-600/20 to-blue-600/20 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-sm"
-            >
-              <i class="fas fa-wallet text-emerald-400"></i>
-              <span class="text-white font-medium"
-                >${{ balance | round(2) }}</span
-              >
-            </div>
-
-            <!-- User Dropdown -->
-            <div class="relative w-[200px]">
-              <select
-                id="user-name"
-                name="user_name"
-                class="user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-opacity-50 appearance-none cursor-pointer"
-                onchange="handleDropdownChange(this)"
-                required
-              >
-                <option
-                  value=""
-                  disabled
-                  selected
-                  class="bg-slate-800 text-gray-300 user-dropdown-option"
-                  data-fallback="👤"
-                >
-                  <i class="fas fa-user"></i> {{ username }}
-                </option>
-                <option
-                  value="view_revenue"
-                  class="bg-slate-800 text-white user-dropdown-option"
-                  data-fallback="📊"
-                >
-                  <i class="fas fa-chart-bar"></i> View Revenue
-                </option>
-                <option
-                  value="update_pass"
-                  class="bg-slate-800 text-white user-dropdown-option"
-                  data-fallback="🔒"
-                >
-                  <i class="fas fa-lock"></i> Update Password
-                </option>
-                <option
-                  value="logout"
-                  class="bg-slate-800 text-white user-dropdown-option"
-                  data-fallback="⬅️"
-                >
-                  <i class="fas fa-sign-out-alt"></i> Logout
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-2 flex items-center pointer-events-none user-dropdown-arrow"
-              >
-                <i class="fas fa-chevron-down text-white"></i>
-              </div>
-            </div>
+          <!-- Mobile Right Section (visible only on mobile) -->
+          <div class="flex sm:hidden items-center gap-2">
+            <!-- Menu Button -->
+            <button type="button" id="mobileMenuButton" class="flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all">
+              <i class="fas fa-bars text-[#efeff1] text-base"></i>
+            </button>
           </div>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Slide-out Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div id="mobileMenuBackdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      
+      <!-- Menu Panel -->
+      <div id="mobileMenuPanel" class="absolute top-0 right-0 h-full w-80 bg-[#18181b] border-l border-[#2d2d35] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+          <!-- Menu Header -->
+          <div class="flex items-center justify-between p-4 border-b border-[#2d2d35]">
+            <h3 class="text-lg font-bold text-[#efeff1]">Menu</h3>
+            <button id="closeMobileMenu" class="flex items-center justify-center w-8 h-8 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+              <i class="fas fa-times text-[#efeff1]"></i>
+            </button>
+          </div>
+          
+          <!-- User Info -->
+          <div class="p-4 border-b border-[#2d2d35]">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 bg-[#9147ff] rounded-full flex items-center justify-center text-white text-xl font-bold">
+                {{username[0].upper()}}
+              </div>
+              <div>
+                <p class="text-[#efeff1] font-semibold">{{username}}</p>
+                <p class="text-[#adadb8] text-sm">Developer Account</p>
+              </div>
+            </div>
+            
+            <!-- Balance Display -->
+            <div class="flex items-center gap-2 bg-[#1f1f23] px-3 py-2 rounded">
+              <i class="fas fa-wallet text-green-400"></i>
+              <span class="text-green-400 font-semibold">${{ balance | round(2) }}</span>
+            </div>
+          </div>
+          
+          <!-- Menu Options -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <nav class="space-y-2">
+              <button onclick="showDeveloperRevenueModal(); closeMobileMenuFunc();" class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">View Revenue</span>
+              </button>
+              
+              <button onclick="showUpdatePasswordModal(); closeMobileMenuFunc();" class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Update Password</span>
+              </button>
+              
+              <a href="/logout" class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Logout</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Update Password Modal -->
     <div
       id="UpdatePasswordModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
     >
-      <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
-        <!-- Modal content -->
-        <div
-          class="relative p-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl border border-white/20"
-        >
-          <!-- Modal header -->
-          <div
-            class="flex justify-between items-center pb-4 mb-4 rounded-t border-b border-white/20"
-          >
-            <div class="text-lg text-white md:text-xl">
-              <h3
-                class="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-              >
-                <i class="fas fa-lock mr-2"></i>Update Password
-              </h3>
-            </div>
+      <div class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg">
+        <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+          <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+            <h3 class="text-xl font-bold text-[#efeff1]">
+              <i class="fas fa-lock mr-2 text-[#9147ff]"></i>Update Password
+            </h3>
             <button
               type="button"
-              class="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
               data-modal-toggle="UpdatePasswordModal"
             >
-              <i class="fas fa-times w-5 h-5"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">Close modal</span>
             </button>
           </div>
-
-          <!-- Modal body: Update password form -->
           <form
             id="updatePasswordForm"
             action="/update_password"
             method="POST"
-            class="space-y-4"
+            class="space-y-6"
           >
             <div>
               <label
                 for="current-password"
-                class="block text-sm font-medium text-gray-300"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Current Password</label
               >
               <input
@@ -256,13 +255,14 @@
                 id="current-password"
                 name="current_password"
                 required
-                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                placeholder="Enter current password"
               />
             </div>
             <div>
               <label
                 for="new-password"
-                class="block text-sm font-medium text-gray-300"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >New Password</label
               >
               <input
@@ -270,13 +270,14 @@
                 id="new-password"
                 name="new_password"
                 required
-                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                placeholder="Enter new password"
               />
             </div>
             <div>
               <label
                 for="confirm-password"
-                class="block text-sm font-medium text-gray-300"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Confirm New Password</label
               >
               <input
@@ -284,23 +285,21 @@
                 id="confirm-password"
                 name="confirm_password"
                 required
-                class="mt-2 w-full px-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                placeholder="Confirm new password"
               />
             </div>
-
-            <!-- Error and Success Messages -->
-            <div id="password-error" class="text-red-500 hidden">
+            <div id="password-error" class="text-[#eb0400] hidden text-sm">
               Passwords do not match.
             </div>
-            <div id="password-success" class="text-green-500 hidden">
+            <div id="password-success" class="text-[#00c7ac] hidden text-sm">
               Password updated successfully!
             </div>
-
-            <div class="mt-4 flex justify-end space-x-2">
+            <div class="flex justify-end gap-3">
               <button
                 type="button"
                 id="cancel-password"
-                class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition duration-300"
+                class="text-sm px-4 py-2 bg-[#1f1f23] hover:bg-[#26262c] text-[#efeff1] rounded transition-colors"
                 data-modal-toggle="UpdatePasswordModal"
               >
                 Cancel
@@ -308,7 +307,7 @@
               <button
                 type="submit"
                 id="submit-password"
-                class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:scale-105 transition duration-300"
+                class="text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
               >
                 Update
               </button>
@@ -323,67 +322,53 @@
       id="DeveloperRevenueModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
     >
-      <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
-        <!-- Modal content -->
-        <div
-          class="relative p-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl border border-white/20"
-        >
-          <!-- Modal header -->
-          <div
-            class="flex justify-between items-center pb-4 mb-4 rounded-t border-b border-white/20"
-          >
-            <div class="text-lg text-white md:text-xl">
-              <h1
-                class="font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent"
-              >
+      <div class="relative p-4 sm:p-6 w-full max-w-4xl">
+        <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+          <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+            <div>
+              <h3 class="text-xl font-bold text-[#efeff1]">
                 Total Cashflow: ${{total_cash_flow | round(2)}}
-              </h1>
-              <h3
-                class="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-              >
-                <i class="fas fa-wallet mr-2"></i>Developer Revenue
               </h3>
+              <p class="text-sm text-[#adadb8] mt-1">Developer Revenue Overview</p>
             </div>
             <button
               type="button"
-              class="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
               data-modal-toggle="DeveloperRevenueModal"
             >
-              <i class="fas fa-times w-5 h-5"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">Close modal</span>
             </button>
           </div>
-
-          <!-- Display Developer Revenue -->
-          <div class="mt-4">
-            <ul class="space-y-3">
-              {% for developer in developer_earnings %}
-              <li
-                class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10"
-              >
-                <span class="text-white font-medium">{{ developer[0] }}</span>
-                <span class="text-emerald-400 font-semibold"
-                  >${{ developer[1] | round(2) }}</span
-                >
-              </li>
-              {% endfor %}
-              <div class="mt-4 space-y-2">
-                <p
-                  class="text-sm font-bold text-gray-300 bg-gradient-to-r from-slate-700 to-slate-600 p-3 rounded-xl"
-                >
-                  Top earning game: {{highest_game[0]}} (${{highest_game[1] |
-                  round(2)}})
-                </p>
-                <p
-                  class="text-sm font-bold text-gray-300 bg-gradient-to-r from-slate-700 to-slate-600 p-3 rounded-xl"
-                >
-                  Dev with the highest earning (cumulative): {{highest_dev[0]}}
-                  (${{highest_dev[1]| round(2)}})
-                </p>
+          <div class="space-y-6">
+            <div class="overflow-x-auto">
+              <div class="bg-[#1f1f23] rounded p-3 mb-4 flex font-semibold text-[#efeff1] text-sm">
+                <div class="w-1/2">Developer</div>
+                <div class="w-1/2">Earnings</div>
               </div>
-            </ul>
+              <ul class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                {% for developer in developer_earnings %}
+                <li class="flex items-center p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors">
+                  <span class="w-1/2 text-[#efeff1]">{{ developer[0] }}</span>
+                  <span class="w-1/2 text-[#00c7ac] font-semibold">${{ developer[1] | round(2) }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-[#1f1f23] rounded p-4 border border-[#2d2d35]">
+                <p class="text-sm text-[#adadb8] mb-1">Top Earning Game</p>
+                <p class="text-[#efeff1] font-semibold">{{highest_game[0]}}</p>
+                <p class="text-[#00c7ac] font-bold text-lg">${{highest_game[1] | round(2)}}</p>
+              </div>
+              <div class="bg-[#1f1f23] rounded p-4 border border-[#2d2d35]">
+                <p class="text-sm text-[#adadb8] mb-1">Top Developer (Cumulative)</p>
+                <p class="text-[#efeff1] font-semibold">{{highest_dev[0]}}</p>
+                <p class="text-[#00c7ac] font-bold text-lg">${{highest_dev[1]| round(2)}}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -393,83 +378,83 @@
     <main>
       <!-- Hero Section -->
       <section
-        class="relative min-h-screen bg-[url('{{ url_for('static', filename='img/bg-2.jpg') }}')] bg-cover bg-center"
+        class="relative min-h-screen bg-[url('{{ url_for('static', filename='img/bg-2.jpg') }}')] bg-cover bg-center flex items-center justify-center"
       >
-        <div class="absolute inset-0 backdrop-blur-md bg-black/50"></div>
-        <div class="relative z-10 container mx-auto px-4 py-8">
-          <!-- Profile Header -->
-          <div class="text-center mb-8">
-            <div class="relative inline-block mb-6">
-              <div
-                class="w-32 h-32 mx-auto bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 rounded-full flex items-center justify-center shadow-2xl"
-              >
-                <i class="fas fa-user text-6xl text-white"></i>
+        <div class="absolute inset-0 backdrop-blur-sm bg-black/80"></div>
+        <div class="relative z-10 container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
+          <div class="w-full max-w-6xl">
+            <!-- Profile Header -->
+            <div class="text-center mb-8">
+              <div class="relative inline-block mb-6">
+                <div
+                  class="w-32 h-32 mx-auto bg-[#9147ff] rounded-full flex items-center justify-center shadow-2xl"
+                >
+                  <i class="fas fa-user text-6xl text-white"></i>
+                </div>
+                <div
+                  class="absolute -bottom-2 -right-2 w-10 h-10 bg-[#00c7ac] rounded-full flex items-center justify-center shadow-lg"
+                >
+                  <i class="fas fa-user-friends text-white text-sm"></i>
+                </div>
               </div>
-              <div
-                class="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg"
+              <h1
+                class="text-4xl lg:text-6xl font-bold text-[#efeff1] mb-4"
               >
-                <i class="fas fa-user-friends text-white text-sm"></i>
-              </div>
+                {{friendusername}}'s Profile
+              </h1>
             </div>
-            <h1
-              class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent mb-4"
-            >
-              {{friendusername}}'s Profile
-            </h1>
-          </div>
 
-          <!-- Profile Content -->
-          <div class="max-w-6xl mx-auto">
+            <!-- Profile Content -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <!-- Profile Information Card -->
               <div
-                class="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-2xl"
+                class="bg-[#18181b] backdrop-blur-sm rounded p-8 border border-[#2d2d35] shadow-2xl"
               >
                 <div class="flex items-center space-x-3 mb-6">
                   <div
-                    class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center"
+                    class="w-12 h-12 bg-[#9147ff] rounded flex items-center justify-center"
                   >
                     <i class="fas fa-info-circle text-white text-xl"></i>
                   </div>
-                  <h2 class="text-2xl font-bold text-white">
+                  <h2 class="text-2xl font-bold text-[#efeff1]">
                     Profile Information
                   </h2>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-4">
                   <div
-                    class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10"
+                    class="flex items-center justify-between p-4 bg-[#1f1f23] rounded border border-[#2d2d35]"
                   >
                     <div class="flex items-center space-x-3">
-                      <i class="fas fa-user text-blue-400"></i>
-                      <span class="text-gray-300">Username</span>
+                      <i class="fas fa-user text-[#9147ff]"></i>
+                      <span class="text-[#adadb8]">Username</span>
                     </div>
-                    <span class="text-white font-semibold"
+                    <span class="text-[#efeff1] font-semibold"
                       >{{friendusername}}</span
                     >
                   </div>
 
                   <div
-                    class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10"
+                    class="flex items-center justify-between p-4 bg-[#1f1f23] rounded border border-[#2d2d35]"
                   >
                     <div class="flex items-center space-x-3">
-                      <i class="fas fa-envelope text-purple-400"></i>
-                      <span class="text-gray-300">Email</span>
+                      <i class="fas fa-envelope text-[#9147ff]"></i>
+                      <span class="text-[#adadb8]">Email</span>
                     </div>
-                    <span class="text-white font-semibold"
+                    <span class="text-[#efeff1] font-semibold"
                       >{{friend_email}}</span
                     >
                   </div>
 
                   <div
-                    class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10"
+                    class="flex items-center justify-between p-4 bg-[#1f1f23] rounded border border-[#2d2d35]"
                   >
                     <div class="flex items-center space-x-3">
-                      <i class="fas fa-shield-alt text-green-400"></i>
-                      <span class="text-gray-300">Account Status</span>
+                      <i class="fas fa-shield-alt text-[#00c7ac]"></i>
+                      <span class="text-[#adadb8]">Account Status</span>
                     </div>
                     <span
-                      class="font-semibold {% if friend_account_status == 'ACTIVE' %}text-green-400{% elif friend_account_status == 'TERMINATED' %}text-red-400{% else %}text-gray-400{% endif %}"
+                      class="font-semibold {% if friend_account_status == 'ACTIVE' %}text-[#00c7ac]{% elif friend_account_status == 'TERMINATED' %}text-[#eb0400]{% else %}text-[#adadb8]{% endif %}"
                     >
                       {{friend_account_status}}
                     </span>
@@ -479,28 +464,28 @@
 
               <!-- Actions Card -->
               <div
-                class="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-2xl"
+                class="bg-[#18181b] backdrop-blur-sm rounded p-8 border border-[#2d2d35] shadow-2xl"
               >
                 <div class="flex items-center space-x-3 mb-6">
                   <div
-                    class="w-12 h-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl flex items-center justify-center"
+                    class="w-12 h-12 bg-[#9147ff] rounded flex items-center justify-center"
                   >
                     <i class="fas fa-gamepad text-white text-xl"></i>
                   </div>
-                  <h2 class="text-2xl font-bold text-white">Gaming Library</h2>
+                  <h2 class="text-2xl font-bold text-[#efeff1]">Gaming Library</h2>
                 </div>
 
                 <div class="text-center">
                   <div class="mb-6">
                     <div
-                      class="w-20 h-20 mx-auto bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mb-4"
+                      class="w-20 h-20 mx-auto bg-[#9147ff] rounded-full flex items-center justify-center mb-4"
                     >
                       <i class="fas fa-trophy text-white text-2xl"></i>
                     </div>
-                    <p class="text-gray-300 mb-2">
+                    <p class="text-[#efeff1] mb-2">
                       Discover what games {{friendusername}} owns
                     </p>
-                    <p class="text-sm text-gray-400">
+                    <p class="text-sm text-[#adadb8]">
                       View your friend's games collection and achievements,
                       maybe you'd like something that your friend likes as well!
                     </p>
@@ -509,19 +494,10 @@
                   <button
                     type="button"
                     id="ViewOwnedGamesButton"
-                    data-modal-target="ViewOwnedGamesModal"
-                    data-modal-toggle="ViewOwnedGamesModal"
-                    class="relative group w-full"
+                    class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
                   >
-                    <div
-                      class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-                    ></div>
-                    <div
-                      class="relative bg-gradient-to-r from-slate-800 to-slate-700 px-8 py-4 rounded-xl border border-white/20 text-white hover:scale-105 transition-all duration-300"
-                    >
-                      <i class="fas fa-gamepad mr-2"></i>
-                      View {{friendusername}}'s Owned Games
-                    </div>
+                    <i class="fas fa-gamepad mr-2"></i>
+                    View {{friendusername}}'s Owned Games
                   </button>
                 </div>
               </div>
@@ -535,77 +511,53 @@
         id="ViewOwnedGamesModal"
         tabindex="-1"
         aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black bg-opacity-40"
+        class="hidden bg-black/70 backdrop-blur-sm overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center p-4"
+        onclick="if(event.target === this) closeOwnedGamesModal()"
       >
-        <div class="relative p-4 w-full max-w-4xl h-full md:h-auto">
-          <!-- Modal content -->
-          <div
-            class="relative p-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl border border-white/20"
-          >
-            <!-- Modal header -->
-            <div
-              class="flex justify-between items-center pb-4 mb-4 rounded-t border-b border-white/20"
-            >
-              <div class="text-lg text-white md:text-xl">
-                <h3
-                  class="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                >
-                  <i class="fas fa-gamepad mr-2"></i>{{friendusername}}'s Game
-                  Library
-                </h3>
-              </div>
+        <div class="relative w-full max-w-4xl max-h-[90vh] flex flex-col">
+          <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+            <!-- Header - Fixed -->
+            <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+              <h3 class="text-xl font-bold text-[#efeff1]">
+                <i class="fas fa-gamepad mr-2 text-[#9147ff]"></i>{{friendusername}}'s Game Library
+              </h3>
               <button
                 type="button"
-                class="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                data-modal-toggle="ViewOwnedGamesModal"
+                class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
+                onclick="closeOwnedGamesModal()"
               >
-                <i class="fas fa-times w-5 h-5"></i>
+                <i class="fas fa-times"></i>
                 <span class="sr-only">Close modal</span>
               </button>
             </div>
 
-            <!-- Search bar -->
-            <div class="mb-4">
-              <div class="relative">
-                <div
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-                >
-                  <i class="fas fa-search text-gray-400"></i>
-                </div>
-                <input
-                  type="text"
-                  id="searchInput_games"
-                  class="block w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg bg-slate-700 text-white placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Search games..."
-                />
-              </div>
+            <!-- Search - Fixed -->
+            <div class="p-6 pb-4 flex-shrink-0">
+              <input
+                type="text"
+                id="searchInput_games"
+                placeholder="Search games..."
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+              />
             </div>
 
-            <!-- Modal body -->
-            <div class="max-h-96 overflow-y-auto">
+            <!-- Content - Scrollable -->
+            <div class="overflow-y-auto flex-1 px-6 pb-6">
               {% if friends_games %}
               <ul id="friendrequest" class="space-y-3">
                 {% for o_game in friends_games %}
-                <li
-                  class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300"
-                >
-                  <div class="flex items-center space-x-4">
-                    <div
-                      class="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center flex-shrink-0"
-                    >
-                      <i class="fas fa-gamepad text-2xl text-gray-400"></i>
+                <li class="bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors p-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="w-16 h-16 rounded bg-[#26262c] flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-gamepad text-2xl text-[#9147ff]"></i>
+                      </div>
+                      <div>
+                        <span class="text-[#efeff1] font-medium owned_games">{{o_game[0]}}</span>
+                        <p class="text-[#adadb8] text-sm">Owned Game</p>
+                      </div>
                     </div>
-                    <div>
-                      <span class="text-white font-medium owned_games"
-                        >{{o_game[0]}}</span
-                      >
-                      <p class="text-gray-400 text-sm">Owned Game</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center space-x-2">
-                    <span
-                      class="px-3 py-1 bg-green-600/20 text-green-400 rounded-full text-sm font-medium"
-                    >
+                    <span class="px-3 py-1 bg-[#00c7ac]/20 text-[#00c7ac] rounded text-sm font-medium">
                       <i class="fas fa-check mr-1"></i>Owned
                     </span>
                   </div>
@@ -614,9 +566,9 @@
               </ul>
               {% else %}
               <div class="text-center py-8">
-                <i class="fas fa-gamepad text-6xl text-gray-600 mb-4"></i>
-                <p class="text-gray-400 text-lg">No games found</p>
-                <p class="text-gray-500 text-sm">
+                <i class="fas fa-gamepad text-6xl text-[#adadb8] mb-4"></i>
+                <p class="text-[#efeff1] text-lg">No games found</p>
+                <p class="text-[#adadb8] text-sm">
                   {{friendusername}} hasn't purchased any games yet!
                 </p>
               </div>
@@ -630,7 +582,8 @@
     <!-- Footer -->
     <footer
       id="footer"
-      class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10"
+      class="relative bg-[#0e0e10] border-t border-[#2d2d35]"
+      style="z-index: 0;"
     >
       <div class="container mx-auto px-4 py-12">
         <div
@@ -640,74 +593,67 @@
             class="flex flex-col items-center lg:items-start text-center lg:text-left"
           >
             <div class="flex items-center space-x-3 mb-4">
-              <div class="relative group">
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"
-                ></div>
-                <img
-                  src="{{ url_for('static', filename='img/logo.jpg') }}"
-                  alt="Bashpo Logo"
-                  class="w-14 h-10 rounded-xl relative z-10"
-                />
-              </div>
+              <img
+                src="{{ url_for('static', filename='img/logo.jpg') }}"
+                alt="Bashpo Logo"
+                class="w-12 h-8 rounded-xl"
+              />
               <div>
-                <h1
-                  class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                >
+                <h1 class="text-xl font-bold text-[#efeff1]">
                   Bashpo
                 </h1>
-                <p class="text-xs text-gray-400">Gaming Platform</p>
+                <p class="text-xs text-[#adadb8]">Gaming Platform</p>
               </div>
             </div>
-            <p class="text-gray-400 max-w-md">
+            <p class="text-[#adadb8] max-w-md">
               Find everything you love, in one place. Your ultimate gaming
               destination.
             </p>
           </div>
           <div class="text-center lg:text-right">
-            <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
+            <h6 class="text-[#efeff1] font-bold mb-4">Find Us on Socials</h6>
             <div class="flex justify-center lg:justify-end gap-4">
               <a
                 href="#"
-                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-10 h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-youtube text-white"></i>
+                <i class="fab fa-youtube text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-10 h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-facebook text-white"></i>
+                <i class="fab fa-facebook text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-10 h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-instagram text-white"></i>
+                <i class="fab fa-instagram text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-10 h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-x-twitter text-white"></i>
+                <i class="fab fa-x-twitter text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-10 h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-tiktok text-white"></i>
+                <i class="fab fa-tiktok text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-10 h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-discord text-white"></i>
+                <i class="fab fa-discord text-[#efeff1]"></i>
               </a>
             </div>
           </div>
         </div>
-        <div class="border-t border-white/10 mt-8 pt-6 text-center">
-          <p class="text-gray-400 text-sm">
+        <div class="border-t border-[#2d2d35] mt-8 pt-6 text-center">
+          <p class="text-[#adadb8] text-sm">
             <i class="fa-regular fa-copyright mr-1"></i>
             2025 Bashpo. All rights reserved.
           </p>
@@ -716,6 +662,63 @@
     </footer>
 
     <script>
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+      const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+      const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+      function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => {
+          mobileMenuPanel.classList.remove('translate-x-full');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenuFunc() {
+        mobileMenuPanel.classList.add('translate-x-full');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = '';
+        }, 300);
+      }
+
+      if (mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+      }
+
+      if (closeMobileMenu) {
+        closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+      }
+
+      if (mobileMenuBackdrop) {
+        mobileMenuBackdrop.addEventListener('click', closeMobileMenuFunc);
+      }
+
+      // Simple function to open owned games modal
+      function openOwnedGamesModal() {
+        console.log('openOwnedGamesModal called');
+        const modal = document.getElementById("ViewOwnedGamesModal");
+        if (modal) {
+          console.log('Modal found, opening...');
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        } else {
+          console.error('Modal not found!');
+        }
+      }
+
+      // Function to close owned games modal
+      function closeOwnedGamesModal() {
+        const modal = document.getElementById("ViewOwnedGamesModal");
+        if (modal) {
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+      }
+
       // Function to handle the "Update Password" modal
       function showUpdatePasswordModal() {
         const modal = document.getElementById("UpdatePasswordModal");
@@ -726,14 +729,21 @@
       // Close the modal and reset the form if clicked outside of it
       function initializeModal_update_password() {
         const modal = document.getElementById("UpdatePasswordModal");
+        
+        if (!modal) {
+          return;
+        }
+        
         const closeModalButton = modal.querySelector(
           '[data-modal-toggle="UpdatePasswordModal"]'
         );
 
-        closeModalButton.addEventListener("click", function () {
-          modal.classList.add("hidden");
-          document.body.style.overflow = "";
-        });
+        if (closeModalButton) {
+          closeModalButton.addEventListener("click", function () {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+          });
+        }
 
         modal.addEventListener("click", function (event) {
           if (event.target === modal) {
@@ -803,21 +813,24 @@
           "#ViewOwnedGamesModal ul li"
         );
 
-        searchInput.addEventListener("input", function () {
-          const filter = searchInput.value.toLowerCase();
+        if (searchInput && userList.length > 0) {
+          searchInput.addEventListener("input", function () {
+            const filter = searchInput.value.toLowerCase();
 
-          userList.forEach((userItem) => {
-            const gameName = userItem
-              .querySelector(".owned_games")
-              .textContent.toLowerCase();
+            userList.forEach((userItem) => {
+              const gameNameElement = userItem.querySelector(".owned_games");
+              if (gameNameElement) {
+                const gameName = gameNameElement.textContent.toLowerCase();
 
-            if (gameName.includes(filter)) {
-              userItem.style.display = "";
-            } else {
-              userItem.style.display = "none";
-            }
+                if (gameName.includes(filter)) {
+                  userItem.style.display = "";
+                } else {
+                  userItem.style.display = "none";
+                }
+              }
+            });
           });
-        });
+        }
       }
 
       function showViewOwnedGamesModal() {
@@ -827,21 +840,36 @@
       }
 
       function initializeModal_OwnedGames() {
+        console.log('Initializing ViewOwnedGames modal...');
         const openModalButton = document.getElementById("ViewOwnedGamesButton");
         const modal = document.getElementById("ViewOwnedGamesModal");
+        
+        console.log('Button:', openModalButton);
+        console.log('Modal:', modal);
+        
+        if (!openModalButton || !modal) {
+          console.error('Button or modal not found!');
+          return;
+        }
+        
         const closeModalButton = modal.querySelector(
           '[data-modal-toggle="ViewOwnedGamesModal"]'
         );
+        
+        console.log('Close button:', closeModalButton);
 
         openModalButton.addEventListener("click", function () {
+          console.log('Button clicked!');
           modal.classList.remove("hidden");
           document.body.style.overflow = "hidden";
         });
 
-        closeModalButton.addEventListener("click", function () {
-          modal.classList.add("hidden");
-          document.body.style.overflow = "";
-        });
+        if (closeModalButton) {
+          closeModalButton.addEventListener("click", function () {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+          });
+        }
 
         modal.addEventListener("click", function (event) {
           if (event.target === modal) {
@@ -849,6 +877,8 @@
             document.body.style.overflow = "";
           }
         });
+        
+        console.log('ViewOwnedGames modal initialized successfully');
       }
 
       function showDeveloperRevenueModal() {
@@ -859,14 +889,21 @@
 
       function initializeModal_developer_revenue() {
         const modal = document.getElementById("DeveloperRevenueModal");
+        
+        if (!modal) {
+          return;
+        }
+        
         const closeModalButton = modal.querySelector(
           '[data-modal-toggle="DeveloperRevenueModal"]'
         );
 
-        closeModalButton.addEventListener("click", function () {
-          modal.classList.add("hidden");
-          document.body.style.overflow = "";
-        });
+        if (closeModalButton) {
+          closeModalButton.addEventListener("click", function () {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+          });
+        }
 
         modal.addEventListener("click", function (event) {
           if (event.target === modal) {
@@ -892,10 +929,41 @@
       }
 
       window.addEventListener("DOMContentLoaded", function () {
-        initializeSearch_ownedgames();
-        initializeModal_OwnedGames();
-        initializeModal_developer_revenue();
-        initializeModal_update_password();
+        console.log('DOM Content Loaded - Starting initialization...');
+        
+        try {
+          console.log('1. Initializing search...');
+          initializeSearch_ownedgames();
+          console.log('   Search initialized successfully');
+        } catch (e) {
+          console.error('   Error in initializeSearch_ownedgames:', e);
+        }
+        
+        try {
+          console.log('2. Initializing OwnedGames modal...');
+          initializeModal_OwnedGames();
+          console.log('   OwnedGames modal initialized successfully');
+        } catch (e) {
+          console.error('   Error in initializeModal_OwnedGames:', e);
+        }
+        
+        try {
+          console.log('3. Initializing developer revenue modal...');
+          initializeModal_developer_revenue();
+          console.log('   Developer revenue modal initialized successfully');
+        } catch (e) {
+          console.error('   Error in initializeModal_developer_revenue:', e);
+        }
+        
+        try {
+          console.log('4. Initializing update password modal...');
+          initializeModal_update_password();
+          console.log('   Update password modal initialized successfully');
+        } catch (e) {
+          console.error('   Error in initializeModal_update_password:', e);
+        }
+        
+        console.log('All initialization complete!');
       });
 
       function updateNavbarColor() {

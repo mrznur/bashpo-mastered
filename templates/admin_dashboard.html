@@ -69,11 +69,11 @@
         border-radius: 8px;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: linear-gradient(to bottom, #a855f7, #ec4899);
+        background: #464649;
         border-radius: 8px;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(to bottom, #9333ea, #db2777);
+        background: #5c5c61;
       }
       @keyframes pulse-fast {
         0%,
@@ -93,119 +93,132 @@
   </head>
 
   <body
-    class="font-inter bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen"
+    class="font-inter bg-[#0e0e10] min-h-screen text-[#efeff1]"
   >
     <!-- Header -->
-    <header
-      id="navbar"
-      class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10"
-    >
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between flex-wrap gap-4">
+    <header class="sticky top-0 z-50 bg-[#18181b] border-b border-[#2d2d35]">
+      <div class="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
           <!-- Logo Section -->
-          <div class="flex items-center space-x-4">
-            <div class="relative group">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-              ></div>
-              <a href="/" class="relative block">
-                <img
-                  src="{{ url_for('static', filename='img/logo.jpg') }}"
-                  alt="Bashpo Logo"
-                  class="w-12 h-10 sm:w-14 sm:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105"
-                />
-              </a>
+          <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
+              <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo"
+                   class="w-12 h-8 sm:max-h-10 rounded-lg object-contain" loading="lazy">
+              <span class="text-base sm:text-lg font-semibold hidden sm:block text-[#efeff1]">Bashpo</span>
+            </a>
+          </div>
+          
+          <!-- Desktop Right Section (hidden on mobile) -->
+          <div class="hidden sm:flex items-center gap-2">
+            <!-- Balance -->
+            <div class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm border border-[#2d2d35] px-3 py-2 rounded text-sm font-semibold">
+              <i class="fas fa-wallet text-green-400 text-sm"></i>
+              <span class="text-green-400">${{ balance | round(2) }}</span>
             </div>
-            <div class="block">
-              <h1
-                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-              >
-                Bashpo
-              </h1>
-              <p class="text-xs text-gray-400">Gaming Platform</p>
+            
+            <!-- User Dropdown -->
+            <div class="relative">
+              <select id="user-name" name="user_name"
+                      class="bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] text-[#efeff1] text-sm px-3 py-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none pr-8 transition-all"
+                      onchange="handleDropdownChange(this)" required aria-label="User menu">
+                <option value="" disabled selected class="bg-[#1f1f23]">
+                  {{ username[:8] }}{% if username|length > 8 %}...{% endif %}
+                </option>
+                <option value="view_revenue" class="bg-[#1f1f23]">View Revenue</option>
+                <option value="update_pass" class="bg-[#1f1f23]">Update Password</option>
+                <option value="logout" class="bg-[#1f1f23]">Logout</option>
+              </select>
+              <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <i class="fas fa-chevron-down text-[#efeff1] text-xs"></i>
+              </div>
             </div>
           </div>
 
-          <!-- Navigation & Actions -->
-          <div class="flex items-center space-x-4">
-            <!-- User Balance Display -->
-            <div
-              class="flex items-center space-x-2 bg-gradient-to-r from-emerald-600/20 to-blue-600/20 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-sm"
-            >
-              <i class="fas fa-wallet text-emerald-400"></i>
-              <span class="text-white font-medium"
-                >${{ balance | round(2) }}</span
-              >
-            </div>
-
-            <!-- User Dropdown -->
-            <div class="relative w-[180px] lg:w-[200px]">
-              <select
-                id="user-name"
-                name="user_name"
-                class="user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-gray-600/20 shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 appearance-none cursor-pointer"
-                onchange="handleDropdownChange(this)"
-                required
-              >
-                <option
-                  value=""
-                  disabled
-                  selected
-                  class="bg-gray-700 text-white font-bold"
-                >
-                  {{ username }}
-                </option>
-                <option value="view_revenue" class="bg-gray-700 text-white">
-                  View Revenue
-                </option>
-                <option value="update_pass" class="bg-gray-700 text-white">
-                  Update Password
-                </option>
-                <option value="logout" class="bg-gray-700 text-white">
-                  Logout
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
-              >
-                <i class="fas fa-chevron-down text-white"></i>
-              </div>
-            </div>
+          <!-- Mobile Right Section (visible only on mobile) -->
+          <div class="flex sm:hidden items-center gap-2">
+            <!-- Menu Button -->
+            <button type="button" id="mobileMenuButton" class="flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all">
+              <i class="fas fa-bars text-[#efeff1] text-base"></i>
+            </button>
           </div>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Slide-out Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div id="mobileMenuBackdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      
+      <!-- Menu Panel -->
+      <div id="mobileMenuPanel" class="absolute top-0 right-0 h-full w-80 bg-[#18181b] border-l border-[#2d2d35] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+          <!-- Menu Header -->
+          <div class="flex items-center justify-between p-4 border-b border-[#2d2d35]">
+            <h3 class="text-lg font-bold text-[#efeff1]">Menu</h3>
+            <button id="closeMobileMenu" class="flex items-center justify-center w-8 h-8 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+              <i class="fas fa-times text-[#efeff1]"></i>
+            </button>
+          </div>
+          
+          <!-- User Info -->
+          <div class="p-4 border-b border-[#2d2d35]">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 bg-[#eb0400] rounded-full flex items-center justify-center text-white text-xl font-bold">
+                {{username[0].upper()}}
+              </div>
+              <div>
+                <p class="text-[#efeff1] font-semibold">{{username}}</p>
+                <p class="text-[#adadb8] text-sm">Admin Account</p>
+              </div>
+            </div>
+            
+            <!-- Balance Display -->
+            <div class="flex items-center gap-2 bg-[#1f1f23] px-3 py-2 rounded">
+              <i class="fas fa-wallet text-green-400"></i>
+              <span class="text-green-400 font-semibold">${{ balance | round(2) }}</span>
+            </div>
+          </div>
+          
+          <!-- Menu Options -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <nav class="space-y-2">
+              <button onclick="showDeveloperRevenueModal(); closeMobileMenuFunc();" class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">View Revenue</span>
+              </button>
+              
+              <button onclick="showUpdatePasswordModal(); closeMobileMenuFunc();" class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Update Password</span>
+              </button>
+              
+              <a href="/logout" class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Logout</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Update Password Modal -->
     <div
       id="UpdatePasswordModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
     >
-      <div
-        class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
-      >
-        <div
-          class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl"
-        >
-          <div
-            class="flex justify-between items-center pb-4 mb-4 border-b-2 border-purple-600/30"
-          >
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-lock text-purple-400 text-xl sm:text-2xl"></i>
-              <h3
-                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-              >
-                Update Password
-              </h3>
-            </div>
+      <div class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg">
+        <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+          <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+            <h3 class="text-xl font-bold text-[#efeff1]">
+              <i class="fas fa-lock mr-2 text-[#9147ff]"></i>Update Password
+            </h3>
             <button
               type="button"
-              class="text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
+              class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
               onclick="closeUpdatePasswordModal()"
             >
-              <i class="fas fa-times w-5 h-5"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">Close modal</span>
             </button>
           </div>
@@ -213,12 +226,12 @@
             id="updatePasswordForm"
             action="/update_password"
             method="POST"
-            class="space-y-4"
+            class="space-y-6"
           >
             <div>
               <label
                 for="current-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Current Password</label
               >
               <input
@@ -226,14 +239,14 @@
                 id="current-password"
                 name="current_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                 placeholder="Enter current password"
               />
             </div>
             <div>
               <label
                 for="new-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >New Password</label
               >
               <input
@@ -241,14 +254,14 @@
                 id="new-password"
                 name="new_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                 placeholder="Enter new password"
               />
             </div>
             <div>
               <label
                 for="confirm-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Confirm New Password</label
               >
               <input
@@ -256,26 +269,20 @@
                 id="confirm-password"
                 name="confirm_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                 placeholder="Confirm new password"
               />
             </div>
-            <div
-              id="password-error"
-              class="text-red-400 text-sm font-medium hidden"
-            >
+            <div id="password-error" class="text-[#eb0400] hidden text-sm">
               Passwords do not match.
             </div>
-            <div
-              id="password-success"
-              class="text-green-400 text-sm font-medium hidden"
-            >
+            <div id="password-success" class="text-[#00c7ac] hidden text-sm">
               Password updated successfully!
             </div>
-            <div class="mt-6 flex justify-end space-x-4">
+            <div class="flex justify-end gap-3">
               <button
                 type="button"
-                class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                class="text-sm px-4 py-2 bg-[#1f1f23] hover:bg-[#26262c] text-[#efeff1] rounded transition-colors"
                 onclick="closeUpdatePasswordModal()"
               >
                 Cancel
@@ -283,7 +290,7 @@
               <button
                 type="submit"
                 id="submit-password"
-                class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105"
+                class="text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
               >
                 Update
               </button>
@@ -298,69 +305,52 @@
       id="DeveloperRevenueModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
     >
-      <div
-        class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
-      >
-        <div
-          class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl"
-        >
-          <div
-            class="flex justify-between items-center pb-4 mb-4 border-b-2 border-purple-600/30"
-          >
-            <div class="flex flex-col space-y-2">
-              <h1
-                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent"
-              >
+      <div class="relative p-4 sm:p-6 w-full max-w-4xl">
+        <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+          <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+            <div>
+              <h3 class="text-xl font-bold text-[#efeff1]">
                 Total Cashflow: ${{total_cash_flow | round(2)}}
-              </h1>
-              <h3
-                class="text-base sm:text-lg font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-              >
-                <i class="fas fa-wallet mr-2 text-purple-400"></i>Developer
-                Revenue
               </h3>
+              <p class="text-sm text-[#adadb8] mt-1">Developer Revenue Overview</p>
             </div>
             <button
               type="button"
-              class="text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
+              class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
               data-modal-toggle="DeveloperRevenueModal"
             >
-              <i class="fas fa-times w-5 h-5"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">Close modal</span>
             </button>
           </div>
-          <div class="mt-4 space-y-4">
-            <ul
-              class="space-y-3 max-h-80 overflow-y-auto pr-3 custom-scrollbar"
-            >
-              {% for developer in developer_earnings %}
-              <li
-                class="flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl border border-purple-600/30 hover:border-purple-400/50 transition-all duration-300"
-              >
-                <span class="text-gray-100 font-medium"
-                  >{{ developer[0] }}</span
-                >
-                <span class="text-emerald-400 font-semibold"
-                  >${{ developer[1] | round(2) }}</span
-                >
-              </li>
-              {% endfor %}
-            </ul>
-            <div class="space-y-3">
-              <p
-                class="text-sm font-semibold text-gray-100 bg-gradient-to-r from-slate-800/50 to-slate-900/50 p-4 rounded-xl border border-purple-600/30"
-              >
-                Top earning game: {{highest_game[0]}} (${{highest_game[1] |
-                round(2)}})
-              </p>
-              <p
-                class="text-sm font-semibold text-gray-100 bg-gradient-to-r from-slate-800/50 to-slate-900/50 p-4 rounded-xl border border-purple-600/30"
-              >
-                Dev with the highest earning (cumulative): {{highest_dev[0]}}
-                (${{highest_dev[1]| round(2)}})
-              </p>
+          <div class="space-y-6">
+            <div class="overflow-x-auto">
+              <div class="bg-[#1f1f23] rounded p-3 mb-4 flex font-semibold text-[#efeff1] text-sm">
+                <div class="w-1/2">Developer</div>
+                <div class="w-1/2">Earnings</div>
+              </div>
+              <ul class="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
+                {% for developer in developer_earnings %}
+                <li class="flex items-center p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors">
+                  <span class="w-1/2 text-[#efeff1]">{{ developer[0] }}</span>
+                  <span class="w-1/2 text-[#00c7ac] font-semibold">${{ developer[1] | round(2) }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-[#1f1f23] rounded p-4 border border-[#2d2d35]">
+                <p class="text-sm text-[#adadb8] mb-1">Top Earning Game</p>
+                <p class="text-[#efeff1] font-semibold">{{highest_game[0]}}</p>
+                <p class="text-[#00c7ac] font-bold text-lg">${{highest_game[1] | round(2)}}</p>
+              </div>
+              <div class="bg-[#1f1f23] rounded p-4 border border-[#2d2d35]">
+                <p class="text-sm text-[#adadb8] mb-1">Top Developer (Cumulative)</p>
+                <p class="text-[#efeff1] font-semibold">{{highest_dev[0]}}</p>
+                <p class="text-[#00c7ac] font-bold text-lg">${{highest_dev[1]| round(2)}}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -368,149 +358,97 @@
     </div>
 
     <!-- Main Content -->
-    <main class="flex-1 p-0">
+    <main class="flex-1">
       <section
-        class="relative min-h-screen bg-[url('{{ url_for('static', filename='img/admin_bg.jpg') }}')] bg-cover bg-center"
+        class="relative min-h-screen flex items-center justify-center bg-[url('{{ url_for('static', filename='img/admin_bg.jpg') }}')] bg-cover bg-center"
       >
-        <div class="absolute inset-0 backdrop-blur-md bg-black/50"></div>
-        <div class="relative z-10 container mx-auto px-4 py-6 sm:py-8">
-          <div
-            class="max-w-4xl mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-4 border-purple-600 shadow-[0_0_30px_rgba(147,51,234,0.7)] text-center relative overflow-hidden"
-          >
-            <div
-              class="absolute inset-0 bg-purple-600/30 blur-3xl animate-pulse-fast rounded-3xl pointer-events-none"
-            ></div>
-            <h1
-              class="relative text-3xl smබ sm:text-4xl lg:text-5xl font-extrabold mb-4"
-              style="font-family: 'Istok Web', sans-serif"
-            >
-              <span
-                class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 animate-pulse-fast"
-                >Attention!!</span
+        <div class="absolute inset-0 backdrop-blur-sm bg-black/80"></div>
+        <div class="relative z-10 container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
+          <div class="w-full max-w-6xl">
+            <div class="text-center mb-8">
+              <h1
+                class="text-4xl lg:text-6xl font-bold text-[#efeff1] font-manrope mb-2"
               >
-              <br />
-              <span class="text-white drop-shadow-lg">LordGaben is here!!</span>
-            </h1>
-          </div>
-
-          <div
-            class="my-8 flex flex-col lg:flex-row justify-between items-start mx-4 sm:mx-8 lg:mx-12 gap-6"
-          >
-            <!-- Stats Card -->
-            <div
-              class="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/10 shadow-2xl w-full lg:w-[400px]"
-            >
-              <div class="flex items-center space-x-3 mb-6">
-                <div
-                  class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center"
-                >
-                  <i class="fas fa-chart-bar text-white text-lg"></i>
-                </div>
-                <h2 class="text-xl sm:text-2xl font-bold text-white">
-                  Platform Statistics
-                </h2>
-              </div>
-              <div class="space-y-4">
-                <p class="text-sm sm:text-base font-bold text-white">
-                  Total Active User Count: {{ active_users }}
-                </p>
-                <p class="text-sm sm:text-base font-bold text-white">
-                  Total Developer Count: {{ developers }}
-                </p>
-                <p class="text-sm sm:text-base font-bold text-white">
-                  Terminated User Count: {{ terminated_users }}
-                </p>
-              </div>
+                Admin Dashboard
+              </h1>
+              <p class="text-[#adadb8] text-lg">Platform Management & Statistics</p>
             </div>
-
-            <!-- Action Buttons -->
-            <div class="grid gap-4 w-full lg:w-[320px]">
-              <!-- Standardized Button Style -->
-              <button
-                type="button"
-                id="ViewPublishReqButton"
-                data-modal-target="ViewPublishReqModal"
-                data-modal-toggle="ViewPublishReqModal"
-                class="relative group w-full"
+            <div class="flex flex-col lg:flex-row gap-6">
+              <!-- Stats Card -->
+              <div
+                class="bg-[#18181b] backdrop-blur-sm rounded p-8 border border-[#2d2d35] shadow-2xl flex-1"
               >
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative bg-gradient-to-r from-blue-900 to-purple-700 px-6 py-3 rounded-xl border border-white/20 text-white font-semibold text-base hover:scale-105 transition-all duration-300"
+                <div class="flex items-center gap-3 mb-6">
+                  <div
+                    class="w-10 h-10 bg-[#9147ff] rounded flex items-center justify-center"
+                  >
+                    <i class="fas fa-chart-bar text-[#efeff1] text-lg"></i>
+                  </div>
+                  <h2 class="text-2xl font-bold text-[#efeff1]">
+                    Platform Statistics
+                  </h2>
+                </div>
+                <div class="space-y-4">
+                  <p class="text-base font-bold text-[#efeff1]">
+                    Total Active Users: <span class="text-[#9147ff]">{{ active_users }}</span>
+                  </p>
+                  <p class="text-base font-bold text-[#efeff1]">
+                    Total Developers: <span class="text-[#9147ff]">{{ developers }}</span>
+                  </p>
+                  <p class="text-base font-bold text-[#efeff1]">
+                    Terminated Users: <span class="text-[#9147ff]">{{ terminated_users }}</span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-col gap-4 w-full lg:w-80">
+                <button
+                  type="button"
+                  id="ViewPublishReqButton"
+                  data-modal-target="ViewPublishReqModal"
+                  data-modal-toggle="ViewPublishReqModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
                 >
                   View Publishing Requests
-                </div>
-              </button>
-
-              <button
-                type="button"
-                id="ActiveBuyerButton"
-                data-modal-target="ActiveBuyerModal"
-                data-modal-toggle="ActiveBuyerModal"
-                class="relative group w-full"
-              >
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative bg-gradient-to-r from-blue-900 to-purple-700 px-6 py-3 rounded-xl border border-white/20 text-white font-semibold text-base hover:scale-105 transition-all duration-300"
+                </button>
+                <button
+                  type="button"
+                  id="ActiveBuyerButton"
+                  data-modal-target="ActiveBuyerModal"
+                  data-modal-toggle="ActiveBuyerModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
                 >
                   Active Buyers List
-                </div>
-              </button>
-
-              <button
-                type="button"
-                id="DeveloperButton"
-                data-modal-target="DeveloperModal"
-                data-modal-toggle="DeveloperModal"
-                class="relative group w-full"
-              >
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative bg-gradient-to-r from-blue-900 to-purple-700 px-6 py-3 rounded-xl border border-white/20 text-white font-semibold text-base hover:scale-105 transition-all duration-300"
+                </button>
+                <button
+                  type="button"
+                  id="DeveloperButton"
+                  data-modal-target="DeveloperModal"
+                  data-modal-toggle="DeveloperModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
                 >
                   Developer List
-                </div>
-              </button>
-
-              <button
-                type="button"
-                id="GenerateWalletButton"
-                data-modal-target="GenerateWalletModal"
-                data-modal-toggle="GenerateWalletModal"
-                class="relative group w-full"
-              >
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative bg-gradient-to-r from-blue-900 to-purple-700 px-6 py-3 rounded-xl border border-white/20 text-white font-semibold text-base hover:scale-105 transition-all duration-300"
+                </button>
+                <button
+                  type="button"
+                  id="GenerateWalletButton"
+                  data-modal-target="GenerateWalletModal"
+                  data-modal-toggle="GenerateWalletModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
                 >
                   Generate Wallet Codes
-                </div>
-              </button>
-
-              <button
-                type="button"
-                id="SeeWalletCodeButton"
-                data-modal-target="SeeWalletCodeModal"
-                data-modal-toggle="SeeWalletCodeModal"
-                class="relative group w-full"
-              >
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative bg-gradient-to-r from-blue-900 to-purple-700 px-6 py-3 rounded-xl border border-white/20 text-white font-semibold text-base hover:scale-105 transition-all duration-300"
+                </button>
+                <button
+                  type="button"
+                  id="SeeWalletCodeButton"
+                  data-modal-target="SeeWalletCodeModal"
+                  data-modal-toggle="SeeWalletCodeModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
                 >
                   Active Wallet Codes
-                </div>
-              </button>
-            </div>
+                </button>
+              </div>
           </div>
         </div>
 
@@ -519,61 +457,55 @@
           id="ViewPublishReqModal"
           tabindex="-1"
           aria-hidden="true"
-          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+          class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex justify-center items-center p-4"
         >
-          <div
-            class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
-          >
-            <div
-              class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl"
-            >
-              <div
-                class="flex justify-between items-center pb-4 mb-4 border-b-2 border-purple-600/30"
-              >
-                <div class="flex items-center space-x-3">
-                  <i
-                    class="fas fa-folder-open text-purple-400 text-xl sm:text-2xl"
-                  ></i>
-                  <h3
-                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                  >
-                    Pending Requests
-                  </h3>
-                </div>
+          <div class="relative w-full max-w-4xl max-h-[90vh] flex flex-col">
+            <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+              <!-- Header - Fixed -->
+              <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+                <h3 class="text-xl font-bold text-[#efeff1]">Pending Publication Requests</h3>
                 <button
                   type="button"
-                  class="text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
+                  class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                   data-modal-toggle="ViewPublishReqModal"
                 >
-                  <i class="fas fa-times w-5 h-5"></i>
+                  <i class="fas fa-times"></i>
                   <span class="sr-only">Close modal</span>
                 </button>
               </div>
-              <div class="mt-4 max-h-80 overflow-y-auto pr-3 custom-scrollbar">
-                <ul id="buyerList" class="space-y-3">
+              
+              <!-- Content - Scrollable -->
+              <div class="overflow-y-auto flex-1 p-6">
+                {% if all_requests %}
+                <div id="buyerList" class="space-y-4">
                   {% for requests in all_requests %}
-                  <li
-                    class="p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl border border-purple-600/30 hover:border-purple-400/50 transition-all duration-300"
-                  >
-                    <div class="flex flex-col space-y-2 text-gray-100">
-                      <span class="font-medium"
-                        >Game Name: {{ requests[2] }}</span
-                      >
-                      <span class="font-medium"
-                        >Publisher username: {{ requests[1] }}</span
-                      >
-                      <span class="font-medium">Genre: {{ requests[3] }}</span>
-                      <span class="font-medium"
-                        >Estimated Release Year: {{ requests[4] }}</span
-                      >
-                      <span class="font-medium"
-                        >Description: {{ requests[5] }}</span
-                      >
+                  <div class="bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors p-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      <div>
+                        <span class="text-xs text-[#adadb8] block mb-1">Game Name</span>
+                        <span class="text-[#efeff1] font-medium">{{ requests[2] }}</span>
+                      </div>
+                      <div>
+                        <span class="text-xs text-[#adadb8] block mb-1">Publisher Username</span>
+                        <span class="text-[#efeff1]">{{ requests[1] }}</span>
+                      </div>
+                      <div>
+                        <span class="text-xs text-[#adadb8] block mb-1">Genre</span>
+                        <span class="text-[#efeff1]">{{ requests[3] }}</span>
+                      </div>
+                      <div>
+                        <span class="text-xs text-[#adadb8] block mb-1">Estimated Release Year</span>
+                        <span class="text-[#efeff1]">{{ requests[4] }}</span>
+                      </div>
+                      <div class="sm:col-span-2">
+                        <span class="text-xs text-[#adadb8] block mb-1">Description</span>
+                        <span class="text-[#efeff1]">{{ requests[5] }}</span>
+                      </div>
                     </div>
-                    <div class="flex space-x-3 mt-4">
+                    <div class="flex gap-3">
                       <button
                         type="button"
-                        class="text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                        class="text-sm px-4 py-2 text-[#efeff1] bg-green-600 hover:bg-green-700 rounded transition-colors"
                         data-request_id="{{ requests[0] }}"
                         data-status="Accepted"
                         onclick="updateRequest(this)"
@@ -582,7 +514,7 @@
                       </button>
                       <button
                         type="button"
-                        class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                        class="text-sm px-4 py-2 text-[#efeff1] bg-[#eb0400] hover:bg-[#c20400] rounded transition-colors"
                         data-request_id="{{ requests[0] }}"
                         data-status="Rejected"
                         onclick="updateRequest(this)"
@@ -590,9 +522,20 @@
                         Reject
                       </button>
                     </div>
-                  </li>
+                  </div>
                   {% endfor %}
-                </ul>
+                </div>
+                {% else %}
+                <div class="flex flex-col items-center justify-center py-16 text-center">
+                  <div class="w-24 h-24 bg-[#1f1f23] rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-inbox text-5xl text-[#adadb8]"></i>
+                  </div>
+                  <h4 class="text-xl font-bold text-[#efeff1] mb-2">No Pending Requests</h4>
+                  <p class="text-[#adadb8] max-w-md">
+                    There are currently no publication requests waiting for review. New requests will appear here when developers submit them.
+                  </p>
+                </div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -603,77 +546,58 @@
           id="ActiveBuyerModal"
           tabindex="-1"
           aria-hidden="true"
-          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+          class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex justify-center items-center p-4"
         >
-          <div
-            class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
-          >
-            <div
-              class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl"
-            >
-              <div
-                class="flex justify-between items-center pb-4 mb-4 border-b-2 border-purple-600/30"
-              >
-                <div class="flex items-center space-x-3">
-                  <i
-                    class="fas fa-users text-purple-400 text-xl sm:text-2xl"
-                  ></i>
-                  <h3
-                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                  >
-                    Active Buyers
-                  </h3>
-                </div>
+          <div class="relative w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+              <!-- Header - Fixed -->
+              <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+                <h3 class="text-xl font-bold text-[#efeff1]">Active Buyers</h3>
                 <button
                   type="button"
-                  class="text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
+                  class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                   data-modal-toggle="ActiveBuyerModal"
                 >
-                  <i class="fas fa-times w-5 h-5"></i>
+                  <i class="fas fa-times"></i>
                   <span class="sr-only">Close modal</span>
                 </button>
               </div>
-              <div class="mb-4">
-                <div class="relative">
-                  <div
-                    class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"
-                  >
-                    <i class="fas fa-search text-purple-400"></i>
-                  </div>
-                  <input
-                    type="text"
-                    id="searchInput_buyer"
-                    class="block w-full pl-12 pr-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
-                    placeholder="Search by username..."
-                  />
-                </div>
+              
+              <!-- Search - Fixed -->
+              <div class="p-6 pb-4 flex-shrink-0">
+                <input
+                  type="text"
+                  id="searchInput_buyer"
+                  placeholder="Search by username..."
+                  class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                />
               </div>
-              <div class="mt-4 max-h-80 overflow-y-auto pr-3 custom-scrollbar">
+              
+              <!-- Content - Scrollable -->
+              <div class="overflow-y-auto flex-1 px-6 pb-6">
                 <ul id="buyerList" class="space-y-3">
                   {% for user in all_users %}
-                  <li
-                    class="flex items-center justify-between p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl border border-purple-600/30 hover:border-purple-400/50 transition-all duration-300"
-                  >
-                    <span class="buyer-username text-gray-100 font-medium"
-                      >{{ user[0] }}</span
-                    >
-                    <div class="flex space-x-3">
-                      <button
-                        type="button"
-                        class="text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
-                        data-buyerusername="{{ user[0] }}"
-                        onclick="ViewUserProfile(this)"
-                      >
-                        View Profile
-                      </button>
-                      <button
-                        type="button"
-                        class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
-                        data-username="{{ user[0] }}"
-                        onclick="terminateUser(this)"
-                      >
-                        Terminate
-                      </button>
+                  <li class="bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <span class="buyer-username text-[#efeff1] font-medium">{{ user[0] }}</span>
+                      <div class="flex gap-3">
+                        <button
+                          type="button"
+                          class="text-sm px-4 py-2 text-[#efeff1] bg-blue-600 hover:bg-blue-700 rounded transition-colors"
+                          data-buyerusername="{{ user[0] }}"
+                          onclick="ViewUserProfile(this)"
+                        >
+                          View Profile
+                        </button>
+                        <button
+                          type="button"
+                          class="text-sm px-4 py-2 text-[#efeff1] bg-[#eb0400] hover:bg-[#c20400] rounded transition-colors"
+                          data-username="{{ user[0] }}"
+                          onclick="terminateUser(this)"
+                        >
+                          Terminate
+                        </button>
+                      </div>
                     </div>
                   </li>
                   {% endfor %}
@@ -688,73 +612,44 @@
           id="DeveloperModal"
           tabindex="-1"
           aria-hidden="true"
-          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+          class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex justify-center items-center p-4"
         >
-          <div
-            class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
-          >
-            <div
-              class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl"
-            >
-              <div
-                class="flex justify-between items-center pb-4 mb-4 border-b-2 border-purple-600/30"
-              >
-                <div class="flex items-center space-x-3">
-                  <i
-                    class="fas fa-code text-purple-400 text-xl sm:text-2xl"
-                  ></i>
-                  <h3
-                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                  >
-                    Developers List
-                  </h3>
-                </div>
+          <div class="relative w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+              <!-- Header - Fixed -->
+              <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+                <h3 class="text-xl font-bold text-[#efeff1]">Developers List</h3>
                 <button
                   type="button"
-                  class="text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
+                  class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                   data-modal-toggle="DeveloperModal"
                 >
-                  <i class="fas fa-times w-5 h-5"></i>
+                  <i class="fas fa-times"></i>
                   <span class="sr-only">Close modal</span>
                 </button>
               </div>
-              <div class="mb-4">
-                <div class="relative">
-                  <div
-                    class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"
-                  >
-                    <i class="fas fa-search text-purple-400"></i>
-                  </div>
-                  <input
-                    type="text"
-                    id="searchInput_dev"
-                    class="block w-full pl-12 pr-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
-                    placeholder="Search by company name..."
-                  />
-                </div>
+              
+              <!-- Search - Fixed -->
+              <div class="p-6 pb-4 flex-shrink-0">
+                <input
+                  type="text"
+                  id="searchInput_dev"
+                  placeholder="Search by company name..."
+                  class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                />
               </div>
-              <div class="mt-4 max-h-80 overflow-y-auto pr-3 custom-scrollbar">
-                <ul id="devList" class="space-y-3">
-                  <li
-                    class="flex justify-between items-center p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl border border-purple-600/30"
-                  >
-                    <span class="dev-username text-gray-100 font-bold"
-                      >Company Name</span
-                    >
-                    <span class="dev-company_name text-gray-100 font-bold"
-                      >Username</span
-                    >
-                  </li>
+              
+              <!-- Content - Scrollable -->
+              <div class="overflow-y-auto flex-1 px-6 pb-6">
+                <div class="bg-[#1f1f23] rounded p-3 mb-4 flex font-semibold text-[#efeff1] text-sm">
+                  <div class="w-1/2">Company Name</div>
+                  <div class="w-1/2">Username</div>
+                </div>
+                <ul id="devList" class="space-y-2">
                   {% for dev in all_devs %}
-                  <li
-                    class="flex justify-between items-center p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl border border-purple-600/30 hover:border-purple-400/50 transition-all duration-300"
-                  >
-                    <span class="dev-username text-gray-100 font-medium"
-                      >{{ dev[1] }}</span
-                    >
-                    <span class="dev-company_name text-gray-100 font-medium"
-                      >{{ dev[0] }}</span
-                    >
+                  <li class="flex items-center p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors">
+                    <span class="w-1/2 dev-username text-[#efeff1]">{{ dev[1] }}</span>
+                    <span class="w-1/2 dev-company_name text-[#efeff1]">{{ dev[0] }}</span>
                   </li>
                   {% endfor %}
                 </ul>
@@ -768,46 +663,29 @@
           id="GenerateWalletModal"
           tabindex="-1"
           aria-hidden="true"
-          class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500"
+          class="hidden bg-black/70 backdrop-blur-sm overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center"
         >
-          <div
-            class="relative w-full max-w-md sm:max-w-lg p-4 sm:p-6 animate-slideIn"
-          >
-            <div
-              class="relative bg-gradient-to-br from-purple-900/90 via-indigo-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-md"
-            >
-              <div
-                class="flex justify-between items-center pb-4 mb-4 border-b border-purple-600/30"
-              >
-                <div class="flex items-center space-x-3">
-                  <i
-                    class="fas fa-wallet text-purple-400 text-xl sm:text-2xl"
-                  ></i>
-                  <h3
-                    class="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                  >
-                    Generate Wallet Codes
-                  </h3>
-                </div>
+          <div class="relative p-4 sm:p-6 w-full max-w-3xl">
+            <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+              <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+                <h3 class="text-xl font-bold text-[#efeff1]">Generate Wallet Codes</h3>
                 <button
                   type="button"
-                  class="text-gray-200 bg-purple-700/40 hover:bg-purple-600/60 rounded-full p-2 transition-all duration-300"
+                  class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                   data-modal-toggle="GenerateWalletModal"
                 >
-                  <i class="fas fa-times w-5 h-5"></i>
+                  <i class="fas fa-times"></i>
                   <span class="sr-only">Close modal</span>
                 </button>
               </div>
-              <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <div
-                  class="flex-1 bg-gradient-to-r from-slate-800/60 to-slate-900/60 rounded-xl p-4 sm:p-6 border border-purple-600/30"
-                >
-                  <label class="text-gray-200 font-semibold mb-2 block"
-                    >Select Amount</label
-                  >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-[#1f1f23] border border-[#2d2d35] rounded p-6">
+                  <h4 class="text-[#efeff1] font-semibold mb-4">
+                    Select Amount
+                  </h4>
                   <select
                     id="amountDropdown"
-                    class="w-full text-white bg-slate-800/50 border border-purple-600/50 rounded-xl py-2 px-4 text-sm focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
+                    class="w-full px-4 py-2 bg-[#0e0e10] rounded border border-[#2d2d35] text-[#efeff1] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                   >
                     <option value="" disabled selected>Select Amount</option>
                     <option value="100">100$</option>
@@ -818,29 +696,25 @@
                     <option value="5">5$</option>
                   </select>
                 </div>
-                <div
-                  class="flex-1 bg-gradient-to-r from-slate-800/60 to-slate-900/60 rounded-xl p-4 sm:p-6 border border-purple-600/30"
-                >
-                  <label class="text-gray-200 font-semibold mb-2 block"
-                    >Enter No. of Gift Cards</label
-                  >
+                <div class="bg-[#1f1f23] border border-[#2d2d35] rounded p-6">
+                  <h4 class="text-[#efeff1] font-semibold mb-4">
+                    Number of Gift Cards
+                  </h4>
                   <input
                     id="giftCardInput"
+                    class="w-full px-4 py-2 bg-[#0e0e10] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                     type="number"
                     max="5"
                     placeholder="Max 5 cards at once"
-                    class="w-full text-white bg-slate-800/50 border border-purple-600/50 rounded-xl py-2 px-4 text-sm placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
                   />
+                  <button
+                    id="submitButton"
+                    class="text-sm px-4 py-2 mt-6 w-full bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
+                    type="button"
+                  >
+                    Generate Codes
+                  </button>
                 </div>
-              </div>
-              <div class="mt-6 flex justify-end">
-                <button
-                  id="submitButton"
-                  type="button"
-                  class="bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold px-4 py-2 rounded-xl hover:from-green-700 hover:to-emerald-600 transition-all duration-300 hover:scale-105 shadow-lg"
-                >
-                  Submit
-                </button>
               </div>
             </div>
           </div>
@@ -851,58 +725,34 @@
           id="SeeWalletCodeModal"
           tabindex="-1"
           aria-hidden="true"
-          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+          class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex justify-center items-center p-4"
         >
-          <div
-            class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
-          >
-            <div
-              class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl"
-            >
-              <div
-                class="flex justify-between items-center pb-4 mb-4 border-b-2 border-purple-600/30"
-              >
-                <div class="flex items-center space-x-3">
-                  <i
-                    class="fas fa-wallet text-purple-400 text-xl sm:text-2xl"
-                  ></i>
-                  <h3
-                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                  >
-                    Active Wallet Codes
-                  </h3>
-                </div>
+          <div class="relative w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+              <!-- Header - Fixed -->
+              <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+                <h3 class="text-xl font-bold text-[#efeff1]">Active Wallet Codes</h3>
                 <button
                   type="button"
-                  class="text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
+                  class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                   data-modal-toggle="SeeWalletCodeModal"
                 >
-                  <i class="fas fa-times w-5 h-5"></i>
+                  <i class="fas fa-times"></i>
                   <span class="sr-only">Close modal</span>
                 </button>
               </div>
-              <div class="mt-4 max-h-80 overflow-y-auto pr-3 custom-scrollbar">
-                <ul id="devList" class="space-y-3">
-                  <li
-                    class="flex justify-between items-center p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl border border-purple-600/30"
-                  >
-                    <span class="dev-username text-gray-100 font-bold"
-                      >Wallet Code</span
-                    >
-                    <span class="dev-company_name text-gray-100 font-bold"
-                      >Denomination ($)</span
-                    >
-                  </li>
+              
+              <!-- Content - Scrollable -->
+              <div class="overflow-y-auto flex-1 p-6">
+                <div class="bg-[#1f1f23] rounded p-3 mb-4 flex font-semibold text-[#efeff1] text-sm">
+                  <div class="w-2/3">Wallet Code</div>
+                  <div class="w-1/3">Denomination ($)</div>
+                </div>
+                <ul id="devList" class="space-y-2">
                   {% for wallet_code in wallet_codes_active %}
-                  <li
-                    class="flex justify-between items-center p-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-xl border border-purple-600/30 hover:border-purple-400/50 transition-all duration-300"
-                  >
-                    <span class="dev-username text-gray-100 font-medium"
-                      >{{ wallet_code[0] }}</span
-                    >
-                    <span class="dev-company_name text-gray-100 font-medium"
-                      >{{ wallet_code[1] }}</span
-                    >
+                  <li class="flex items-center p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors">
+                    <span class="w-2/3 dev-username text-[#efeff1] font-mono text-sm break-all">{{ wallet_code[0] }}</span>
+                    <span class="w-1/3 dev-company_name text-[#efeff1]">{{ wallet_code[1] }}</span>
                   </li>
                   {% endfor %}
                 </ul>
@@ -915,36 +765,28 @@
         <div
           id="popup-modal"
           tabindex="-1"
-          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+          class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
         >
-          <div
-            class="relative p-4 sm:p-6 w-full max-w-md max-h-full animate-slideIn"
-          >
-            <div
-              class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl"
-            >
+          <div class="relative p-4 sm:p-6 w-full max-w-md">
+            <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
               <button
                 type="button"
-                class="absolute top-4 end-4 text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
+                class="text-[#adadb8] hover:text-[#efeff1] absolute top-3 right-3 bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                 data-modal-hide="popup-modal"
               >
-                <i class="fas fa-times w-5 h-5"></i>
+                <i class="fas fa-times"></i>
                 <span class="sr-only">Close modal</span>
               </button>
-              <div class="p-4 text-center">
+              <div class="p-6 text-center">
                 <i
-                  class="fas fa-exclamation-circle mx-auto mb-4 text-purple-400 text-4xl sm:text-5xl"
+                  class="fas fa-exclamation-circle mx-auto mb-4 text-[#9147ff] text-5xl"
                 ></i>
-                <h3 class="mb-4 text-lg sm:text-xl font-bold text-gray-100">
-                  Modal Title
-                </h3>
-                <div
-                  class="modal-body text-gray-200 text-sm sm:text-base"
-                ></div>
+                <h3 class="text-lg font-bold text-[#efeff1] mb-4">Modal Title</h3>
+                <div class="modal-body text-[#adadb8] mb-6"></div>
                 <button
                   data-modal-hide="popup-modal"
                   type="button"
-                  class="mt-4 text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 text-center transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
                 >
                   Close
                 </button>
@@ -958,7 +800,8 @@
     <!-- Footer -->
     <footer
       id="footer"
-      class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10"
+      class="relative bg-[#0e0e10] border-t border-[#2d2d35]"
+      style="z-index: 0;"
     >
       <div class="container mx-auto px-4 py-8 sm:py-12">
         <div
@@ -968,76 +811,69 @@
             class="flex flex-col items-center lg:items-start text-center lg:text-left"
           >
             <div class="flex items-center space-x-3 mb-4">
-              <div class="relative group">
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"
-                ></div>
-                <img
-                  src="{{ url_for('static', filename='img/logo.jpg') }}"
-                  alt="Bashpo Logo"
-                  class="w-12 h-8 sm:w-14 sm:h-10 rounded-xl relative z-10"
-                />
-              </div>
+              <img
+                src="{{ url_for('static', filename='img/logo.jpg') }}"
+                alt="Bashpo Logo"
+                class="w-12 h-8 rounded-xl"
+              />
               <div>
-                <h1
-                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                >
+                <h1 class="text-xl font-bold text-[#efeff1]">
                   Bashpo
                 </h1>
-                <p class="text-xs text-gray-400">Gaming Platform</p>
+                <p class="text-xs text-[#adadb8]">Gaming Platform</p>
               </div>
             </div>
-            <p class="text-gray-400 max-w-md text-sm">
+            <p class="text-[#adadb8] max-w-md text-sm">
               Find everything you love, in one place. Your ultimate gaming
               destination.
             </p>
           </div>
           <div class="text-center lg:text-right">
-            <h6 class="text-white font-bold mb-4 text-base sm:text-lg">
+            <h6 class="text-[#efeff1] font-bold mb-4 text-base sm:text-lg">
               Find Us on Socials
             </h6>
             <div class="flex justify-center lg:justify-end gap-3 sm:gap-4">
               <a
                 href="#"
-                class="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-9 h-9 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-youtube text-white"></i>
+                <i class="fab fa-youtube text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-9 h-9 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-facebook text-white"></i>
+                <i class="fab fa-facebook text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-9 h-9 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-instagram text-white"></i>
+                <i class="fab fa-instagram text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-9 h-9 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-x-twitter text-white"></i>
+                <i class="fab fa-x-twitter text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-9 h-9 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-tiktok text-white"></i>
+                <i class="fab fa-tiktok text-[#efeff1]"></i>
               </a>
               <a
                 href="#"
-                class="w-9 h-9 sm:w-10 sm:h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                class="w-9 h-9 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#26262c] rounded-full flex items-center justify-center transition-colors"
               >
-                <i class="fab fa-discord text-white"></i>
+                <i class="fab fa-discord text-[#efeff1]"></i>
               </a>
             </div>
           </div>
         </div>
-        <div class="border-t border-white/10 mt-6 sm:mt-8 pt-6 text-center">
-          <p class="text-gray-400 text-xs sm:text-sm">
+        <div class="border-t border-[#2d2d35] mt-6 sm:mt-8 pt-6 text-center">
+          <p class="text-[#adadb8] text-xs sm:text-sm">
             <i class="fa-regular fa-copyright mr-1"></i>2025 Bashpo. All rights
             reserved.
           </p>
@@ -1432,6 +1268,44 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+        const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+        function openMobileMenu() {
+          mobileMenu.classList.remove('hidden');
+          setTimeout(() => {
+            mobileMenuPanel.classList.remove('translate-x-full');
+          }, 10);
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenuFunc() {
+          mobileMenuPanel.classList.add('translate-x-full');
+          setTimeout(() => {
+            mobileMenu.classList.add('hidden');
+            document.body.style.overflow = '';
+          }, 300);
+        }
+
+        if (mobileMenuButton) {
+          mobileMenuButton.addEventListener('click', openMobileMenu);
+        }
+
+        if (closeMobileMenu) {
+          closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+
+        if (mobileMenuBackdrop) {
+          mobileMenuBackdrop.addEventListener('click', closeMobileMenuFunc);
+        }
+
+        // Make closeMobileMenuFunc globally available
+        window.closeMobileMenuFunc = closeMobileMenuFunc;
+
         const showModal = (modalId) => {
           const modal = document.getElementById(modalId);
           if (modal) {

@@ -87,27 +87,26 @@
         border-color: rgba(38, 166, 154, 0.7);
         box-shadow: 0 0 12px rgba(38, 166, 154, 0.4);
       }
-      .action-button {
+      .text-sm px-4 py-2 {
         transition: all 0.3s ease;
       }
-      .action-button:hover {
+      .text-sm px-4 py-2:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(38, 166, 154, 0.3);
       }
-      .modal-close {
+      .text-[#adadb8] hover:text-[#efeff1] {
         transition: all 0.3s ease;
       }
-      .modal-close:hover {
+      .text-[#adadb8] hover:text-[#efeff1]:hover {
         transform: scale(1.1);
         box-shadow: 0 0 10px rgba(38, 166, 154, 0.4);
       }
-      .modal-container {
+      .bg-[#18181b] border border-[#2d2d35] p-6 {
         background: rgba(31, 31, 31, 0.8);
         backdrop-filter: blur(10px);
         border: 2px solid transparent;
-        border-image: linear-gradient(
-            to right,
-            rgba(38, 166, 154, 0.7),
+        border-color: #2d2d35;
+        /*
             rgba(45, 212, 191, 0.7)
           )
           1;
@@ -115,7 +114,7 @@
         animation: scaleIn 0.3s ease-out forwards;
         border-radius: 1.5rem;
       }
-      .modal-header {
+      .flex justify-between items-center mb-6 {
         border-bottom: 1px solid rgba(107, 114, 128, 0.3);
         padding-bottom: 1rem;
         margin-bottom: 1.5rem;
@@ -123,16 +122,16 @@
         justify-content: space-between;
         align-items: center;
       }
-      .modal-title {
+      .text-lg font-bold text-[#efeff1] mb-4 {
         font-size: 1.5rem;
         font-weight: 600;
-        background: linear-gradient(to right, #26a69a, #2dd4bf);
+        color: #efeff1; /*
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
         font-family: "Manrope", sans-serif;
       }
-      .modal-button {
+      .text-sm px-4 py-2 {
         padding: 0.75rem 1.5rem;
         border-radius: 0.75rem;
         font-weight: 500;
@@ -156,101 +155,131 @@
   </head>
 
   <body
-    class="font-inter bg-gradient-to-br from-charcoal to-charcoal-dark min-h-screen"
+    class="font-inter bg-[#0e0e10] min-h-screen"
   >
-    <header
-      id="navbar"
-      class="sticky top-0 z-50 backdrop-blur-md bg-gray-800/90 border-b border-gray-600/20"
-    >
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="relative group">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-teal-600 via-teal-500 to-teal-400 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-              ></div>
-              <a href="/" class="relative block">
-                <img
-                  alt="Logo"
-                  src="{{ url_for('static', filename='img/logo.jpg') }}"
-                  class="w-12 h-10 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105"
-                />
-              </a>
-            </div>
-            <div class="hidden lg:block">
-              <h1
-                class="text-xl font-bold bg-gradient-to-r from-teal-400 to-teal-300 bg-clip-text text-transparent font-manrope"
-              >
-                Bashpo
-              </h1>
-              <p class="text-xs text-gray-300">Dev Platform</p>
-            </div>
+    <header class="sticky top-0 z-50 bg-[#18181b] border-b border-[#2d2d35]">
+      <div class="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
+          <!-- Logo Section -->
+          <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
+              <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo"
+                   class="w-12 h-8 rounded object-contain" loading="lazy">
+              <span class="text-base sm:text-lg font-semibold hidden sm:block text-[#efeff1]">Bashpo</span>
+            </a>
           </div>
-          <div class="flex items-center space-x-4">
-            <div
-              class="flex items-center space-x-2 bg-gradient-to-r from-teal-600/20 to-teal-500/20 px-4 py-2 rounded-xl border border-gray-600/10 backdrop-blur-sm"
-            >
-              <i class="fas fa-wallet text-teal-400"></i>
-              <span class="text-white font-medium"
-                >${{ balance | round(2) }}</span
-              >
+          
+          <!-- Desktop Right Section (hidden on mobile) -->
+          <div class="hidden sm:flex items-center gap-2">
+            <!-- Balance -->
+            <div class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm border border-[#2d2d35] px-3 py-2 rounded text-sm font-semibold">
+              <i class="fas fa-wallet text-[#00c7ac] text-sm"></i>
+              <span class="text-[#00c7ac]">${{ balance | round(2) }}</span>
             </div>
-            <div class="relative w-[180px] lg:w-[200px]">
-              <select
-                id="user-name"
-                name="user_name"
-                class="user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-gray-600/20 shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 appearance-none cursor-pointer"
-                onchange="handleDropdownChange(this)"
-                required
-              >
-                <option
-                  value=""
-                  disabled
-                  selected
-                  class="bg-gray-700 text-white font-bold"
-                >
-                  {{ dev_username }} ${{ balance | round(2) }}
+            
+            <!-- User Dropdown -->
+            <div class="relative">
+              <select id="user-name" name="user_name"
+                      class="bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] text-[#efeff1] text-sm px-3 py-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none pr-8 transition-all"
+                      onchange="handleDropdownChange(this)" required aria-label="User menu">
+                <option value="" disabled selected class="bg-[#1f1f23]">
+                  {{ dev_username[:8] }}{% if dev_username|length > 8 %}...{% endif %}
                 </option>
-                <option value="view_revenue" class="bg-gray-700 text-white">
-                  View Revenue
-                </option>
-                <option value="update_pass" class="bg-gray-700 text-white">
-                  Update Password
-                </option>
-                <option value="logout" class="bg-gray-700 text-white">
-                  Logout
-                </option>
+                <option value="view_revenue" class="bg-[#1f1f23]">View Revenue</option>
+                <option value="update_pass" class="bg-[#1f1f23]">Update Password</option>
+                <option value="logout" class="bg-[#1f1f23]">Logout</option>
               </select>
-              <div
-                class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
-              >
-                <i class="fas fa-chevron-down text-white"></i>
+              <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <i class="fas fa-chevron-down text-[#efeff1] text-xs"></i>
               </div>
             </div>
+          </div>
+
+          <!-- Mobile Right Section (visible only on mobile) -->
+          <div class="flex sm:hidden items-center gap-2">
+            <!-- Menu Button -->
+            <button type="button" id="mobileMenuButton" class="flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all">
+              <i class="fas fa-bars text-[#efeff1] text-base"></i>
+            </button>
           </div>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Slide-out Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div id="mobileMenuBackdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      
+      <!-- Menu Panel -->
+      <div id="mobileMenuPanel" class="absolute top-0 right-0 h-full w-80 bg-[#18181b] border-l border-[#2d2d35] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+          <!-- Menu Header -->
+          <div class="flex items-center justify-between p-4 border-b border-[#2d2d35]">
+            <h3 class="text-lg font-bold text-[#efeff1]">Menu</h3>
+            <button id="closeMobileMenu" class="flex items-center justify-center w-8 h-8 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+              <i class="fas fa-times text-[#efeff1]"></i>
+            </button>
+          </div>
+          
+          <!-- User Info -->
+          <div class="p-4 border-b border-[#2d2d35]">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 bg-[#00c7ac] rounded flex items-center justify-center text-[#efeff1] text-xl font-bold">
+                {{dev_username[0].upper()}}
+              </div>
+              <div>
+                <p class="text-[#efeff1] font-semibold">{{dev_username}}</p>
+                <p class="text-[#adadb8] text-sm">Developer Account</p>
+              </div>
+            </div>
+            
+            <!-- Balance Display -->
+            <div class="flex items-center gap-2 bg-[#1f1f23] px-3 py-2 rounded">
+              <i class="fas fa-wallet text-[#00c7ac]"></i>
+              <span class="text-[#00c7ac] font-semibold">${{ balance | round(2) }}</span>
+            </div>
+          </div>
+          
+          <!-- Menu Options -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <nav class="space-y-2">
+              <button onclick="showRevenueModal(); closeMobileMenuFunc();" class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">View Revenue</span>
+              </button>
+              
+              <button onclick="showUpdatePasswordModal(); closeMobileMenuFunc();" class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Update Password</span>
+              </button>
+              
+              <a href="/logout" class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Logout</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Update Password Modal -->
     <div
       id="UpdatePasswordModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-md bg-black/70"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
     >
-      <div class="relative p-6 w-full max-w-xl h-full md:h-auto">
-        <div class="modal-container relative p-8">
-          <div class="modal-header">
-            <h3 class="modal-title">
-              <i class="fas fa-lock mr-2"></i>Update Password
+      <div class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg">
+        <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+          <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+            <h3 class="text-xl font-bold text-[#efeff1]">
+              <i class="fas fa-lock mr-2 text-[#9147ff]"></i>Update Password
             </h3>
             <button
               type="button"
-              class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+              class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
               data-modal-toggle="UpdatePasswordModal"
             >
-              <i class="fas fa-times w-5 h-5"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">Close modal</span>
             </button>
           </div>
@@ -263,7 +292,7 @@
             <div>
               <label
                 for="current-password"
-                class="block text-sm font-medium text-gray-200 mb-2"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Current Password</label
               >
               <input
@@ -271,14 +300,14 @@
                 id="current-password"
                 name="current_password"
                 required
-                class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                 placeholder="Enter current password"
               />
             </div>
             <div>
               <label
                 for="new-password"
-                class="block text-sm font-medium text-gray-200 mb-2"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >New Password</label
               >
               <input
@@ -286,14 +315,14 @@
                 id="new-password"
                 name="new_password"
                 required
-                class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                 placeholder="Enter new password"
               />
             </div>
             <div>
               <label
                 for="confirm-password"
-                class="block text-sm font-medium text-gray-200 mb-2"
+                class="block text-sm font-medium text-[#efeff1] mb-2"
                 >Confirm New Password</label
               >
               <input
@@ -301,20 +330,20 @@
                 id="confirm-password"
                 name="confirm_password"
                 required
-                class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                 placeholder="Confirm new password"
               />
             </div>
-            <div id="password-error" class="text-red-400 hidden text-sm">
+            <div id="password-error" class="text-[#eb0400] hidden text-sm">
               Passwords do not match.
             </div>
-            <div id="password-success" class="text-green-400 hidden text-sm">
+            <div id="password-success" class="text-[#00c7ac] hidden text-sm">
               Password updated successfully!
             </div>
-            <div class="mt-6 flex justify-end space-x-4">
+            <div class="flex justify-end gap-3">
               <button
                 type="button"
-                class="modal-close modal-button bg-gray-600 text-white hover:bg-gray-700"
+                class="text-sm px-4 py-2 bg-[#1f1f23] hover:bg-[#26262c] text-[#efeff1] rounded transition-colors"
                 data-modal-toggle="UpdatePasswordModal"
               >
                 Cancel
@@ -322,7 +351,7 @@
               <button
                 type="submit"
                 id="submit-password"
-                class="modal-button bg-gradient-to-r from-teal-600 to-teal-500 text-white hover:from-teal-700 hover:to-teal-600"
+                class="text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
               >
                 Update
               </button>
@@ -337,20 +366,20 @@
       id="RevenueModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-md bg-black/70"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
     >
-      <div class="relative p-6 w-full max-w-2xl h-full md:h-auto">
-        <div class="modal-container relative p-8">
-          <div class="modal-header">
-            <h3 class="modal-title">
+      <div class="relative p-4 sm:p-6 w-full max-w-4xl">
+        <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+          <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+            <h3 class="text-xl font-bold text-[#efeff1]">
               Total Earnings: ${{ balance | round(2) }}
             </h3>
             <button
               type="button"
-              class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+              class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
               data-modal-toggle="RevenueModal"
             >
-              <i class="fas fa-times w-5 h-5"></i>
+              <i class="fas fa-times"></i>
               <span class="sr-only">Close modal</span>
             </button>
           </div>
@@ -359,29 +388,21 @@
               type="text"
               id="searchInput_games_earning"
               placeholder="Search games..."
-              class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
             />
           </div>
-          <div class="modal-list">
-            <div
-              class="modal-table-header flex justify-between font-semibold text-white"
-            >
-              <div class="w-1/3 text-left">Game Name</div>
-              <div class="w-1/3 text-left">Copies Sold</div>
-              <div class="w-1/3 text-left">Earnings</div>
+          <div class="overflow-x-auto">
+            <div class="bg-[#1f1f23] rounded p-3 mb-4 flex font-semibold text-[#efeff1] text-sm">
+              <div class="w-1/3">Game Name</div>
+              <div class="w-1/3">Copies Sold</div>
+              <div class="w-1/3">Earnings</div>
             </div>
-            <ul id="buyerList" class="list-none">
+            <ul id="buyerList" class="space-y-2">
               {% for revenue_data_per_game in revenue_data %}
-              <li
-                class="flex justify-between items-center text-white font-medium"
-              >
-                <span class="w-1/3 game_name"
-                  >{{ revenue_data_per_game[0] }}</span
-                >
-                <span class="w-1/3">{{ revenue_data_per_game[1] }}</span>
-                <span class="w-1/3"
-                  >${{ revenue_data_per_game[2] | round(2) }}</span
-                >
+              <li class="flex items-center p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors">
+                <span class="w-1/3 game_name text-[#efeff1]">{{ revenue_data_per_game[0] }}</span>
+                <span class="w-1/3 text-[#efeff1]">{{ revenue_data_per_game[1] }}</span>
+                <span class="w-1/3 text-[#efeff1]">${{ revenue_data_per_game[2] | round(2) }}</span>
               </li>
               {% endfor %}
             </ul>
@@ -392,523 +413,543 @@
 
     <main>
       <section
-        class="relative min-h-screen bg-[url('{{ url_for('static', filename='img/bg-1.jpg') }}')] bg-cover bg-center"
+        class="relative min-h-screen flex items-center justify-center bg-[url('{{ url_for('static', filename='img/bg-1.jpg') }}')] bg-cover bg-center"
       >
-        <div class="absolute inset-0 backdrop-blur-md bg-black/50"></div>
-        <div class="relative z-10 container mx-auto px-4 py-8">
-          <div class="text-center mb-8">
-            <h1
-              class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-teal-400 via-teal-300 to-teal-500 bg-clip-text text-transparent font-manrope"
-            >
-              {{ dev_username }}'s General Info
-            </h1>
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div
-              class="bg-gradient-to-br from-gray-700 to-gray-600 backdrop-blur-md rounded-2xl p-8 border border-gray-600/10 shadow-2xl w-full lg:w-[450px] animate-slideIn"
-            >
-              <p class="text-base mb-5 font-bold text-white">
-                Developer Name:
-                <span class="text-teal-400">{{ company_name }}</span>
-              </p>
-              <p class="text-base mb-5 font-bold text-white">
-                Publisher Name:
-                <span class="text-teal-400">{{ publisher_name }}</span>
-              </p>
-              <p class="text-base mb-5 font-bold text-white">
-                Email: <span class="text-teal-400">{{ dev_email }}</span>
-              </p>
-              <p class="text-base mb-5 font-bold text-white">
-                Total Games Released:
-                <span class="text-teal-400">{{ no_of_total_games }}</span>
-              </p>
-              <p class="text-base mb-5 font-bold text-white">
-                Total Games Active:
-                <span class="text-teal-400">{{ no_of_games_active }}</span>
-              </p>
-              <p class="text-base mb-5 font-bold text-white">
-                Total Games Delisted:
-                <span class="text-teal-400">{{ delisted_games_count }}</span>
-              </p>
-              <p class="text-base mb-5 font-bold text-white">
-                Total Copies Sold:
-                <span class="text-teal-400">{{ no_of_total__games_sold }}</span>
-              </p>
+        <div class="absolute inset-0 backdrop-blur-sm bg-black/80"></div>
+        <div class="relative z-10 container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
+          <div class="w-full max-w-6xl">
+            <div class="text-center mb-8">
+              <h1
+                class="text-4xl lg:text-6xl font-bold text-[#efeff1] font-manrope"
+              >
+                {{ dev_username }}'s General Info
+              </h1>
             </div>
-            <div class="flex flex-col space-y-4 items-end">
-              <button
-                type="button"
-                id="ViewPublishedGamesButton"
-                data-modal-target="ViewPublishedGamesModal"
-                data-modal-toggle="ViewPublishedGamesModal"
-                class="action-button w-[300px] h-[45px] font-bold bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-lg font-manrope"
-              >
-                View Published Games
-              </button>
+            <div class="flex flex-col lg:flex-row gap-6">
               <div
-                id="ViewPublishedGamesModal"
-                tabindex="-1"
-                aria-hidden="true"
-                class="hidden backdrop-blur-md bg-black/70 overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center"
+                class="bg-[#18181b] backdrop-blur-sm rounded p-8 border border-[#2d2d35] shadow-2xl flex-1"
               >
-                <div class="modal-container relative p-8 w-full max-w-2xl">
-                  <div class="modal-header">
-                    <h3 class="modal-title">Published Games</h3>
+                <p class="text-base mb-5 font-bold text-[#efeff1]">
+                  Developer Name:
+                  <span class="text-[#9147ff]">{{ company_name }}</span>
+                </p>
+                <p class="text-base mb-5 font-bold text-[#efeff1]">
+                  Publisher Name:
+                  <span class="text-[#9147ff]">{{ publisher_name }}</span>
+                </p>
+                <p class="text-base mb-5 font-bold text-[#efeff1]">
+                  Email: <span class="text-[#9147ff]">{{ dev_email }}</span>
+                </p>
+                <p class="text-base mb-5 font-bold text-[#efeff1]">
+                  Total Games Released:
+                  <span class="text-[#9147ff]">{{ no_of_total_games }}</span>
+                </p>
+                <p class="text-base mb-5 font-bold text-[#efeff1]">
+                  Total Games Active:
+                  <span class="text-[#9147ff]">{{ no_of_games_active }}</span>
+                </p>
+                <p class="text-base mb-5 font-bold text-[#efeff1]">
+                  Total Games Delisted:
+                  <span class="text-[#9147ff]">{{ delisted_games_count }}</span>
+                </p>
+                <p class="text-base mb-5 font-bold text-[#efeff1]">
+                  Total Copies Sold:
+                  <span class="text-[#9147ff]">{{ no_of_total__games_sold }}</span>
+                </p>
+              </div>
+              <div class="flex flex-col gap-4 w-full lg:w-80">
+                <button
+                  type="button"
+                  id="ViewPublishedGamesButton"
+                  data-modal-target="ViewPublishedGamesModal"
+                  data-modal-toggle="ViewPublishedGamesModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
+                >
+                  View Published Games
+                </button>
+                <button
+                  type="button"
+                  id="SendPubReqButton"
+                  data-modal-target="SendPubReqModal"
+                  data-modal-toggle="SendPubReqModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
+                >
+                  Send Publication Request
+                </button>
+                <button
+                  type="button"
+                  id="RequestStatusButton"
+                  data-modal-target="RequestStatusModal"
+                  data-modal-toggle="RequestStatusModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
+                >
+                  Status of Requests
+                </button>
+                <button
+                  type="button"
+                  id="GenerateWalletButton"
+                  data-modal-target="GenerateWalletModal"
+                  data-modal-toggle="GenerateWalletModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
+                >
+                  Generate Game Activation Keys
+                </button>
+                <button
+                  type="button"
+                  id="SeeGameKeyButton"
+                  data-modal-target="SeeGameKeyModal"
+                  data-modal-toggle="SeeGameKeyModal"
+                  class="w-full text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded font-medium transition-colors"
+                >
+                  Active Game Keys
+                </button>
+              </div>
+            </div>
+
+            <!-- All Modals -->
+            
+            <!-- View Published Games Modal -->
+            <div
+              id="ViewPublishedGamesModal"
+              tabindex="-1"
+              aria-hidden="true"
+              class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex justify-center items-center p-4"
+            >
+              <div class="relative w-full max-w-6xl max-h-[90vh] flex flex-col">
+                <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+                  <!-- Header - Fixed -->
+                  <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+                    <h3 class="text-xl font-bold text-[#efeff1]">Published Games</h3>
                     <button
                       type="button"
-                      class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+                      class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
                       data-modal-toggle="ViewPublishedGamesModal"
                     >
-                      <i class="fas fa-times w-5 h-5"></i>
+                      <i class="fas fa-times"></i>
                       <span class="sr-only">Close modal</span>
                     </button>
                   </div>
-                  <div class="mb-6">
+                  
+                  <!-- Search - Fixed -->
+                  <div class="p-6 pb-4 flex-shrink-0">
                     <input
                       type="text"
                       id="searchInput_games"
                       placeholder="Search games..."
-                      class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
                     />
                   </div>
-                  <div class="modal-list">
-                    <div
-                      class="modal-table-header flex justify-between font-semibold text-white"
-                    >
-                      <div class="w-1/4 text-left">Game Name</div>
-                      <div class="w-1/4 text-left">Status</div>
-                      <div class="w-1/4 text-left">Base Price</div>
-                      <div class="w-1/4 text-left">Action</div>
-                    </div>
-                    <ul id="buyerList" class="list-none">
+                  
+                  <!-- Content - Scrollable -->
+                  <div class="overflow-y-auto flex-1 px-6 pb-6">
+                    <div class="space-y-3">
                       {% for game_data in game_list_data %}
-                      <li
-                        class="flex justify-between items-center text-white font-medium"
-                      >
-                        <span class="w-1/4">{{ game_data[0] }}</span>
-                        <span class="w-1/4">{{ game_data[1] }}</span>
-                        <span class="w-1/4">${{ game_data[2] }}</span>
-                        <div class="w-1/4 text-left space-x-2">
-                          {% if game_data[4] == '0' and game_data[1] == 'Active'
-                          %}
-                          <button
-                            type="button"
-                            class="modal-button text-white bg-green-600 hover:bg-green-700 text-xs"
-                            data-game_name_sale="{{ game_data[0] }}"
-                            onclick="switchToInnerModal('{{ game_data[0] }}')"
-                          >
-                            Start Sale
-                          </button>
-                          {% endif %} {% if game_data[1] == 'Active' %}
-                          <button
-                            type="button"
-                            class="modal-button text-white bg-red-600 hover:bg-red-700 text-xs"
-                            data-game_name_delist="{{ game_data[0] }}"
-                            onclick="DelistGame(this)"
-                          >
-                            Delist
-                          </button>
-                          {% endif %}
-                        </div>
-                      </li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div
-                id="StartSaleModal"
-                class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/70"
-              >
-                <div class="modal-container relative p-8 w-full max-w-xl">
-                  <div class="modal-header">
-                    <h3 class="modal-title">Start Sale</h3>
-                    <button
-                      type="button"
-                      class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-                      data-modal-toggle="StartSaleModal"
-                    >
-                      <i class="fas fa-times w-5 h-5"></i>
-                      <span class="sr-only">Close modal</span>
-                    </button>
-                  </div>
-                  <form
-                    id="StartSaleForm"
-                    action="/StartSaleRequest"
-                    method="POST"
-                    class="space-y-6"
-                  >
-                    <input
-                      type="hidden"
-                      id="game_name_hidden"
-                      name="game_name"
-                    />
-                    <div>
-                      <label
-                        for="sale_percentage"
-                        class="block text-sm font-medium text-gray-200 mb-2"
-                        >Sale Percentage (10-90):</label
-                      >
-                      <input
-                        type="number"
-                        id="sale_percentage"
-                        name="sale_percentage"
-                        min="10"
-                        max="90"
-                        required
-                        class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="Enter percentage"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        for="sale_end_date"
-                        class="block text-sm font-medium text-gray-200 mb-2"
-                        >End Date & Time:</label
-                      >
-                      <input
-                        type="datetime-local"
-                        id="sale_end_date"
-                        name="sale_end_date"
-                        required
-                        class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      />
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-4">
-                      <button
-                        type="button"
-                        class="modal-close modal-button bg-gray-600 text-white hover:bg-gray-700"
-                        data-modal-toggle="StartSaleModal"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        class="modal-button bg-gradient-to-r from-teal-600 to-teal-500 text-white hover:from-teal-700 hover:to-teal-600"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <button
-                type="button"
-                id="SendPubReqButton"
-                data-modal-target="SendPubReqModal"
-                data-modal-toggle="SendPubReqModal"
-                class="action-button w-[300px] h-[45px] font-bold bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-lg font-manrope"
-              >
-                Send Publication Request
-              </button>
-              <div
-                id="SendPubReqModal"
-                class="hidden backdrop-blur-md bg-black/70 fixed inset-0 z-50 flex items-center justify-center"
-              >
-                <div class="modal-container relative p-8 w-full max-w-2xl">
-                  <div class="modal-header">
-                    <h3 class="modal-title">Send Publication Request</h3>
-                    <button
-                      type="button"
-                      class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-                      data-modal-toggle="SendPubReqModal"
-                    >
-                      <i class="fas fa-times w-5 h-5"></i>
-                      <span class="sr-only">Close modal</span>
-                    </button>
-                  </div>
-                  <form
-                    id="SendPubReqForm"
-                    action="/SendPublishingRequest"
-                    method="POST"
-                    class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                  >
-                    <div>
-                      <label
-                        for="game_name"
-                        class="block text-sm font-medium text-gray-200 mb-2"
-                        >Game Name</label
-                      >
-                      <input
-                        type="text"
-                        id="game_name"
-                        name="game_name"
-                        required
-                        class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="Enter game name"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        for="game_genre"
-                        class="block text-sm font-medium text-gray-200 mb-2"
-                        >Genre</label
-                      >
-                      <input
-                        type="text"
-                        id="game_genre"
-                        name="game_genre"
-                        required
-                        class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="Enter genre"
-                      />
-                    </div>
-
-                    <div class="md:col-span-2">
-                      <label
-                        for="basic_description"
-                        class="block text-sm font-medium text-gray-200 mb-2"
-                        >Basic Description</label
-                      >
-                      <input
-                        type="text"
-                        id="basic_description"
-                        name="basic_description"
-                        required
-                        class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="Enter description"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        for="estimated_release_year"
-                        class="block text-sm font-medium text-gray-200 mb-2"
-                        >Estimated Release Year</label
-                      >
-                      <input
-                        type="number"
-                        id="estimated_release_year"
-                        name="estimated_release_year"
-                        required
-                        class="modal-input w-full px-4 py-3 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        placeholder="Enter year"
-                      />
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-4 md:col-span-2">
-                      <button
-                        type="button"
-                        class="modal-close modal-button bg-gray-600 text-white hover:bg-gray-700"
-                        data-modal-toggle="SendPubReqModal"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        id="submitSendPubReq"
-                        class="modal-button bg-gradient-to-r from-teal-600 to-teal-500 text-white hover:from-teal-700 hover:to-teal-600"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <button
-                type="button"
-                id="RequestStatusButton"
-                data-modal-target="RequestStatusModal"
-                data-modal-toggle="RequestStatusModal"
-                class="action-button w-[300px] h-[45px] font-bold bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-lg font-manrope"
-              >
-                Status of Requests
-              </button>
-              <div
-                id="RequestStatusModal"
-                tabindex="-1"
-                aria-hidden="true"
-                class="hidden backdrop-blur-md bg-black/70 overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center"
-              >
-                <div class="modal-container relative p-8 w-full max-w-2xl">
-                  <div class="modal-header">
-                    <h3 class="modal-title">Status of Requests</h3>
-                    <button
-                      type="button"
-                      class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-                      data-modal-toggle="RequestStatusModal"
-                    >
-                      <i class="fas fa-times w-5 h-5"></i>
-                      <span class="sr-only">Close modal</span>
-                    </button>
-                  </div>
-                  <div class="modal-list">
-                    <div
-                      class="modal-table-header flex justify-between font-semibold text-white"
-                    >
-                      <span class="w-1/2 text-left">Game Name</span>
-                      <span class="w-1/2 text-left">Status</span>
-                    </div>
-                    <ul id="statusReq" class="list-none">
-                      {% for game_request in game_req_data %}
-                      <li
-                        class="flex justify-between items-center text-white font-medium"
-                      >
-                        <span class="w-1/2">{{ game_request[0] }}</span>
-                        <div class="w-1/2 flex items-center space-x-4">
-                          {% if game_request[1] == 'Accepted' and
-                          game_request[2] == False %}
-                          <form action="/PayPublishingFee" method="POST">
-                            <input
-                              type="hidden"
-                              name="game_name"
-                              value="{{ game_request[0] }}"
-                            />
+                      <div class="bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors p-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                          <div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                              <span class="text-xs text-[#adadb8] block mb-1">Game Name</span>
+                              <span class="text-[#efeff1] font-medium">{{ game_data[0] }}</span>
+                            </div>
+                            <div>
+                              <span class="text-xs text-[#adadb8] block mb-1">Status</span>
+                              <span class="text-[#efeff1]">{{ game_data[1] }}</span>
+                            </div>
+                            <div>
+                              <span class="text-xs text-[#adadb8] block mb-1">Base Price</span>
+                              <span class="text-[#efeff1]">${{ game_data[2] }}</span>
+                            </div>
+                          </div>
+                          <div class="flex gap-2 flex-shrink-0">
+                            {% if game_data[4] == '0' and game_data[1] == 'Active' %}
                             <button
-                              type="submit"
-                              class="modal-button text-white bg-orange-600 hover:bg-orange-700 text-xs"
+                              type="button"
+                              class="text-sm px-4 py-2 text-[#efeff1] bg-green-600 hover:bg-green-700 rounded transition-colors whitespace-nowrap"
+                              data-game_name_sale="{{ game_data[0] }}"
+                              onclick="switchToInnerModal('{{ game_data[0] }}')"
                             >
-                              Pay publishing fee
+                              Start Sale
                             </button>
-                          </form>
-                          {% elif game_request[1] == 'Accepted' and
-                          game_request[2] == True %}
-                          <button
-                            type="button"
-                            class="modal-button text-white bg-green-600 hover:bg-green-700 text-xs"
-                            data-game_name="{{ game_request[0] }}"
-                            onclick="UploadGameData(this)"
-                          >
-                            Upload Data
-                          </button>
-                          {% endif %}
-                          <span>{{ game_request[1] }}</span>
+                            {% endif %}
+                            {% if game_data[1] == 'Active' %}
+                            <button
+                              type="button"
+                              class="text-sm px-4 py-2 text-[#efeff1] bg-[#eb0400] hover:bg-[#c20400] rounded transition-colors whitespace-nowrap"
+                              data-game_name_delist="{{ game_data[0] }}"
+                              onclick="DelistGame(this)"
+                            >
+                              Delist
+                            </button>
+                            {% endif %}
+                          </div>
                         </div>
-                      </li>
+                      </div>
                       {% endfor %}
-                    </ul>
+                    </div>
                   </div>
                 </div>
               </div>
-              <button
-                type="button"
-                id="GenerateWalletButton"
-                data-modal-target="GenerateWalletModal"
-                data-modal-toggle="GenerateWalletModal"
-                class="action-button w-[300px] h-[45px] font-bold bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-lg font-manrope"
-              >
-                Generate Game Activation Keys
-              </button>
-              <div
-                id="GenerateWalletModal"
-                tabindex="-1"
-                aria-hidden="true"
-                class="hidden backdrop-blur-md bg-black/70 overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center"
-              >
-                <div class="relative p-6 w-full max-w-3xl h-full md:h-auto">
-                  <div
-                    class="modal-container relative p-8"
-                    style="
-                      background-image: radial-gradient(
-                        circle at 10% 20%,
-                        rgba(38, 166, 154, 0.2) 0%,
-                        transparent 50%
-                      );
-                    "
-                  >
-                    <div class="modal-header">
-                      <h3 class="modal-title">Generate Game Keys</h3>
-                      <button
-                        type="button"
-                        class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-                        data-modal-toggle="GenerateWalletModal"
-                      >
-                        <i class="fas fa-times w-5 h-5"></i>
-                        <span class="sr-only">Close modal</span>
-                      </button>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                      <div
-                        class="bg-gray-900/60 backdrop-filter blur-6px border border-gray-600/30 rounded-xl p-6"
-                      >
-                        <h4 class="text-white font-manrope font-semibold mb-4">
-                          Select Game
-                        </h4>
-                        <select
-                          id="GameNameDropDown"
-                          class="modal-input w-full px-4 py-3 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-                        >
-                          <option value="" disabled selected>
-                            Select a game
-                          </option>
-                          {% for game_data in game_list_data %}
-                          <option value="{{ game_data[0] }}">
-                            {{ game_data[0] }}
-                          </option>
-                          {% endfor %}
-                        </select>
-                      </div>
-                      <div
-                        class="bg-gray-900/60 backdrop-filter blur-6px border border-gray-600/30 rounded-xl p-6"
-                      >
-                        <h4 class="text-white font-manrope font-semibold mb-4">
-                          Number of Keys
-                        </h4>
-                        <input
-                          id="GameKeyInput"
-                          class="modal-input w-full px-4 py-3 border border-gray-600 text-white"
-                          type="number"
-                          max="5"
-                          placeholder="Max 5 keys at once"
-                        />
+            </div>
+            
+            <!-- Start Sale Modal -->
+            <div
+              id="StartSaleModal"
+              class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+            >
+              <div class="relative p-4 sm:p-6 w-full max-w-lg">
+                <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+                  <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+                    <h3 class="text-xl font-bold text-[#efeff1]">Start Sale</h3>
                         <button
-                          id="submitButton"
-                          class="modal-button mt-6 w-full bg-gradient-to-r from-teal-600 to-teal-500 text-white hover:from-teal-700 hover:to-teal-600 animate-pulseGlow"
                           type="button"
+                          class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
+                          data-modal-toggle="StartSaleModal"
                         >
-                          Generate Keys
+                          <i class="fas fa-times"></i>
+                          <span class="sr-only">Close modal</span>
                         </button>
                       </div>
+                      <form
+                        id="StartSaleForm"
+                        action="/StartSaleRequest"
+                        method="POST"
+                        class="space-y-6"
+                      >
+                        <input
+                          type="hidden"
+                          id="game_name_hidden"
+                          name="game_name"
+                        />
+                        <div>
+                          <label
+                            for="sale_percentage"
+                            class="block text-sm font-medium text-[#efeff1] mb-2"
+                            >Sale Percentage (10-90):</label
+                          >
+                          <input
+                            type="number"
+                            id="sale_percentage"
+                            name="sale_percentage"
+                            min="10"
+                            max="90"
+                            required
+                            class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                            placeholder="Enter percentage"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            for="sale_end_date"
+                            class="block text-sm font-medium text-[#efeff1] mb-2"
+                            >End Date & Time:</label
+                          >
+                          <input
+                            type="datetime-local"
+                            id="sale_end_date"
+                            name="sale_end_date"
+                            required
+                            class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                          />
+                        </div>
+                        <div class="flex justify-end gap-3">
+                          <button
+                            type="button"
+                            class="text-sm px-4 py-2 bg-[#1f1f23] hover:bg-[#26262c] text-[#efeff1] rounded transition-colors"
+                            data-modal-toggle="StartSaleModal"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            class="text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            
+            <!-- Send Publication Request Modal -->
+            <div
+              id="SendPubReqModal"
+              class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex items-center justify-center"
+            >
+              <div class="relative p-4 sm:p-6 w-full max-w-2xl">
+                <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+                  <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+                    <h3 class="text-xl font-bold text-[#efeff1]">Send Publication Request</h3>
+                        <button
+                          type="button"
+                          class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
+                          data-modal-toggle="SendPubReqModal"
+                        >
+                          <i class="fas fa-times"></i>
+                          <span class="sr-only">Close modal</span>
+                        </button>
+                      </div>
+                      <form
+                        id="SendPubReqForm"
+                        action="/SendPublishingRequest"
+                        method="POST"
+                        class="grid grid-cols-1 md:grid-cols-2 gap-6"
+                      >
+                        <div>
+                          <label
+                            for="game_name"
+                            class="block text-sm font-medium text-[#efeff1] mb-2"
+                            >Game Name</label
+                          >
+                          <input
+                            type="text"
+                            id="game_name"
+                            name="game_name"
+                            required
+                            class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                            placeholder="Enter game name"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            for="game_genre"
+                            class="block text-sm font-medium text-[#efeff1] mb-2"
+                            >Genre</label
+                          >
+                          <input
+                            type="text"
+                            id="game_genre"
+                            name="game_genre"
+                            required
+                            class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                            placeholder="Enter genre"
+                          />
+                        </div>
+                        <div class="md:col-span-2">
+                          <label
+                            for="basic_description"
+                            class="block text-sm font-medium text-[#efeff1] mb-2"
+                            >Basic Description</label
+                          >
+                          <input
+                            type="text"
+                            id="basic_description"
+                            name="basic_description"
+                            required
+                            class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                            placeholder="Enter description"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            for="estimated_release_year"
+                            class="block text-sm font-medium text-[#efeff1] mb-2"
+                            >Estimated Release Year</label
+                          >
+                          <input
+                            type="number"
+                            id="estimated_release_year"
+                            name="estimated_release_year"
+                            required
+                            class="w-full px-4 py-2 bg-[#1f1f23] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                            placeholder="Enter year"
+                          />
+                        </div>
+                        <div class="flex justify-end gap-3 md:col-span-2">
+                          <button
+                            type="button"
+                            class="text-sm px-4 py-2 bg-[#1f1f23] hover:bg-[#26262c] text-[#efeff1] rounded transition-colors"
+                            data-modal-toggle="SendPubReqModal"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            id="submitSendPubReq"
+                            class="text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            <!-- Status of Requests Modal -->
+            <div
+              id="RequestStatusModal"
+              tabindex="-1"
+              aria-hidden="true"
+              class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex justify-center items-center p-4"
+            >
+              <div class="relative w-full max-w-5xl max-h-[90vh] flex flex-col">
+                <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+                  <!-- Header - Fixed -->
+                  <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+                    <h3 class="text-xl font-bold text-[#efeff1]">Status of Requests</h3>
+                    <button
+                      type="button"
+                      class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
+                      data-modal-toggle="RequestStatusModal"
+                    >
+                      <i class="fas fa-times"></i>
+                      <span class="sr-only">Close modal</span>
+                    </button>
+                  </div>
+                  
+                  <!-- Content - Scrollable -->
+                  <div class="overflow-y-auto flex-1 p-6">
+                    <div class="space-y-3">
+                      {% for game_request in game_req_data %}
+                      <div class="bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors p-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                          <div class="flex-1">
+                            <span class="text-xs text-[#adadb8] block mb-1">Game Name</span>
+                            <span class="text-[#efeff1] font-medium">{{ game_request[0] }}</span>
+                          </div>
+                          <div class="flex items-center gap-3 flex-shrink-0">
+                            {% if game_request[1] == 'Accepted' and game_request[2] == False %}
+                            <form action="/PayPublishingFee" method="POST">
+                              <input
+                                type="hidden"
+                                name="game_name"
+                                value="{{ game_request[0] }}"
+                              />
+                              <button
+                                type="submit"
+                                class="text-sm px-4 py-2 text-[#efeff1] bg-orange-600 hover:bg-orange-700 rounded transition-colors whitespace-nowrap"
+                              >
+                                Pay Publishing Fee
+                              </button>
+                            </form>
+                            {% elif game_request[1] == 'Accepted' and game_request[2] == True %}
+                            <button
+                              type="button"
+                              class="text-sm px-4 py-2 text-[#efeff1] bg-green-600 hover:bg-green-700 rounded transition-colors whitespace-nowrap"
+                              data-game_name="{{ game_request[0] }}"
+                              onclick="UploadGameData(this)"
+                            >
+                              Upload Data
+                            </button>
+                            {% endif %}
+                            <span class="text-[#efeff1] px-3 py-1 bg-[#26262c] rounded text-sm">{{ game_request[1] }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
                     </div>
                   </div>
                 </div>
               </div>
-              <button
-                type="button"
-                id="SeeGameKeyButton"
-                data-modal-target="SeeGameKeyModal"
-                data-modal-toggle="SeeGameKeyModal"
-                class="action-button w-[300px] h-[45px] font-bold bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-lg font-manrope"
-              >
-                Active Game Keys
-              </button>
-              <div
-                id="SeeGameKeyModal"
-                tabindex="-1"
-                aria-hidden="true"
-                class="hidden backdrop-blur-md bg-black/70 overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center"
-              >
-                <div class="relative p-6 w-full max-w-2xl h-full md:h-auto">
-                  <div class="modal-container relative p-8">
-                    <div class="modal-header">
-                      <h3 class="modal-title">Active Game Keys</h3>
-                      <button
-                        type="button"
-                        class="modal-close text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-                        data-modal-toggle="SeeGameKeyModal"
-                      >
-                        <i class="fas fa-times w-5 h-5"></i>
-                        <span class="sr-only">Close modal</span>
-                      </button>
-                    </div>
-                    <div class="modal-list">
-                      <div
-                        class="modal-table-header flex justify-between text-white font-semibold"
-                      >
-                        <span class="w-1/2 text-left">Game Keys</span>
-                        <span class="w-1/2 text-left">Game Name</span>
-                      </div>
-                      <ul class="list-none">
-                        {% for game_key in game_key_active %}
-                        <li
-                          class="flex justify-between items-center text-white font-medium"
+            </div>
+            
+            <!-- Generate Game Keys Modal -->
+            <div
+              id="GenerateWalletModal"
+              tabindex="-1"
+              aria-hidden="true"
+              class="hidden bg-black/70 backdrop-blur-sm overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center"
+                >
+                  <div class="relative p-4 sm:p-6 w-full max-w-3xl">
+                    <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
+                      <div class="flex justify-between items-center pb-4 mb-6 border-b border-[#2d2d35]">
+                        <h3 class="text-xl font-bold text-[#efeff1]">Generate Game Keys</h3>
+                        <button
+                          type="button"
+                          class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
+                          data-modal-toggle="GenerateWalletModal"
                         >
-                          <span class="w-1/2">{{ game_key[0] }}</span>
-                          <span class="w-1/2">{{ game_key[1] }}</span>
-                        </li>
-                        {% endfor %}
-                      </ul>
+                          <i class="fas fa-times"></i>
+                          <span class="sr-only">Close modal</span>
+                        </button>
+                      </div>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-[#1f1f23] border border-[#2d2d35] rounded p-6">
+                          <h4 class="text-[#efeff1] font-semibold mb-4">
+                            Select Game
+                          </h4>
+                          <select
+                            id="GameNameDropDown"
+                            class="w-full px-4 py-2 bg-[#0e0e10] rounded border border-[#2d2d35] text-[#efeff1] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                          >
+                            <option value="" disabled selected>
+                              Select a game
+                            </option>
+                            {% for game_data in game_list_data %}
+                            <option value="{{ game_data[0] }}">
+                              {{ game_data[0] }}
+                            </option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        <div class="bg-[#1f1f23] border border-[#2d2d35] rounded p-6">
+                          <h4 class="text-[#efeff1] font-semibold mb-4">
+                            Number of Keys
+                          </h4>
+                          <input
+                            id="GameKeyInput"
+                            class="w-full px-4 py-2 bg-[#0e0e10] rounded border border-[#2d2d35] text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff]"
+                            type="number"
+                            max="5"
+                            placeholder="Max 5 keys at once"
+                          />
+                          <button
+                            id="submitButton"
+                            class="text-sm px-4 py-2 mt-6 w-full bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
+                            type="button"
+                          >
+                            Generate Keys
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+            <!-- Active Game Keys Modal -->
+            <div
+              id="SeeGameKeyModal"
+              tabindex="-1"
+              aria-hidden="true"
+              class="hidden bg-black/70 backdrop-blur-sm fixed inset-0 z-50 flex justify-center items-center p-4"
+            >
+              <div class="relative w-full max-w-4xl max-h-[90vh] flex flex-col">
+                <div class="bg-[#18181b] border border-[#2d2d35] rounded flex flex-col max-h-[90vh]">
+                  <!-- Header - Fixed -->
+                  <div class="flex justify-between items-center p-6 border-b border-[#2d2d35] flex-shrink-0">
+                    <h3 class="text-xl font-bold text-[#efeff1]">Active Game Keys</h3>
+                    <button
+                      type="button"
+                      class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
+                      data-modal-toggle="SeeGameKeyModal"
+                    >
+                      <i class="fas fa-times"></i>
+                      <span class="sr-only">Close modal</span>
+                    </button>
+                  </div>
+                  
+                  <!-- Content - Scrollable -->
+                  <div class="overflow-y-auto flex-1 p-6">
+                    <div class="space-y-3">
+                      {% for game_key in game_key_active %}
+                      <div class="bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors p-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <span class="text-xs text-[#adadb8] block mb-1">Game Key</span>
+                            <span class="text-[#efeff1] font-mono text-sm break-all">{{ game_key[0] }}</span>
+                          </div>
+                          <div>
+                            <span class="text-xs text-[#adadb8] block mb-1">Game Name</span>
+                            <span class="text-[#efeff1] font-medium">{{ game_key[1] }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
               </div>
             </div>
           </div>
@@ -916,116 +957,86 @@
       </section>
     </main>
 
-    <footer
-      id="footer"
-      class="bg-gray-800/90 backdrop-blur-sm border-t border-gray-600/20 p-6 lg:p-10"
-    >
-      <div class="container mx-auto">
-        <div
-          class="flex flex-col lg:flex-row justify-between items-center gap-8"
-        >
-          <aside
-            class="flex flex-col items-center lg:items-start text-center lg:text-left"
-          >
-            <div class="relative group mb-4">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-teal-600 via-teal-500 to-teal-400 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-              ></div>
-              <img
-                src="{{ url_for('static', filename='img/logo.jpg') }}"
-                alt="Bashpo Logo"
-                class="w-14 h-10 rounded-xl relative z-10"
-              />
+        <footer class="relative bg-[#0e0e10] border-t border-[#2d2d35]">
+            <div class="container mx-auto px-4 py-12">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
+                    <!-- Logo and Description -->
+                    <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="relative group">
+                                <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"></div>
+                                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo"
+                                     class="w-12 h-8 rounded-xl relative"/>
+                            </div>
+                            <div>
+                                <h1 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Bashpo</h1>
+                                <p class="text-xs text-gray-400">Gaming Platform</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 max-w-md">
+                            Pan, Build, Publish, Earn.
+                        </p>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="text-center lg:text-right">
+                        <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
+                        <div class="flex justify-center lg:justify-end gap-4">
+                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fab fa-youtube text-white"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fab fa-facebook text-white"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fab fa-instagram text-white"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fab fa-x-twitter text-white"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fab fa-tiktok text-white"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fab fa-discord text-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-white/10 mt-8 pt-6 text-center">
+                    <p class="text-gray-400 text-sm">
+                        <i class="fa-regular fa-copyright mr-1"></i>
+                        2025 Bashpo. All rights reserved.
+                    </p>
+                </div>
             </div>
-            <h1
-              class="font-bold text-lg lg:text-xl bg-gradient-to-r from-teal-400 to-teal-300 bg-clip-text text-transparent font-manrope"
-            >
-              <i class="fa-regular fa-copyright mr-1"></i>Bashpo
-            </h1>
-            <p class="text-sm text-gray-300">
-              Find everything you love, in one place.
-            </p>
-          </aside>
-          <nav class="text-center lg:text-right">
-            <h6
-              class="footer-title text-sm lg:text-base font-bold mb-4 text-white font-manrope"
-            >
-              Find Us on Socials
-            </h6>
-            <div class="flex justify-center lg:justify-end gap-4">
-              <a
-                href="#"
-                class="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-teal-600 hover:to-teal-500 rounded-full flex items-center justify-center transition-all duration-300 action-button"
-              >
-                <i class="fab fa-youtube text-white"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-teal-600 hover:to-teal-500 rounded-full flex items-center justify-center transition-all duration-300 action-button"
-              >
-                <i class="fab fa-facebook text-white"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-teal-600 hover:to-teal-500 rounded-full flex items-center justify-center transition-all duration-300 action-button"
-              >
-                <i class="fab fa-instagram text-white"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-teal-600 to-teal-500 rounded-full flex items-center justify-center transition-all duration-300 action-button"
-              >
-                <i class="fab fa-x-twitter text-white"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-teal-600 to-teal-500 rounded-full flex items-center justify-center transition-all duration-300 action-button"
-              >
-                <i class="fab fa-tiktok text-white"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-teal-600 to-teal-500 rounded-full flex items-center justify-center transition-all duration-300 action-button"
-              >
-                <i class="fab fa-discord text-white"></i>
-              </a>
-            </div>
-          </nav>
-        </div>
-        <div class="border-t border-gray-600/10 mt-8 pt-6 text-center">
-          <p class="text-gray-300 text-sm">
-            <i class="fa-regular fa-copyright mr-1"></i>2025 Bashpo. All rights
-            reserved.
-          </p>
-        </div>
-      </div>
-    </footer>
+        </footer>
 
     <div
       id="popup-modal"
       tabindex="-1"
-      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center backdrop-blur-md bg-black/70"
+      class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm"
     >
-      <div class="relative p-6 w-full max-w-md max-h-full">
-        <div class="modal-container relative p-8">
+      <div class="relative p-4 sm:p-6 w-full max-w-md">
+        <div class="bg-[#18181b] border border-[#2d2d35] rounded p-6 sm:p-8">
           <button
             type="button"
-            class="modal-close absolute top-3 end-2.5 text-gray-300 bg-gray-700 hover:bg-teal-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+            class="text-[#adadb8] hover:text-[#efeff1] absolute top-3 right-3 bg-[#1f1f23] hover:bg-[#26262c] rounded text-sm w-8 h-8 inline-flex justify-center items-center transition-colors"
             data-modal-toggle="popup-modal"
           >
-            <i class="fas fa-times w-5 h-5"></i>
+            <i class="fas fa-times"></i>
             <span class="sr-only">Close modal</span>
           </button>
           <div class="p-6 text-center">
             <i
-              class="fas fa-exclamation-circle mx-auto mb-4 text-gray-300 w-12 h-12"
+              class="fas fa-exclamation-circle mx-auto mb-4 text-[#9147ff] text-5xl"
             ></i>
-            <h3 class="modal-title mb-5">Modal Title</h3>
-            <div class="modal-body"></div>
+            <h3 class="text-lg font-bold text-[#efeff1] mb-4">Modal Title</h3>
+            <div class="modal-body text-[#adadb8] mb-6"></div>
             <button
               data-modal-toggle="popup-modal"
               type="button"
-              class="modal-close modal-button bg-gradient-to-r from-teal-600 to-teal-500 text-white hover:from-teal-700 hover:to-teal-600"
+              class="text-sm px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-[#efeff1] rounded transition-colors"
             >
               Close
             </button>
@@ -1035,6 +1046,41 @@
     </div>
 
     <script>
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+      const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+      const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+      function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => {
+          mobileMenuPanel.classList.remove('translate-x-full');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenuFunc() {
+        mobileMenuPanel.classList.add('translate-x-full');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = '';
+        }, 300);
+      }
+
+      if (mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+      }
+
+      if (closeMobileMenu) {
+        closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+      }
+
+      if (mobileMenuBackdrop) {
+        mobileMenuBackdrop.addEventListener('click', closeMobileMenuFunc);
+      }
+
       // Generic function to hide a modal
       function hideModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -1096,22 +1142,25 @@
 
       function initializeSearch_games() {
         const searchInput = document.getElementById("searchInput_games");
-        const userList = document.querySelectorAll(
-          "#ViewPublishedGamesModal ul li"
+        const gameCards = document.querySelectorAll(
+          "#ViewPublishedGamesModal .space-y-3 > div"
         );
-        searchInput.addEventListener("input", function () {
-          const filter = searchInput.value.toLowerCase();
-          userList.forEach((userItem) => {
-            const username = userItem
-              .querySelector("span")
-              .textContent.toLowerCase();
-            if (username.includes(filter)) {
-              userItem.style.display = "";
-            } else {
-              userItem.style.display = "none";
-            }
+        if (searchInput) {
+          searchInput.addEventListener("input", function () {
+            const filter = searchInput.value.toLowerCase();
+            gameCards.forEach((card) => {
+              const gameName = card.querySelector(".text-[\\#efeff1].font-medium");
+              if (gameName) {
+                const text = gameName.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                  card.style.display = "";
+                } else {
+                  card.style.display = "none";
+                }
+              }
+            });
           });
-        });
+        }
       }
 
       function initializeSearch_revenue() {
@@ -1394,13 +1443,13 @@
         const currentHour = new Date().getHours();
         if (currentHour >= 6 && currentHour < 18) {
           navbar.classList.remove("bg-gray-800");
-          navbar.classList.add("bg-charcoal-light");
+          navbar.classList.add("bg-[#18181b]-light");
           footer.classList.remove("bg-gray-800");
-          footer.classList.add("bg-charcoal-light");
+          footer.classList.add("bg-[#18181b]-light");
         } else {
-          navbar.classList.remove("bg-charcoal-light");
+          navbar.classList.remove("bg-[#18181b]-light");
           navbar.classList.add("bg-gray-800");
-          footer.classList.remove("bg-charcoal-light");
+          footer.classList.remove("bg-[#18181b]-light");
           footer.classList.add("bg-gray-800");
         }
       }

@@ -148,176 +148,182 @@
   </head>
 
   <body
-    class="font-inter bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 min-h-screen"
+    class="font-inter bg-[#0e0e10] min-h-screen text-[#efeff1]"
   >
     <!-- Header -->
-    <header
-      id="navbar"
-      class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-emerald-500/20"
-    >
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="relative group">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-              ></div>
-              <a href="/" class="relative block">
-                <img
-                  src="{{ url_for('static', filename='img/logo.jpg') }}"
-                  alt="Bashpo Logo"
-                  class="w-12 h-8 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105"
-                />
-              </a>
+    <header class="sticky top-0 z-50 bg-[#0e0e10] border-b border-[#2d2d35]">
+      <div class="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
+          <!-- Logo Section -->
+          <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
+              <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo"
+                   class="w-12 h-8 rounded-lg object-contain" loading="lazy">
+              <span class="text-base sm:text-lg font-semibold hidden sm:block text-[#efeff1]">Bashpo</span>
+            </a>
+          </div>
+          
+          <!-- Desktop Right Section (hidden on mobile) -->
+          <div class="hidden sm:flex items-center gap-2">
+            <!-- Cart -->
+            {% if cart_status=='1' %}
+            <a href="/ViewCart" class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] px-3 py-2 rounded text-sm font-medium transition-all">
+              <i class="fas fa-shopping-cart text-blue-400 text-sm"></i>
+              <span class="text-blue-400">Cart</span>
+              <span class="bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded text-xs font-semibold">{{cart_value}}</span>
+            </a>
+            {% else %}
+            <a href="/ViewCart" class="flex items-center gap-1.5 bg-[#1f1f23]/80 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] px-3 py-2 rounded text-sm font-medium transition-all">
+              <i class="fas fa-shopping-cart text-red-400 text-sm"></i>
+              <span class="text-red-400">Cart</span>
+              <span class="bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded text-xs font-semibold">0</span>
+            </a>
+            {% endif %}
+            
+            <!-- Wishlist -->
+            <button type="button" id="ViewWishlistedGamesButton"
+                    class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] px-3 py-2 rounded text-sm font-medium transition-all">
+              <i class="fas fa-heart text-purple-400 text-sm"></i>
+              <span class="text-purple-400">Wishlist</span>
+              <span class="bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded text-xs font-semibold">{{wishlist_value}}</span>
+            </button>
+            
+            <!-- Balance -->
+            <div class="text-green-400 flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm border border-[#2d2d35] px-3 py-2 rounded text-sm font-semibold">
+              <i class="fas fa-wallet text-sm"></i>
+              <span class="">${{ balance | round(2) }}</span>
             </div>
-            <div class="hidden lg:block">
-              <h1
-                class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent"
-              >
-                Bashpo Wallet
-              </h1>
-              <p class="text-xs text-gray-400">Manage Your Funds</p>
+            
+            <!-- User Dropdown -->
+            <div class="relative">
+              <select id="user-name" name="user_name"
+                      class="bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] text-[#efeff1] text-sm px-3 py-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none pr-8 transition-all"
+                      onchange="handleDropdownChange(this)" required aria-label="User menu">
+                <option value="" disabled selected class="bg-[#1f1f23]">
+                  {{ buyer_username[:8] }}{% if buyer_username|length > 8 %}...{% endif %}
+                </option>
+                <option value="view_profile" class="bg-[#1f1f23]">View Profile</option>
+                <option value="update_pass" class="bg-[#1f1f23]">Update Password</option>
+                <option value="logout" class="bg-[#1f1f23]">Logout</option>
+              </select>
+              <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <i class="fas fa-chevron-down text-[#efeff1] text-xs"></i>
+              </div>
             </div>
           </div>
-          <div class="flex items-center space-x-4">
-            <!-- Cart & Wishlist -->
-            <div class="flex items-center space-x-2" data-cart-status>
-              {% if cart_status=='1' %}
-              <a href="/ViewCart" class="relative group">
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
-                >
-                  <i class="fas fa-cart-shopping text-green-400"></i>
-                  <span class="font-medium">Cart ({{cart_value}})</span>
-                </div>
-              </a>
-              {% else %}
-              <div
-                class="flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400 relative group"
-              >
-                <i class="fas fa-cart-shopping"></i>
-                <span class="font-medium">Cart is Empty</span>
-                <div
-                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-                >
-                  Add games to your cart to get started!
-                </div>
-              </div>
-              {% endif %}
-              <button
-                type="button"
-                id="ViewWishlistedGamesButton"
-                data-modal-target="ViewWishlistedGamesModal"
-                class="relative group"
-              >
-                <div
-                  class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
-                ></div>
-                <div
-                  class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300"
-                >
-                  <i class="fas fa-heart text-pink-500"></i>
-                  <span id="wishlist-count" class="font-medium"
-                    >Wishlist ({{wishlist_value}})</span
-                  >
-                </div>
-              </button>
-            </div>
 
-            <div
-              class="flex items-center space-x-2 bg-gradient-to-r from-emerald-600/20 to-teal-600/20 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-sm"
-            >
-              <i class="fas fa-wallet text-emerald-400"></i>
-              <span class="text-white font-medium"
-                >${{ balance | round(2) }}</span
-              >
-            </div>
-            <a href="/buyer_dashboard" class="relative group">
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"
-              ></div>
+          <!-- Mobile Right Section (visible only on mobile) -->
+          <div class="flex sm:hidden items-center gap-2">
+            <!-- Cart Icon -->
+            {% if cart_status=='1' %}
+            <a href="/ViewCart" class="relative flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all">
+              <i class="fas fa-shopping-cart text-blue-400 text-base"></i>
+              <span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{cart_value}}</span>
             </a>
-            <!-- User Dropdown -->
-            <div class="relative w-[200px]">
-              <select
-                id="user-name"
-                name="user_name"
-                class="ml-0 user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 appearance-none cursor-pointer text-left pl-3"
-                onchange="handleDropdownChange(this)"
-                required
-              >
-                <option
-                  value=""
-                  disabled
-                  selected
-                  class="bg-slate-800 text-gray-300 user-dropdown-option"
-                  data-fallback="👤"
-                >
-                  <i class="fas fa-user"></i> {{ buyer_username }}
-                </option>
-                <option
-                  value="view_profile"
-                  class="bg-slate-800 text-white user-dropdown-option"
-                  data-fallback="👤"
-                >
-                  <i class="fas fa-user"></i> View Profile
-                </option>
-                <option
-                  value="update_pass"
-                  class="bg-slate-800 text-white user-dropdown-option"
-                  data-fallback="🔒"
-                >
-                  <i class="fas fa-lock"></i> Update Password
-                </option>
-                <option
-                  value="logout"
-                  class="bg-slate-800 text-white user-dropdown-option"
-                  data-fallback="⬅️"
-                >
-                  <i class="fas fa-sign-out-alt"></i> Logout
-                </option>
-              </select>
-              <div
-                class="absolute inset-y-0 right-2 flex items-center pointer-events-none user-dropdown-arrow"
-              >
-                <i class="fas fa-chevron-down text-white"></i>
-              </div>
-            </div>
+            {% else %}
+            <a href="/ViewCart" class="relative flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all">
+              <i class="fas fa-shopping-cart text-[#eb0400] text-base"></i>
+              <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+            </a>
+            {% endif %}
+            
+            <!-- Wishlist Icon -->
+            <button type="button" id="ViewWishlistedGamesButtonMobile" class="relative flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all">
+              <i class="fas fa-heart text-purple-400 text-base"></i>
+              <span class="absolute -top-1 -right-1 bg-purple-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{wishlist_value}}</span>
+            </button>
+            
+            <!-- Menu Button -->
+            <button type="button" id="mobileMenuButton" class="flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all">
+              <i class="fas fa-bars text-[#efeff1] text-base"></i>
+            </button>
           </div>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Slide-out Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div id="mobileMenuBackdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      
+      <!-- Menu Panel -->
+      <div id="mobileMenuPanel" class="absolute top-0 right-0 h-full w-80 bg-[#18181b] border-l border-[#2d2d35] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+          <!-- Menu Header -->
+          <div class="flex items-center justify-between p-4 border-b border-[#2d2d35]">
+            <h3 class="text-lg font-bold text-[#efeff1]">Menu</h3>
+            <button id="closeMobileMenu" class="flex items-center justify-center w-8 h-8 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+              <i class="fas fa-times text-[#efeff1]"></i>
+            </button>
+          </div>
+          
+          <!-- User Info -->
+          <div class="p-4 border-b border-[#2d2d35]">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 bg-[#9147ff] rounded-full flex items-center justify-center text-white text-xl font-bold">
+                {{buyer_username[0].upper()}}
+              </div>
+              <div>
+                <p class="text-[#efeff1] font-semibold">{{buyer_username}}</p>
+                <p class="text-[#adadb8] text-sm">Buyer Account</p>
+              </div>
+            </div>
+            
+            <!-- Balance Display -->
+            <div class="flex items-center gap-2 bg-[#1f1f23] px-3 py-2 rounded">
+              <i class="fas fa-wallet text-[#00c7ac]"></i>
+              <span class="text-[#00c7ac] font-semibold">${{ balance | round(2) }}</span>
+            </div>
+          </div>
+          
+          <!-- Menu Options -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <nav class="space-y-2">
+              <a href="/ViewMyProfile" class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">View Profile</span>
+              </a>
+              
+              <button onclick="showUpdatePasswordModal(); closeMobileMenuFunc();" class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Update Password</span>
+              </button>
+              
+              <a href="/logout" class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors">
+                <span class="text-[#efeff1] font-medium">Logout</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Update Password Modal -->
     <div
       id="UpdatePasswordModal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+      class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500"
     >
       <div
-        class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+        class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto"
       >
         <div
-          class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+          class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
         >
           <div
-            class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+            class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
           >
             <div class="flex items-center space-x-3">
-              <i class="fas fa-lock text-emerald-400 text-xl sm:text-2xl"></i>
+              <i class="fas fa-lock text-[#9147ff] text-xl sm:text-2xl"></i>
               <h3
-                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                class="text-lg sm:text-xl font-bold text-[#efeff1]"
               >
                 Update Password
               </h3>
             </div>
             <button
               type="button"
-              class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+              class="text-[#adadb8] hover:text-[#efeff1] rounded-full p-2 transition-colors"
               data-modal-hide="UpdatePasswordModal"
             >
               <i class="fas fa-times w-5 h-5"></i>
@@ -333,7 +339,7 @@
             <div>
               <label
                 for="current-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-semibold text-[#efeff1]"
                 >Current Password</label
               >
               <input
@@ -341,14 +347,14 @@
                 id="current-password"
                 name="current_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                 placeholder="Enter current password"
               />
             </div>
             <div>
               <label
                 for="new-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-semibold text-[#efeff1]"
                 >New Password</label
               >
               <input
@@ -356,14 +362,14 @@
                 id="new-password"
                 name="new_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                 placeholder="Enter new password"
               />
             </div>
             <div>
               <label
                 for="confirm-password"
-                class="block text-sm font-semibold text-gray-100"
+                class="block text-sm font-semibold text-[#efeff1]"
                 >Confirm New Password</label
               >
               <input
@@ -371,26 +377,26 @@
                 id="confirm-password"
                 name="confirm_password"
                 required
-                class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                 placeholder="Confirm new password"
               />
             </div>
             <div
               id="password-error"
-              class="text-red-400 text-sm font-medium hidden"
+              class="text-[#eb0400] text-sm font-medium hidden"
             >
               Passwords do not match.
             </div>
             <div
               id="password-success"
-              class="text-green-400 text-sm font-medium hidden"
+              class="text-[#00c7ac] text-sm font-medium hidden"
             >
               Password updated successfully!
             </div>
             <div class="mt-6 flex justify-end space-x-4">
               <button
                 type="button"
-                class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                class="text-sm px-4 py-2 bg-[#1f1f23] text-[#efeff1] rounded hover:bg-[#26262c] transition-colors"
                 data-modal-hide="UpdatePasswordModal"
               >
                 Cancel
@@ -398,7 +404,7 @@
               <button
                 type="submit"
                 id="submit-password"
-                class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                class="text-sm px-4 py-2 bg-[#9147ff] text-white rounded hover:bg-[#772ce8] transition-colors"
               >
                 Update
               </button>
@@ -409,39 +415,30 @@
     </div>
 
     <!-- Main Section -->
-    <section class="relative z-10">
-      <div
-        class="mx-auto justify-items-center relative bg-[url('{{ url_for('static', filename='img/bg-1.jpg') }}')] bg-cover bg-center w-full sm:h-[auto] lg:h-[800px]"
-      >
-        <h1
-          class="font-bold text-3xl lg:text-5xl font-manrope tracking-widest text-center text-white bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text"
-        >
+    <section class="relative min-h-screen bg-[url('{{ url_for('static', filename='img/bg-1.jpg') }}')] bg-cover bg-center flex items-center justify-center">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div class="relative z-10 container mx-auto px-4 py-8">
+        <h1 class="font-bold text-3xl lg:text-4xl text-center text-[#efeff1] mb-8">
           Wallet Balance and Purchase History
         </h1>
-        <div
-          class="flex flex-col my-5 mx-3 lg:mx-auto h-[auto] lg:w-[1200px] bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-5 border border-white/20"
-        >
+        <div class="flex flex-col mx-auto max-w-6xl bg-[#18181b]/90 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-[#2d2d35] shadow-2xl">
           <div>
-            <h1
-              class="my-5 text-center text-xl lg:text-4xl font-bold text-white"
-            >
-              Current Balance ${{ balance | round(2) }}
-            </h1>
+            <h2 class="mb-6 text-center text-2xl lg:text-3xl font-bold text-[#efeff1]">
+              Current Balance: <span class="text-[#00c7ac]">${{ balance | round(2) }}</span>
+            </h2>
           </div>
-          <div
-            class="my-5 mx-auto lg:flex lg:flex-col justify-center items-center gap-5"
-          >
-            <div class="flex gap-5">
+          <div class="flex flex-col justify-center items-center gap-5">
+            <div class="flex flex-wrap justify-center gap-5">
               <button
                 type="button"
                 id="open-credit-card-modal"
                 class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
               >
                 <div
-                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                  class="absolute inset-0 bg-[#9147ff] rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-300"
                 ></div>
                 <div
-                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                  class="relative px-6 py-3 bg-[#1f1f23] text-white rounded-lg font-semibold border border-[#2d2d35] hover:bg-[#26262c] transition-colors"
                 >
                   Add to Wallet via Credit Card
                 </div>
@@ -452,26 +449,26 @@
                 class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
               >
                 <div
-                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                  class="absolute inset-0 bg-[#9147ff] rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-300"
                 ></div>
                 <div
-                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                  class="relative px-6 py-3 bg-[#1f1f23] text-white rounded-lg font-semibold border border-[#2d2d35] hover:bg-[#26262c] transition-colors"
                 >
                   Add to Wallet via Gift Card
                 </div>
               </button>
             </div>
-            <div class="flex gap-5 mt-5">
+            <div class="flex flex-wrap justify-center gap-5">
               <button
                 type="button"
                 id="open-activate-product-modal"
                 class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
               >
                 <div
-                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                  class="absolute inset-0 bg-[#9147ff] rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-300"
                 ></div>
                 <div
-                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                  class="relative px-6 py-3 bg-[#1f1f23] text-white rounded-lg font-semibold border border-[#2d2d35] hover:bg-[#26262c] transition-colors"
                 >
                   Activate a Product
                 </div>
@@ -482,10 +479,10 @@
                 class="relative group action-button w-full sm:w-[250px] lg:w-[300px] lg:h-[50px]"
               >
                 <div
-                  class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"
+                  class="absolute inset-0 bg-[#9147ff] rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-300"
                 ></div>
                 <div
-                  class="relative px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg font-semibold border border-white/20"
+                  class="relative px-6 py-3 bg-[#1f1f23] text-white rounded-lg font-semibold border border-[#2d2d35] hover:bg-[#26262c] transition-colors"
                 >
                   View Purchase History
                 </div>
@@ -498,30 +495,30 @@
       <!-- Modals -->
       <div
         id="creditCardModal"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500"
       >
         <div
-          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto "
         >
           <div
-            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+            class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
           >
             <div
-              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+              class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
             >
               <div class="flex items-center space-x-3">
                 <i
-                  class="fas fa-credit-card text-emerald-400 text-xl sm:text-2xl"
+                  class="fas fa-credit-card text-[#9147ff] text-xl sm:text-2xl"
                 ></i>
                 <h3
-                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                  class="text-lg sm:text-xl font-bold text-[#efeff1]"
                 >
                   Add to Wallet via Credit Card
                 </h3>
               </div>
               <button
                 type="button"
-                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                class="text-[#adadb8] hover:text-[#efeff1] rounded-full p-2 transition-colors"
                 data-modal-hide="creditCardModal"
               >
                 <i class="fas fa-times w-5 h-5"></i>
@@ -537,7 +534,7 @@
               <div>
                 <label
                   for="wallet"
-                  class="block text-sm font-semibold text-gray-100"
+                  class="block text-sm font-semibold text-[#efeff1]"
                   >Enter Amount</label
                 >
                 <input
@@ -546,7 +543,7 @@
                   name="wallet"
                   min="1"
                   step="0.01"
-                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                   placeholder="Enter amount in $$"
                   required
                 />
@@ -554,14 +551,14 @@
               <div class="mt-6 flex justify-end space-x-4">
                 <button
                   type="button"
-                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#1f1f23] text-[#efeff1] rounded hover:bg-[#26262c] transition-colors"
                   data-modal-hide="creditCardModal"
                 >
                   Close
                 </button>
                 <button
                   type="submit"
-                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#9147ff] text-white rounded hover:bg-[#772ce8] transition-colors"
                 >
                   Submit
                 </button>
@@ -573,28 +570,28 @@
 
       <div
         id="giftCardModal"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500"
       >
         <div
-          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto"
         >
           <div
-            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+            class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
           >
             <div
-              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+              class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
             >
               <div class="flex items-center space-x-3">
-                <i class="fas fa-gift text-emerald-400 text-xl sm:text-2xl"></i>
+                <i class="fas fa-gift text-[#9147ff] text-xl sm:text-2xl"></i>
                 <h3
-                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                  class="text-lg sm:text-xl font-bold text-[#efeff1]"
                 >
                   Add to Wallet via Gift Card
                 </h3>
               </div>
               <button
                 type="button"
-                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                class="text-[#adadb8] hover:text-[#efeff1] rounded-full p-2 transition-colors"
                 data-modal-hide="giftCardModal"
               >
                 <i class="fas fa-times w-5 h-5"></i>
@@ -610,14 +607,14 @@
               <div>
                 <label
                   for="gift-code"
-                  class="block text-sm font-semibold text-gray-100"
+                  class="block text-sm font-semibold text-[#efeff1]"
                   >Gift Card Code</label
                 >
                 <input
                   type="text"
                   id="gift-code"
                   name="gift_code"
-                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                   placeholder="Enter gift card code"
                   required
                 />
@@ -625,14 +622,14 @@
               <div class="mt-6 flex justify-end space-x-4">
                 <button
                   type="button"
-                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#1f1f23] text-[#efeff1] rounded hover:bg-[#26262c] transition-colors"
                   data-modal-hide="giftCardModal"
                 >
                   Close
                 </button>
                 <button
                   type="submit"
-                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#9147ff] text-white rounded hover:bg-[#772ce8] transition-colors"
                   id="submitWalletCode"
                 >
                   Submit
@@ -645,28 +642,28 @@
 
       <div
         id="activateProductModal"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500"
       >
         <div
-          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto "
         >
           <div
-            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+            class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
           >
             <div
-              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+              class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
             >
               <div class="flex items-center space-x-3">
-                <i class="fas fa-key text-emerald-400 text-xl sm:text-2xl"></i>
+                <i class="fas fa-key text-[#9147ff] text-xl sm:text-2xl"></i>
                 <h3
-                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                  class="text-lg sm:text-xl font-bold text-[#efeff1]"
                 >
                   Activate a Product
                 </h3>
               </div>
               <button
                 type="button"
-                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                class="text-[#adadb8] hover:text-[#efeff1] rounded-full p-2 transition-colors"
                 data-modal-hide="activateProductModal"
               >
                 <i class="fas fa-times w-5 h-5"></i>
@@ -682,14 +679,14 @@
               <div>
                 <label
                   for="product-key"
-                  class="block text-sm font-semibold text-gray-100"
+                  class="block text-sm font-semibold text-[#efeff1]"
                   >Product Key</label
                 >
                 <input
                   type="text"
                   id="product-key"
                   name="product_key"
-                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                   placeholder="Enter activation key"
                   required
                 />
@@ -697,14 +694,14 @@
               <div class="mt-6 flex justify-end space-x-4">
                 <button
                   type="button"
-                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#1f1f23] text-[#efeff1] rounded hover:bg-[#26262c] transition-colors"
                   data-modal-hide="activateProductModal"
                 >
                   Close
                 </button>
                 <button
                   type="submit"
-                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#9147ff] text-white rounded hover:bg-[#772ce8] transition-colors"
                   id="submitProductKey"
                 >
                   Submit
@@ -717,30 +714,30 @@
 
       <div
         id="updateCreditCardModal"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500"
       >
         <div
-          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto "
         >
           <div
-            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+            class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
           >
             <div
-              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+              class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
             >
               <div class="flex items-center space-x-3">
                 <i
-                  class="fas fa-credit-card text-emerald-400 text-xl sm:text-2xl"
+                  class="fas fa-credit-card text-[#9147ff] text-xl sm:text-2xl"
                 ></i>
                 <h3
-                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                  class="text-lg sm:text-xl font-bold text-[#efeff1]"
                 >
                   Update Credit Card Info
                 </h3>
               </div>
               <button
                 type="button"
-                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                class="text-[#adadb8] hover:text-[#efeff1] rounded-full p-2 transition-colors"
                 data-modal-hide="updateCreditCardModal"
               >
                 <i class="fas fa-times w-5 h-5"></i>
@@ -756,14 +753,14 @@
               <div>
                 <label
                   for="new-card-number"
-                  class="block text-sm font-semibold text-gray-100"
+                  class="block text-sm font-semibold text-[#efeff1]"
                   >New Card Number</label
                 >
                 <input
                   type="text"
                   id="new-card-number"
                   name="card_number"
-                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                   placeholder="1234 5678 9012 3456"
                   required
                 />
@@ -771,35 +768,35 @@
               <div>
                 <label
                   for="new-expiry-date"
-                  class="block text-sm font-semibold text-gray-100"
+                  class="block text-sm font-semibold text-[#efeff1]"
                   >New Expiry Date</label
                 >
                 <input
                   type="text"
                   id="new-expiry-date"
                   name="expiry_date"
-                  class="mt-2 w-full px-4 py-2 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  class="mt-2 w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded-lg text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all"
                   placeholder="MM/YY"
                   required
                 />
               </div>
               <div
                 id="card-success"
-                class="text-green-400 text-sm font-medium hidden"
+                class="text-[#00c7ac] text-sm font-medium hidden"
               >
                 Card info updated successfully!
               </div>
               <div class="mt-6 flex justify-end space-x-4">
                 <button
                   type="button"
-                  class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#1f1f23] text-[#efeff1] rounded hover:bg-[#26262c] transition-colors"
                   data-modal-hide="updateCreditCardModal"
                 >
                   Close
                 </button>
                 <button
                   type="submit"
-                  class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:scale-105"
+                  class="text-sm px-4 py-2 bg-[#9147ff] text-white rounded hover:bg-[#772ce8] transition-colors"
                 >
                   Submit
                 </button>
@@ -812,30 +809,30 @@
       <!-- Updated Purchase History Modal -->
       <div
         id="purchaseHistoryModal"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500"
       >
         <div
-          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+          class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto "
         >
           <div
-            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+            class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
           >
             <div
-              class="flex justify-between items-center pb-4 mb-4 border-b-2 border-emerald-500/30"
+              class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
             >
               <div class="flex items-center space-x-3">
                 <i
-                  class="fas fa-history text-emerald-400 text-xl sm:text-2xl"
+                  class="fas fa-history text-[#9147ff] text-xl sm:text-2xl"
                 ></i>
                 <h3
-                  class="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                  class="text-lg sm:text-xl font-bold text-[#efeff1]"
                 >
                   Purchase History
                 </h3>
               </div>
               <button
                 type="button"
-                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+                class="text-[#adadb8] hover:text-[#efeff1] rounded-full p-2 transition-colors"
                 data-modal-hide="purchaseHistoryModal"
               >
                 <i class="fas fa-times w-5 h-5"></i>
@@ -845,7 +842,7 @@
             <div class="mt-4 max-h-80 overflow-y-auto pr-3 custom-scrollbar">
               {% if game_info %}
               <div
-                class="flex justify-between font-semibold mb-4 text-gray-100"
+                class="hidden sm:flex justify-between font-semibold mb-4 text-[#efeff1]"
               >
                 <div class="w-1/3 text-left">Game Name</div>
                 <div class="w-1/3 text-left">Amount Paid</div>
@@ -854,23 +851,27 @@
               <ul id="buyerList" class="list-none space-y-3">
                 {% for game in game_info %}
                 <li
-                  class="flex justify-between items-center p-4 bg-gradient-to-r from-emerald-800/50 to-emerald-900/50 rounded-xl border border-emerald-500/30 hover:border-emerald-400/50 transition-all duration-300"
+                  class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 p-4 bg-[#1f1f23] rounded-lg border border-[#2d2d35] hover:border-[#9147ff] transition-colors"
                 >
-                  <span class="w-1/3 text-gray-100 font-medium"
-                    >{{ game[0] }}</span
-                  >
-                  <span class="w-1/3 text-gray-100">
-                    {% if game[2] == 'Digital' %}
-                    <span>{{ game[1] }} $</span>
-                    {% elif game[2] == 'Product_key' %}
-                    <span>Product Key</span>
-                    {% endif %}
-                  </span>
-                  <div class="w-1/3 text-left">
+                  <div class="sm:w-1/3 sm:text-left">
+                    <span class="text-[#adadb8] text-xs sm:hidden">Game:</span>
+                    <span class="text-[#efeff1] font-medium">{{ game[0] }}</span>
+                  </div>
+                  <div class="sm:w-1/3 sm:text-left">
+                    <span class="text-[#adadb8] text-xs sm:hidden">Amount:</span>
+                    <span class="text-[#efeff1]">
+                      {% if game[2] == 'Digital' %}
+                      {{ game[1] }} $
+                      {% elif game[2] == 'Product_key' %}
+                      Product Key
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="sm:w-1/3 sm:text-left">
                     {% if game[2] == 'Digital' %}
                     <button
                       type="button"
-                      class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      class="w-full sm:w-auto text-white bg-[#eb0400] hover:bg-[#c20300] font-medium rounded text-sm px-4 py-2 transition-colors"
                       data-game_name_refund="{{ game[0] }}"
                       data-price="{{ game[1] }}"
                       onclick="RefundGame(this)"
@@ -880,7 +881,7 @@
                     {% elif game[2] == 'Product_key' %}
                     <button
                       type="button"
-                      class="text-white bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      class="w-full sm:w-auto text-white bg-[#adadb8] hover:bg-[#9a9aa5] font-medium rounded text-sm px-4 py-2 transition-colors"
                       data-game_name_refund="{{ game[0] }}"
                     >
                       Refund Unavailable
@@ -892,13 +893,13 @@
               </ul>
               {% else %}
               <div
-                class="text-center py-12 bg-gradient-to-r from-emerald-950 to-emerald-900 rounded-2xl border border-emerald-500/50"
+                class="text-center py-12 bg-[#1f1f23] rounded-xl border border-[#2d2d35]"
               >
-                <i class="fas fa-history text-7xl text-emerald-400 mb-5"></i>
-                <p class="text-emerald-200 text-xl">
+                <i class="fas fa-history text-7xl text-[#9147ff] mb-5"></i>
+                <p class="text-[#efeff1] text-xl">
                   Your purchase history is empty
                 </p>
-                <p class="text-emerald-400 text-md">
+                <p class="text-[#9147ff] text-md">
                   Purchase some games to see them here!
                 </p>
               </div>
@@ -907,7 +908,7 @@
             <div class="mt-6 flex justify-end">
               <button
                 type="button"
-                class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
+                class="text-sm px-4 py-2 bg-[#1f1f23] text-[#efeff1] rounded hover:bg-[#26262c] transition-colors"
                 data-modal-hide="purchaseHistoryModal"
               >
                 Close
@@ -922,49 +923,48 @@
         id="ViewWishlistedGamesModal"
         tabindex="-1"
         aria-hidden="true"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500 p-4"
       >
-        <div
-          class="relative p-6 sm:p-8 w-full max-w-6xl h-auto animate-slideIn"
-        >
+        <div class="relative w-full max-w-6xl max-h-[90vh] ">
           <div
-            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-8 sm:p-10 backdrop-blur-2xl"
+            class="relative bg-[#18181b] rounded-xl sm:rounded-2xl shadow-2xl border border-[#2d2d35] p-4 sm:p-6 lg:p-10 h-full max-h-[90vh] flex flex-col"
           >
             <!-- Header -->
             <div
-              class="flex justify-between items-center pb-6 mb-6 border-b-2 border-emerald-500/30"
+              class="flex justify-between items-center pb-4 sm:pb-6 mb-4 sm:mb-6 border-b border-[#2d2d35] flex-shrink-0"
             >
-              <div class="flex items-center space-x-4">
-                <i class="fas fa-heart text-pink-500 text-2xl sm:text-3xl"></i>
+              <div class="flex items-center space-x-2 sm:space-x-4">
+                <i class="fas fa-heart text-[#9147ff] text-xl sm:text-2xl lg:text-3xl"></i>
                 <h3
-                  class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent"
+                  class="text-base sm:text-xl lg:text-2xl font-bold text-[#efeff1]"
                 >
                   {{buyer_username}}'s Wishlist
                 </h3>
               </div>
               <button
                 type="button"
-                class="text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-3 transition-all duration-300"
+                class="text-gray-200 bg-[#1f1f23] hover:bg-[#26262c] rounded-full p-2 sm:p-3 transition-all duration-300 flex-shrink-0"
                 data-modal-hide="ViewWishlistedGamesModal"
+                aria-label="Close modal"
               >
-                <i class="fas fa-times w-6 h-6"></i>
+                <i class="fas fa-times w-4 h-4 sm:w-6 sm:h-6"></i>
                 <span class="sr-only">Close modal</span>
               </button>
             </div>
 
             <!-- Search -->
-            <div class="mb-6">
+            <div class="mb-4 sm:mb-6 flex-shrink-0">
               <div class="relative">
                 <div
-                  class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none"
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-5 pointer-events-none"
                 >
-                  <i class="fas fa-search text-emerald-400"></i>
+                  <i class="fas fa-search text-[#9147ff] text-sm"></i>
                 </div>
                 <input
                   type="text"
                   id="searchInput_wishlistedgames"
                   placeholder="Search games..."
-                  class="block w-full pl-14 pr-5 py-3 bg-emerald-900/50 border border-emerald-500/50 rounded-2xl text-white placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all duration-300"
+                  class="block w-full pl-10 sm:pl-14 pr-4 sm:pr-5 py-2 sm:py-3 bg-[#1f1f23] border border-[#2d2d35] rounded-lg sm:rounded-xl text-[#efeff1] placeholder-[#adadb8] focus:ring-2 focus:ring-[#9147ff] focus:border-transparent transition-all text-sm"
                 />
               </div>
             </div>
@@ -972,39 +972,39 @@
             <!-- Wishlist Content -->
             <div
               id="wishlist-container"
-              class="mt-6 max-h-[36rem] overflow-y-auto pr-4 custom-scrollbar"
+              class="flex-1 overflow-y-auto pr-2 sm:pr-4 custom-scrollbar"
             >
               {% if wishlist_games %}
-              <ul id="wishlistList" class="list-none space-y-4">
+              <ul id="wishlistList" class="list-none space-y-3 sm:space-y-4">
                 {% for game in wishlist_games %}
                 <li
-                  class="flex justify-between items-center p-6 bg-gradient-to-r from-emerald-900/50 to-emerald-950/50 rounded-2xl border border-emerald-500/50 hover:border-emerald-400/60 transition-all duration-300"
+                  class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 lg:p-6 bg-[#1f1f23] rounded-lg sm:rounded-xl border border-[#2d2d35] hover:border-[#9147ff] transition-colors"
                 >
                   <!-- Game Info -->
-                  <div class="flex items-center space-x-5">
+                  <div class="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
                     <div
-                      class="w-20 h-20 rounded-xl bg-gradient-to-br from-emerald-950 to-emerald-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-sm text-center p-2"
+                      class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl bg-[#26262c] flex items-center justify-center flex-shrink-0 text-white font-semibold text-xs sm:text-sm text-center p-2"
                     >
                       {{game[0]}}
                     </div>
-                    <div>
-                      <span class="text-white font-semibold text-lg"
+                    <div class="flex-1 min-w-0">
+                      <span class="text-white font-semibold text-sm sm:text-base lg:text-lg block truncate"
                         >{{ game[0] }}</span
                       >
-                      <p class="text-emerald-300 text-sm">{{ game[1] }}</p>
+                      <p class="text-[#adadb8] text-xs sm:text-sm truncate">{{ game[1] }}</p>
                       {% if game[4]=='1' %}
-                      <div class="flex items-center space-x-3 mt-1">
+                      <div class="flex items-center gap-2 sm:gap-3 mt-1">
                         <span
-                          class="bg-emerald-800 text-white text-xs px-3 py-1 rounded-lg"
+                          class="bg-[#9147ff] text-white text-xs px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg"
                         >
                           {{ game[5] }}% OFF
                         </span>
-                        <span class="text-emerald-400 font-bold text-lg"
+                        <span class="text-[#9147ff] font-bold text-sm sm:text-base lg:text-lg"
                           >${{ game[2] }}</span
                         >
                       </div>
                       {% else %}
-                      <p class="text-emerald-400 font-bold text-lg mt-1">
+                      <p class="text-[#9147ff] font-bold text-sm sm:text-base lg:text-lg mt-1">
                         ${{ game[2] }}
                       </p>
                       {% endif %}
@@ -1012,10 +1012,10 @@
                   </div>
 
                   <!-- Actions -->
-                  <div class="flex space-x-3">
+                  <div class="flex gap-2 sm:gap-3 flex-shrink-0">
                     <button
                       type="button"
-                      class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      class="flex-1 sm:flex-none text-white bg-[#eb0400] hover:bg-[#c20300] font-medium rounded-lg sm:rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 transition-colors"
                       data-username="{{buyer_username}}"
                       data-game_name_wishlist="{{ game[0] }}"
                       onclick="RemoveFromWishList(this)"
@@ -1024,7 +1024,7 @@
                     </button>
                     <button
                       type="button"
-                      class="text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                      class="flex-1 sm:flex-none text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded-lg sm:rounded-xl text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 transition-colors whitespace-nowrap"
                       data-username="{{buyer_username}}"
                       data-game_name_wishlist="{{ game[0] }}"
                       data-was_it_on_sale="{{ game[4] }}"
@@ -1039,11 +1039,11 @@
               {% else %}
               <!-- Empty Wishlist -->
               <div
-                class="text-center py-12 bg-gradient-to-r from-emerald-950 to-emerald-900 rounded-2xl border border-emerald-500/50"
+                class="text-center py-8 sm:py-12 bg-[#1f1f23] rounded-xl sm:rounded-2xl border border-[#2d2d35]"
               >
-                <i class="fas fa-heart text-7xl text-pink-500 mb-5"></i>
-                <p class="text-emerald-200 text-xl">Your wishlist is empty</p>
-                <p class="text-emerald-400 text-md">
+                <i class="fas fa-heart text-5xl sm:text-7xl text-[#9147ff] mb-3 sm:mb-5"></i>
+                <p class="text-[#efeff1] text-base sm:text-xl">Your wishlist is empty</p>
+                <p class="text-[#9147ff] text-sm sm:text-md px-4">
                   Add some games to your wishlist to see them here!
                 </p>
               </div>
@@ -1057,15 +1057,15 @@
       <div
         id="popup-modal"
         tabindex="-1"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-500"
       >
-        <div class="relative p-4 sm:p-6 w-full max-w-md h-auto animate-slideIn">
+        <div class="relative p-4 sm:p-6 w-full max-w-md h-auto ">
           <div
-            class="relative bg-gradient-to-t from-emerald-900/90 to-emerald-800/90 rounded-3xl shadow-2xl border border-emerald-500/40 p-6 sm:p-8 backdrop-blur-2xl"
+            class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
           >
             <button
               type="button"
-              class="absolute top-4 end-4 text-gray-200 bg-gradient-to-r from-emerald-700/50 to-transparent hover:from-emerald-600/70 rounded-full p-2 transition-all duration-300"
+              class="absolute top-4 end-4 text-[#adadb8] hover:text-[#efeff1] rounded-full p-2 transition-colors"
               data-modal-hide="popup-modal"
             >
               <i class="fas fa-times w-5 h-5"></i>
@@ -1073,16 +1073,16 @@
             </button>
             <div class="p-4 text-center">
               <i
-                class="fas fa-exclamation-circle mx-auto mb-4 text-emerald-400 text-4xl sm:text-5xl"
+                class="fas fa-exclamation-circle mx-auto mb-4 text-[#9147ff] text-4xl sm:text-5xl"
               ></i>
-              <h3 class="mb-4 text-lg sm:text-xl font-bold text-gray-100">
+              <h3 class="mb-4 text-lg sm:text-xl font-bold text-[#efeff1]">
                 Modal Title
               </h3>
               <div class="modal-body text-gray-200 text-sm sm:text-base"></div>
               <button
                 data-modal-hide="popup-modal"
                 type="button"
-                class="mt-4 text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
+                class="mt-4 text-white bg-[#eb0400] hover:bg-[#c20300] font-medium rounded text-sm px-4 py-2 transition-colors"
               >
                 Close
               </button>
@@ -1095,7 +1095,7 @@
     <!-- Footer -->
     <footer
       id="footer"
-      class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10"
+      class="relative bg-[#0e0e10] border-t border-[#2d2d35]"
     >
       <div class="container mx-auto px-4 py-12">
         <div
@@ -1182,6 +1182,49 @@
 
     <!-- JavaScript -->
     <script>
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+      const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+      const closeMobileMenu = document.getElementById('closeMobileMenu');
+      const wishlistButtonMobile = document.getElementById('ViewWishlistedGamesButtonMobile');
+
+      function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => {
+          mobileMenuPanel.classList.remove('translate-x-full');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenuFunc() {
+        mobileMenuPanel.classList.add('translate-x-full');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = '';
+        }, 300);
+      }
+
+      if (mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+      }
+
+      if (closeMobileMenu) {
+        closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+      }
+
+      if (mobileMenuBackdrop) {
+        mobileMenuBackdrop.addEventListener('click', closeMobileMenuFunc);
+      }
+
+      if (wishlistButtonMobile) {
+        wishlistButtonMobile.addEventListener('click', () => {
+          openModal('ViewWishlistedGamesModal');
+          initializeSearch_wishlistedgames();
+        });
+      }
+
       function showUpdatePasswordModal() {
         const modal = document.getElementById("UpdatePasswordModal");
         if (modal) {
@@ -1282,9 +1325,9 @@
                   newCartLink.href = "/ViewCart";
                   newCartLink.className = "relative group";
                   newCartLink.innerHTML = `
-                    <div class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300" data-cart-status>
-                      <i class="fas fa-cart-shopping text-green-400"></i>
+                    <div class="absolute inset-0 bg-[#9147ff] rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                    <div class="relative flex items-center space-x-2 bg-[#1f1f23] px-4 py-2 rounded-lg border border-[#2d2d35] text-white hover:bg-[#26262c] transition-colors" data-cart-status>
+                      <i class="fas fa-cart-shopping text-[#00c7ac]"></i>
                       <span class="font-medium">Cart (${data.cart_count})</span>
                     </div>
                   `;
@@ -1303,7 +1346,7 @@
                 if (!emptyCartDiv) {
                   const newEmptyCartDiv = document.createElement("div");
                   newEmptyCartDiv.className =
-                    "flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-gray-400 relative group";
+                    "flex items-center space-x-2 bg-[#1f1f23] px-4 py-2 rounded-lg border border-[#2d2d35] text-[#adadb8] relative group";
                   newEmptyCartDiv.innerHTML = `
                     <i class="fas fa-cart-shopping"></i>
                     <span class="font-medium">Cart is Empty</span>
@@ -1344,8 +1387,6 @@
               }
             });
           });
-        } else {
-          console.warn("Search input or wishlist items not found");
         }
       }
 
@@ -1478,7 +1519,6 @@
 
       document.addEventListener("DOMContentLoaded", function () {
         updateNavbarColor();
-        initializeSearch_wishlistedgames();
 
         // Initialize modal buttons
         const modalButtons = [
@@ -1505,7 +1545,13 @@
           const button = document.getElementById(buttonId);
           const modal = document.getElementById(modalId);
           if (button && modal) {
-            button.addEventListener("click", () => openModal(modalId));
+            button.addEventListener("click", () => {
+              openModal(modalId);
+              // Initialize wishlist search when modal opens
+              if (modalId === "ViewWishlistedGamesModal") {
+                initializeSearch_wishlistedgames();
+              }
+            });
           }
         });
 
@@ -1730,6 +1776,19 @@
           });
         }
       });
+
+      // Handle dropdown change
+      function handleDropdownChange(selectElement) {
+        const selectedValue = selectElement.value;
+        selectElement.value = "";
+        if (selectedValue === "logout") {
+          window.location.href = "/logout";
+        } else if (selectedValue === "update_pass") {
+          showUpdatePasswordModal();
+        } else if (selectedValue === "view_profile") {
+          window.location.href = "/ViewMyProfile";
+        }
+      }
     </script>
   </body>
 </html>

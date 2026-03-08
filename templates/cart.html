@@ -1,874 +1,1321 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{buyer_username}}'s Cart</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/icon.png') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Istok+Web:wght@400;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Istok+Web:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
     <script>
-        if (typeof tailwind !== "undefined") {
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            inter: ["Inter", "sans-serif"],
-                            istok: ["Istok Web", "sans-serif"]
-                        },
-                        letterSpacing: { "5pct": "0.05em" },
-                        keyframes: {
-                            slideIn: {
-                                "0%": { transform: "translateY(50px)", opacity: "0" },
-                                "100%": { transform: "translateY(0)", opacity: "1" }
-                            },
-                            pulseGlow: {
-                                "0%, 100%": { boxShadow: "0 0 10px rgba(75,0,130,0.5)" },
-                                "50%": { boxShadow: "0 0 20px rgba(75,0,130,0.8)" }
-                            },
-                            fadeOut: {
-                                "0%": { opacity: "1", transform: "scale(1)" },
-                                "100%": { opacity: "0", transform: "scale(0.95)" }
-                            }
-                        },
-                        animation: {
-                            slideIn: "slideIn 0.4s ease-out forwards",
-                            pulseGlow: "pulseGlow 2s ease-in-out infinite",
-                            fadeOut: "fadeOut 0.3s ease-out forwards"
-                        }
-                    }
-                }
-            };
-        }
+      if (typeof tailwind !== "undefined") {
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                inter: ["Inter", "sans-serif"],
+                istok: ["Istok Web", "sans-serif"],
+              },
+              letterSpacing: { "5pct": "0.05em" },
+              keyframes: {
+                slideIn: {
+                  "0%": { transform: "translateY(50px)", opacity: "0" },
+                  "100%": { transform: "translateY(0)", opacity: "1" },
+                },
+                pulseGlow: {
+                  "0%, 100%": { boxShadow: "0 0 10px rgba(75,0,130,0.5)" },
+                  "50%": { boxShadow: "0 0 20px rgba(75,0,130,0.8)" },
+                },
+                fadeOut: {
+                  "0%": { opacity: "1", transform: "scale(1)" },
+                  "100%": { opacity: "0", transform: "scale(0.95)" },
+                },
+              },
+              animation: {
+                slideIn: "slideIn 0.4s ease-out forwards",
+                pulseGlow: "pulseGlow 2s ease-in-out infinite",
+                fadeOut: "fadeOut 0.3s ease-out forwards",
+              },
+            },
+          },
+        };
+      }
     </script>
 
     <style>
-        .user-dropdown {
-            background: linear-gradient(135deg, rgba(30,41,59,.9), rgba(51,65,85,.9));
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,.2);
-            padding-right: 2rem;
-            padding-left: 1rem;
-            text-align: left;
-            line-height: 44px;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+      :root {
+        --twitch-bg-primary: #0e0e10;
+        --twitch-bg-secondary: #18181b;
+        --twitch-bg-tertiary: #1f1f23;
+        --twitch-bg-hover: #26262c;
+        --twitch-purple: #9147ff;
+        --twitch-purple-hover: #772ce8;
+        --twitch-text-primary: #efeff1;
+        --twitch-text-secondary: #adadb8;
+        --twitch-border: #2d2d35;
+        --twitch-teal: #00c7ac;
+        --twitch-red: #eb0400;
+      }
 
-        .user-dropdown:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(100,116,139,.3);
-        }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: var(--twitch-bg-secondary);
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #464649;
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #5c5c61;
+      }
 
-        .user-dropdown option {
-            background: rgba(30,41,59,.95);
-            color: #fff;
-            padding: 8px 12px;
-        }
+      .payment-card {
+        background: var(--twitch-bg-secondary);
+        border: 1px solid var(--twitch-border);
+        transition:
+          transform 0.2s ease,
+          background-color 0.2s ease;
+      }
 
-        .user-dropdown option:hover {
-            background: rgba(100,116,139,.8);
-        }
-
-        .user-dropdown-arrow {
-            transition: transform 0.3s ease;
-        }
-
-        .user-dropdown:focus + .user-dropdown-arrow i {
-            transform: rotate(180deg);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #a855f7, #ec4899);
-            border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #9333ea, #db2777);
-        }
-
-        .user-dropdown-option i {
-            margin-right: 8px;
-            width: 20px;
-            text-align: center;
-            display: inline-block;
-        }
-
-        .user-dropdown-option::before {
-            content: attr(data-fallback);
-            display: inline-block;
-            width: 20px;
-            text-align: center;
-            margin-right: 8px;
-        }
-
-        .fa-solid ~ .user-dropdown-option::before {
-            content: none;
-        }
-
-        .payment-card {
-            background: #4B0082;
-            backdrop-filter: blur(12px);
-            border: 1px solid #A0AEC0;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .payment-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(75,0,130,0.4);
-        }
+      .payment-card:hover {
+        transform: translateY(-2px);
+        background: var(--twitch-bg-tertiary);
+      }
     </style>
-</head>
+  </head>
 
-<body class="font-inter min-h-screen relative">
-    <!-- Background -->
-    <div class="fixed inset-0 z-0">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm"
-             style="background-image: url('{{ url_for('static', filename='img/cart-img.png') }}');"></div>
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/80 via-slate-900/70 to-purple-800/80"></div>
-    </div>
-
+  <body class="font-inter min-h-screen bg-[#0e0e10] text-[#efeff1]">
     <div class="relative z-10">
-        <!-- Header -->
-        <header id="navbar" class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10">
-            <div class="container mx-auto px-4 py-3">
-                <div class="flex items-center justify-between">
-                    <!-- Logo -->
-                    <div class="flex items-center space-x-4">
-                        <div class="relative group">
-                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                            <a href="/" class="relative block">
-                                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo"
-                                     class="w-12 h-10 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105">
-                            </a>
-                        </div>
-                        <div class="hidden lg:block">
-                            <h1 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Bashpo</h1>
-                            <p class="text-xs text-gray-400">Your Gaming Cart</p>
-                        </div>
-                    </div>
-
-                    <!-- Navigation & Actions -->
-                    <div class="flex items-center space-x-4">
-                        <!-- Wishlist -->
-                        <button type="button" id="ViewWishlistedGamesButton" data-modal-target="ViewWishlistedGamesModal"
-                                data-modal-toggle="ViewWishlistedGamesModal" class="relative group">
-                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                            <div class="relative flex items-center space-x-2 bg-gradient-to-r from-slate-800 to-slate-700 px-4 py-2 rounded-lg border border-white/20 text-white hover:scale-105 transition-all duration-300">
-                                <i class="fas fa-heart text-pink-500"></i>
-                                <span class="font-medium">Wishlist ({{wishlist_value}})</span>
-                            </div>
-                        </button>
-
-                        <!-- User Balance Display -->
-                        <div class="hidden lg:flex items-center space-x-2 bg-gradient-to-r from-emerald-600/20 to-blue-600/20 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-sm">
-                            <i class="fas fa-wallet text-emerald-400"></i>
-                            <span class="text-white font-medium">${{ balance }}</span>
-                        </div>
-
-                        <!-- User Dropdown -->
-                        <div class="relative w-[200px]">
-                            <select id="user-name" name="user_name"
-                                    class="user-dropdown w-full h-[44px] text-white font-medium rounded-xl border border-white/20 shadow-lg
-                                        hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500
-                                        focus:ring-opacity-50 appearance-none cursor-pointer"
-                                    onchange="handleDropdownChange(this)" required>
-                                <option value="" disabled selected class="bg-slate-800 text-gray-300">
-                                    <i class="fas fa-user user-dropdown-option" data-fallback="👤"></i> {{ buyer_username }}
-                                </option>
-                                <option value="view_profile" class="bg-slate-800 text-white user-dropdown-option" data-fallback="👤">
-                                    <i class="fas fa-user"></i> View My Profile
-                                </option>
-                                <option value="AddMonitorWallet" class="bg-slate-800 text-white user-dropdown-option" data-fallback="💳">
-                                    <i class="fas fa-wallet"></i> Manage Wallet
-                                </option>
-                                <option value="update_pass" class="bg-slate-800 text-white user-dropdown-option" data-fallback="🔒">
-                                    <i class="fas fa-lock"></i> Update Password
-                                </option>
-                                <option value="logout" class="bg-slate-800 text-white user-dropdown-option" data-fallback="⬅️">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </option>
-                            </select>
-                            <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none user-dropdown-arrow">
-                                <i class="fas fa-chevron-down text-white"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <!-- Header -->
+      <header
+        id="navbar"
+        class="sticky top-0 z-50 bg-[#18181b] border-b border-[#2d2d35]"
+      >
+        <div class="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
+          <div class="flex items-center justify-between gap-2 sm:gap-4">
+            <!-- Logo Section -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              <a
+                href="/"
+                class="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
+              >
+                <img
+                  src="{{ url_for('static', filename='img/logo.jpg') }}"
+                  alt="Bashpo Logo"
+                  class="w-12 h-8 rounded-lg object-contain"
+                  loading="lazy"
+                />
+                <span
+                  class="text-base sm:text-lg font-semibold hidden sm:block text-[#efeff1]"
+                  >Bashpo</span
+                >
+              </a>
             </div>
-        </header>
 
-        <!-- Main -->
-        <main class="relative min-h-screen">
-            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%239C92AC\" fill-opacity=\"0.05\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+            <!-- Desktop Right Section (hidden on mobile) -->
+            <div class="hidden sm:flex items-center gap-2">
+              <!-- Wishlist -->
+              <button
+                type="button"
+                id="ViewWishlistedGamesButton"
+                class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] px-3 py-2 rounded text-sm font-medium transition-all"
+              >
+                <i class="fas fa-heart text-purple-400 text-sm"></i>
+                <span class="text-purple-400">Wishlist</span>
+                <span
+                  class="bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded text-xs font-semibold"
+                  >{{wishlist_value}}</span
+                >
+              </button>
 
-            <div class="relative z-10 container mx-auto px-4 py-8">
-  <!-- Page Title -->
-  <h1 class="text-4xl lg:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 drop-shadow-lg mb-12">
-    Manage Your Cart
-  </h1>
+              <!-- Balance -->
+              <div
+                class="flex items-center gap-1.5 bg-[#1f1f23]/50 backdrop-blur-sm border border-[#2d2d35] px-3 py-2 rounded text-sm font-semibold"
+              >
+                <i class="fas fa-wallet text-green-400 text-sm"></i>
+                <span class="text-green-400">${{ balance | round(2) }}</span>
+              </div>
 
-  <div class="relative mt-6 flex justify-center items-center flex-col">
-    <div class="gap-4 box border-0 h-auto lg:w-[1200px]" id="SortingTest">
-      {% for games in game_list %}
-      <div class="cart-item flex justify-between items-center mx-4 my-6 lg:h-[180px] lg:w-[820px] bg-gradient-to-r from-purple-900 to-purple-950 rounded-2xl border border-purple-800/50 hover:border-purple-700/60 transition-all duration-300 p-6">
-        <div class="flex items-center space-x-5">
-          <img src="{{ url_for('static', filename = games[5]) }}" alt="Game-Logo"
-               class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
-          <div>
-            <h2 class="text-xl font-bold text-white">{{games[0]}}</h2>
-            {% if games[1]!=games[4] %}
-            <p class="text-purple-300 text-sm italic">Price of this item has changed since it was added to cart.</p>
-            {% endif %}
+              <!-- User Dropdown -->
+              <div class="relative">
+                <select
+                  id="user-name"
+                  name="user_name"
+                  class="bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] text-[#efeff1] text-sm px-3 py-2 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#9147ff] appearance-none pr-8 transition-all"
+                  onchange="handleDropdownChange(this)"
+                  required
+                  aria-label="User menu"
+                >
+                  <option value="" disabled selected class="bg-[#1f1f23]">
+                    {{ buyer_username[:8] }}{% if buyer_username|length > 8
+                    %}...{% endif %}
+                  </option>
+                  <option value="view_profile" class="bg-[#1f1f23]">
+                    View Profile
+                  </option>
+                  <option value="AddMonitorWallet" class="bg-[#1f1f23]">
+                    Manage Wallet
+                  </option>
+                  <option value="update_pass" class="bg-[#1f1f23]">
+                    Update Password
+                  </option>
+                  <option value="logout" class="bg-[#1f1f23]">Logout</option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-2 flex items-center pointer-events-none"
+                >
+                  <i class="fas fa-chevron-down text-[#efeff1] text-xs"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile Right Section (visible only on mobile) -->
+            <div class="flex sm:hidden items-center gap-2">
+              <!-- Wishlist Icon -->
+              <button
+                type="button"
+                id="ViewWishlistedGamesButtonMobile"
+                class="relative flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all"
+              >
+                <i class="fas fa-heart text-purple-400 text-base"></i>
+                <span
+                  class="absolute -top-1 -right-1 bg-purple-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                  >{{wishlist_value}}</span
+                >
+              </button>
+
+              <!-- Menu Button -->
+              <button
+                type="button"
+                id="mobileMenuButton"
+                class="flex items-center justify-center w-10 h-10 bg-[#1f1f23]/50 backdrop-blur-sm hover:bg-[#26262c]/50 border border-[#2d2d35] rounded transition-all"
+              >
+                <i class="fas fa-bars text-[#efeff1] text-base"></i>
+              </button>
+            </div>
           </div>
         </div>
-        <div class="flex flex-col items-end gap-4">
-          {% if games[4] == '1' %}
-          <div class="flex items-center space-x-3">
-            <span class="bg-purple-800 text-white text-xs px-3 py-1 rounded-lg">{{games[6]}}% OFF</span>
-            <span class="text-white line-through">${{games[2]}}</span>
-            <span class="text-pink-500 font-bold">${{games[3]}}</span>
+      </header>
+
+      <!-- Mobile Slide-out Menu -->
+      <div id="mobileMenu" class="fixed inset-0 z-50 hidden">
+        <!-- Backdrop -->
+        <div
+          id="mobileMenuBackdrop"
+          class="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        ></div>
+
+        <!-- Menu Panel -->
+        <div
+          id="mobileMenuPanel"
+          class="absolute top-0 right-0 h-full w-80 bg-[#18181b] border-l border-[#2d2d35] shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
+        >
+          <div class="flex flex-col h-full">
+            <!-- Menu Header -->
+            <div
+              class="flex items-center justify-between p-4 border-b border-[#2d2d35]"
+            >
+              <h3 class="text-lg font-bold text-[#efeff1]">Menu</h3>
+              <button
+                id="closeMobileMenu"
+                class="flex items-center justify-center w-8 h-8 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+              >
+                <i class="fas fa-times text-[#efeff1]"></i>
+              </button>
+            </div>
+
+            <!-- User Info -->
+            <div class="p-4 border-b border-[#2d2d35]">
+              <div class="flex items-center gap-3 mb-3">
+                <div
+                  class="w-12 h-12 bg-[#9147ff] rounded-full flex items-center justify-center text-white text-xl font-bold"
+                >
+                  {{buyer_username[0].upper()}}
+                </div>
+                <div>
+                  <p class="text-[#efeff1] font-semibold">{{buyer_username}}</p>
+                  <p class="text-[#adadb8] text-sm">Buyer Account</p>
+                </div>
+              </div>
+
+              <!-- Balance Display -->
+              <div
+                class="flex items-center gap-2 bg-[#1f1f23] px-3 py-2 rounded"
+              >
+                <i class="fas fa-wallet text-green-400"></i>
+                <span class="text-green-400 font-semibold"
+                  >${{ balance | round(2) }}</span
+                >
+              </div>
+            </div>
+
+            <!-- Menu Options -->
+            <div class="flex-1 overflow-y-auto p-4">
+              <nav class="space-y-2">
+                <a
+                  href="/ViewMyProfile"
+                  class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+                >
+                  <span class="text-[#efeff1] font-medium">View Profile</span>
+                </a>
+
+                <a
+                  href="/AddMonitorWallet"
+                  class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+                >
+                  <span class="text-[#efeff1] font-medium">Manage Wallet</span>
+                </a>
+
+                <button
+                  onclick="
+                    showUpdatePasswordModal();
+                    closeMobileMenuFunc();
+                  "
+                  class="w-full text-left px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+                >
+                  <span class="text-[#efeff1] font-medium"
+                    >Update Password</span
+                  >
+                </button>
+
+                <a
+                  href="/logout"
+                  class="block px-4 py-3 bg-[#1f1f23] hover:bg-[#26262c] rounded transition-colors"
+                >
+                  <span class="text-[#efeff1] font-medium">Logout</span>
+                </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById("mobileMenuButton");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const mobileMenuPanel = document.getElementById("mobileMenuPanel");
+        const mobileMenuBackdrop =
+          document.getElementById("mobileMenuBackdrop");
+        const closeMobileMenu = document.getElementById("closeMobileMenu");
+        const wishlistButtonMobile = document.getElementById(
+          "ViewWishlistedGamesButtonMobile",
+        );
+
+        function openMobileMenu() {
+          mobileMenu.classList.remove("hidden");
+          setTimeout(() => {
+            mobileMenuPanel.classList.remove("translate-x-full");
+          }, 10);
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeMobileMenuFunc() {
+          mobileMenuPanel.classList.add("translate-x-full");
+          setTimeout(() => {
+            mobileMenu.classList.add("hidden");
+            document.body.style.overflow = "";
+          }, 300);
+        }
+
+        if (mobileMenuButton) {
+          mobileMenuButton.addEventListener("click", openMobileMenu);
+        }
+        if (closeMobileMenu) {
+          closeMobileMenu.addEventListener("click", closeMobileMenuFunc);
+        }
+        if (mobileMenuBackdrop) {
+          mobileMenuBackdrop.addEventListener("click", closeMobileMenuFunc);
+        }
+
+        // Mobile wishlist button
+        if (wishlistButtonMobile) {
+          wishlistButtonMobile.addEventListener("click", function () {
+            const desktopWishlistBtn = document.getElementById(
+              "ViewWishlistedGamesButton",
+            );
+            if (desktopWishlistBtn) {
+              desktopWishlistBtn.click();
+            }
+          });
+        }
+      </script>
+
+      <!-- Main -->
+      <main class="relative min-h-screen flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div class="relative z-10 container mx-auto px-4 py-8">
+          {% if game_list and game_list|length > 0 %}
+          <!-- Cart Header -->
+          <div class="mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-[#efeff1] mb-2">
+              Shopping Cart
+            </h1>
+            <p class="text-[#adadb8]">
+              Review your items and proceed to checkout
+            </p>
+          </div>
+
+          <!-- Cart Layout: Stack on mobile, side-by-side on desktop -->
+          <div class="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto">
+            <!-- Cart Items -->
+            <div class="flex-1 lg:max-w-3xl space-y-4">
+              {% for games in game_list %}
+              <div
+                class="cart-item flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#18181b] rounded border border-[#2d2d35] hover:bg-[#1f1f23] transition-colors p-4 sm:p-6 gap-4"
+              >
+                <div class="flex items-center space-x-4 w-full sm:w-auto">
+                  <img
+                    src="{{ url_for('static', filename = games[5]) }}"
+                    alt="Game-Logo"
+                    class="w-20 h-20 sm:w-24 sm:h-24 rounded object-cover flex-shrink-0"
+                  />
+                  <div class="flex-1 min-w-0">
+                    <h2
+                      class="text-lg sm:text-xl font-semibold text-[#efeff1] truncate"
+                    >
+                      {{games[0]}}
+                    </h2>
+                    {% if games[1]!=games[4] %}
+                    <p class="text-[#adadb8] text-xs sm:text-sm italic">
+                      Price changed since added to cart.
+                    </p>
+                    {% endif %}
+                  </div>
+                </div>
+                <div
+                  class="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-3 sm:gap-4"
+                >
+                  {% if games[4] == '1' %}
+                  <div class="flex items-center space-x-2 sm:space-x-3">
+                    <span
+                      class="bg-[#9147ff] text-white text-xs px-2 sm:px-3 py-1 rounded font-medium"
+                      >{{games[6]}}% OFF</span
+                    >
+                    <span class="text-[#adadb8] line-through text-sm"
+                      >${{games[2]}}</span
+                    >
+                    <span class="text-[#efeff1] font-semibold"
+                      >${{games[3]}}</span
+                    >
+                  </div>
+                  {% else %}
+                  <span class="text-[#efeff1] font-semibold text-lg"
+                    >${{games[3]}}</span
+                  >
+                  {% endif %}
+                  <button
+                    class="text-white bg-[#eb0400] hover:bg-[#c20400] font-medium rounded text-sm px-4 py-2 transition-colors whitespace-nowrap"
+                    data-username="{{buyer_username}}"
+                    data-game_name="{{games[0]}}"
+                    data-price="{{games[3]}}"
+                    onclick="RemoveFromCart(this)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Payment Card - Sticky on desktop, normal flow on mobile -->
+            <div class="lg:w-[380px] flex-shrink-0">
+              <div
+                class="lg:sticky lg:top-24 bg-[#18181b] rounded-lg border border-[#2d2d35] p-6 shadow-xl"
+              >
+                <div class="text-[#efeff1] font-semibold grid gap-4">
+                  <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-[#efeff1]">
+                      Order Summary
+                    </h2>
+                    <i class="fas fa-shopping-cart text-[#adadb8] text-lg"></i>
+                  </div>
+                  <div class="border-t border-[#2d2d35] pt-4">
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-[#adadb8]">Estimated Price</span>
+                      <span
+                        id="total-price"
+                        class="text-[#efeff1] font-semibold text-lg"
+                        >${{total_price}}</span
+                      >
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-[#adadb8]">Region</span>
+                      <span class="text-[#efeff1]">{{store_region}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-3 mt-6">
+                  <a href="/PayUsingCard" class="w-full">
+                    <button
+                      class="w-full font-medium text-white h-12 bg-[#9147ff] rounded hover:bg-[#772ce8] transition-colors flex items-center justify-center gap-2"
+                    >
+                      <i class="fas fa-credit-card"></i> Pay with Card
+                    </button>
+                  </a>
+                  <button
+                    class="w-full font-medium text-white h-12 bg-[#9147ff] rounded hover:bg-[#772ce8] transition-colors flex items-center justify-center gap-2"
+                    onclick="PayUsingWallet()"
+                  >
+                    <i class="fas fa-wallet"></i> Pay with Wallet
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           {% else %}
-          <span class="text-pink-500 font-bold text-lg">${{games[3]}}</span>
+          <!-- Empty Cart State -->
+          <div class="flex justify-center items-center min-h-[60vh]">
+            <div
+              class="text-center max-w-md mx-auto bg-[#18181b]/90 backdrop-blur-sm rounded-2xl p-12 border border-[#2d2d35] shadow-2xl"
+            >
+              <div class="mb-6">
+                <i
+                  class="fas fa-shopping-cart text-8xl text-[#9147ff] mb-4"
+                ></i>
+              </div>
+              <h2 class="text-3xl font-bold text-[#efeff1] mb-4">
+                Your Cart is Empty
+              </h2>
+              <p class="text-[#adadb8] text-lg mb-8">
+                Looks like you haven't added any games to your cart yet. Start
+                exploring our collection!
+              </p>
+              <a href="/buyer_dashboard" class="inline-block">
+                <button
+                  class="bg-[#9147ff] hover:bg-[#772ce8] text-white font-semibold py-3 px-8 rounded-lg transition-colors flex items-center gap-2 mx-auto"
+                >
+                  <i class="fas fa-gamepad"></i>
+                  Browse Games
+                </button>
+              </a>
+            </div>
+          </div>
           {% endif %}
-          <button class="text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
-                  data-username="{{buyer_username}}" data-game_name="{{games[0]}}"
-                  data-price="{{games[3]}}" onclick="RemoveFromCart(this)">Remove</button>
         </div>
-      </div>
-      {% endfor %}
 
-      <!-- Payment Card (unchanged) -->
-      <div class="absolute top-7 right-4 mt-5">
-        <div class="payment-card rounded-2xl p-6 w-[340px] animate-pulseGlow">
-          <div class="text-white font-semibold grid gap-4">
-            <div class="flex items-center justify-between">
-              <h2 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Order Summary</h2>
-              <i class="fas fa-shopping-cart text-purple-300 text-lg"></i>
-            </div>
-            <div class="border-t border-gray-500/50 pt-4">
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-gray-200">Estimated Price</span>
-                <span id="total-price" class="text-purple-400 font-bold text-lg">${{total_price}}</span>
+        <!-- Update Password Modal -->
+        <div
+          id="UpdatePasswordModal"
+          tabindex="-1"
+          aria-hidden="true"
+          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500"
+        >
+          <div
+            class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn"
+          >
+            <div
+              class="relative bg-[#18181b] rounded-2xl shadow-2xl border border-[#2d2d35] p-6 sm:p-8"
+            >
+              <div
+                class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35]"
+              >
+                <div class="flex items-center space-x-3">
+                  <i class="fas fa-lock text-[#9147ff] text-xl sm:text-2xl"></i>
+                  <h3 class="text-lg sm:text-xl font-bold text-[#efeff1]">
+                    Update Password
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  class="text-[#adadb8] hover:text-[#efeff1] bg-[#1f1f23] hover:bg-[#26262c] rounded-lg p-2 transition-colors"
+                  data-modal-toggle="UpdatePasswordModal"
+                  onclick="closeUpdatePasswordModal()"
+                >
+                  <i class="fas fa-times w-5 h-5"></i>
+                  <span class="sr-only">Close modal</span>
+                </button>
               </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-200">Region</span>
-                <span class="text-gray-300">{{store_region}}</span>
-              </div>
+              <form
+                id="updatePasswordForm"
+                action="/updatepassword"
+                method="POST"
+                class="space-y-4"
+              >
+                <div>
+                  <label
+                    for="current-password"
+                    class="block text-sm font-medium text-[#efeff1] mb-2"
+                    >Current Password</label
+                  >
+                  <input
+                    type="password"
+                    id="current-password"
+                    name="current_password"
+                    required
+                    class="w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] transition-colors"
+                    placeholder="Enter current password"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="new-password"
+                    class="block text-sm font-medium text-[#efeff1] mb-2"
+                    >New Password</label
+                  >
+                  <input
+                    type="password"
+                    id="new-password"
+                    name="new_password"
+                    required
+                    class="w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] transition-colors"
+                    placeholder="Enter new password"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="confirm-password"
+                    class="block text-sm font-medium text-[#efeff1] mb-2"
+                    >Confirm New Password</label
+                  >
+                  <input
+                    type="password"
+                    id="confirm-password"
+                    name="confirm_password"
+                    required
+                    class="w-full px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] transition-colors"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+                <div id="password-error" class="text-[#eb0400] text-sm hidden">
+                  Passwords do not match.
+                </div>
+                <div
+                  id="password-success"
+                  class="text-[#00c7ac] text-sm hidden"
+                >
+                  Password updated successfully!
+                </div>
+                <div class="mt-6 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    class="px-4 py-2 bg-[#1f1f23] hover:bg-[#26262c] text-[#efeff1] rounded transition-colors"
+                    onclick="closeUpdatePasswordModal()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    id="submit-password"
+                    class="px-4 py-2 bg-[#9147ff] hover:bg-[#772ce8] text-white rounded transition-colors"
+                  >
+                    Update
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-          <div class="flex flex-col gap-3 mt-6">
-            <a href="/PayUsingCard" class="w-full">
-              <button class="w-full font-semibold text-white h-12 bg-purple-700 rounded-xl hover:bg-purple-800 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
-                <i class="fas fa-credit-card text-purple-300"></i> Pay with Card
-              </button>
-            </a>
-            <button class="w-full font-semibold text-white h-12 bg-purple-700 rounded-xl hover:bg-purple-800 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
-                    onclick="PayUsingWallet()">
-              <i class="fas fa-wallet text-purple-300"></i> Pay with Wallet
-            </button>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
+        <!-- Wishlist Modal -->
+        <div
+          id="ViewWishlistedGamesModal"
+          tabindex="-1"
+          aria-hidden="true"
+          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 p-4"
+        >
+          <div class="relative w-full max-w-6xl max-h-[90vh]">
+            <div
+              class="relative bg-[#18181b] rounded border border-[#2d2d35] p-4 sm:p-6 h-full max-h-[90vh] flex flex-col"
+            >
+              <!-- Header -->
+              <div
+                class="flex justify-between items-center pb-4 mb-4 border-b border-[#2d2d35] flex-shrink-0"
+              >
+                <h3 class="text-lg font-semibold text-[#efeff1]">
+                  {{buyer_username}}'s Wishlist
+                </h3>
+                <button
+                  type="button"
+                  class="text-[#adadb8] hover:text-[#efeff1] transition-colors"
+                  data-modal-hide="ViewWishlistedGamesModal"
+                  aria-label="Close modal"
+                >
+                  <i class="fas fa-times text-xl"></i>
+                </button>
+              </div>
 
-            <!-- Update Password Modal -->
-            <div id="UpdatePasswordModal" tabindex="-1" aria-hidden="true"
-                 class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500">
-                <div class="relative p-4 sm:p-6 w-full max-w-md sm:max-w-lg h-auto animate-slideIn">
-                    <div class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl">
-                        <div class="flex justify-between items-center pb-4 mb-4 border-b-2 border-purple-600/30">
-                            <div class="flex items-center space-x-3">
-                                <i class="fas fa-lock text-purple-400 text-xl sm:text-2xl"></i>
-                                <h3 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                    Update Password
-                                </h3>
-                            </div>
-                            <button type="button" class="text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
-                                    data-modal-toggle="UpdatePasswordModal" onclick="closeUpdatePasswordModal()">
-                                <i class="fas fa-times w-5 h-5"></i>
-                                <span class="sr-only">Close modal</span>
-                            </button>
-                        </div>
-                        <form id="updatePasswordForm" action="/updatepassword" method="POST" class="space-y-4">
-                            <div>
-                                <label for="current-password" class="block text-sm font-semibold text-gray-100">Current Password</label>
-                                <input type="password" id="current-password" name="current_password" required
-                                       class="mt-2 w-full px-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
-                                       placeholder="Enter current password" />
-                            </div>
-                            <div>
-                                <label for="new-password" class="block text-sm font-semibold text-gray-100">New Password</label>
-                                <input type="password" id="new-password" name="new_password" required
-                                       class="mt-2 w-full px-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
-                                       placeholder="Enter new password" />
-                            </div>
-                            <div>
-                                <label for="confirm-password" class="block text-sm font-semibold text-gray-100">Confirm New Password</label>
-                                <input type="password" id="confirm-password" name="confirm_password" required
-                                       class="mt-2 w-full px-4 py-2 bg-slate-800/50 border border-purple-600/50 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300"
-                                       placeholder="Confirm new password" />
-                            </div>
-                            <div id="password-error" class="text-red-400 text-sm font-medium hidden">Passwords do not match.</div>
-                            <div id="password-success" class="text-green-400 text-sm font-medium hidden">Password updated successfully!</div>
-                            <div class="mt-6 flex justify-end space-x-4">
-                                <button type="button" class="px-4 py-2 bg-gradient-to-r from-slate-700/80 to-slate-800/80 text-gray-100 rounded-xl hover:from-slate-600/80 hover:to-slate-700/80 transition-all duration-300 hover:scale-105"
-                                        onclick="closeUpdatePasswordModal()">Cancel</button>
-                                <button type="submit" id="submit-password" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105">
-                                    Update
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+              <!-- Search -->
+              <div class="mb-4 flex-shrink-0">
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-3 flex items-center pointer-events-none"
+                  >
+                    <i class="fas fa-search text-[#adadb8] text-sm"></i>
+                  </div>
+                  <input
+                    type="text"
+                    id="searchInput_wishlistedgames"
+                    placeholder="Search games..."
+                    class="block w-full pl-10 pr-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-sm"
+                  />
                 </div>
-            </div>
+              </div>
 
-            <!-- Wishlist Modal -->
-            <div id="ViewWishlistedGamesModal" tabindex="-1" aria-hidden="true"
-                 class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/80 backdrop-blur-xl transition-all duration-500">
-                <div class="relative p-6 sm:p-8 w-full max-w-6xl h-auto animate-slideIn">
-                    <div class="relative bg-gradient-to-t from-purple-950/95 to-purple-900/95 rounded-3xl shadow-2xl border border-purple-800/50 p-8 sm:p-10 backdrop-blur-2xl">
-                        <div class="flex justify-between items-center pb-6 mb-6 border-b-2 border-purple-800/50">
-                            <div class="flex items-center space-x-4">
-                                <i class="fas fa-heart text-pink-500 text-2xl sm:text-3xl"></i>
-                                <h3 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent">
-                                    {{buyer_username}}'s Wishlist
-                                </h3>
-                            </div>
-                            <button type="button"
-                                    class="text-gray-200 bg-gradient-to-r from-purple-800/70 to-transparent hover:from-purple-700/80 rounded-full p-3 transition-all duration-300"
-                                    data-modal-toggle="ViewWishlistedGamesModal" onclick="closeWishlistModal()">
-                                <i class="fas fa-times w-6 h-6"></i>
-                                <span class="sr-only">Close modal</span>
-                            </button>
+              <!-- Wishlist Content -->
+              <div class="flex-1 overflow-y-auto custom-scrollbar">
+                {% if wishlist_user %}
+                <ul id="buyerList" class="space-y-2">
+                  {% for wishlist in wishlist_user %}
+                  <li
+                    class="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-[#1f1f23] rounded border border-[#2d2d35] hover:bg-[#26262c] transition-colors"
+                  >
+                    <!-- Game Info -->
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                      <div
+                        class="w-16 h-16 sm:w-20 sm:h-20 rounded bg-[#26262c] flex items-center justify-center flex-shrink-0 text-[#adadb8] font-semibold text-xs text-center overflow-hidden"
+                      >
+                        {{wishlist[1]}}
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <span
+                          class="text-[#efeff1] font-medium text-sm block truncate"
+                          >{{ wishlist[1] }}</span
+                        >
+                        {% if wishlist[4]=='1' %}
+                        <div class="flex items-center gap-2 mt-1 flex-wrap">
+                          <span
+                            class="bg-[#9147ff] text-white text-xs px-2 py-0.5 rounded font-medium"
+                            >{{ wishlist[5] }}% OFF</span
+                          >
+                          <span class="text-[#adadb8] line-through text-xs"
+                            >${{ wishlist[2] }}</span
+                          >
+                          <span class="text-[#efeff1] font-semibold text-sm"
+                            >${{ wishlist[3] }}</span
+                          >
                         </div>
-                        <div class="mb-6">
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none">
-                                    <i class="fas fa-search text-pink-500"></i>
-                                </div>
-                                <input type="text" id="searchInput_wishlistedgames" placeholder="Search games..."
-                                       class="block w-full pl-14 pr-5 py-3 bg-purple-950/70 border border-purple-800/50 rounded-2xl text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300">
-                            </div>
-                        </div>
-                        <div class="mt-6 max-h-[36rem] overflow-y-auto pr-4 custom-scrollbar">
-                            <ul id="buyerList" class="list-none space-y-4">
-                                {% for wishlist in wishlist_user %}
-                                <li class="flex justify-between items-center p-6 bg-gradient-to-r from-purple-900 to-purple-950 rounded-2xl border border-purple-800/50 hover:border-purple-700/60 transition-all duration-300">
-                                    <div class="flex items-center space-x-5">
-                                        <div class="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-purple-950 to-purple-900 flex items-center justify-center flex-shrink-0 text-white font-semibold text-center text-base">
-                                            {{wishlist[1]}}
-                                        </div>
-                                        <div>
-                                            <span class="text-white font-semibold text-lg">{{ wishlist[1] }}</span>
-                                            {% if wishlist[4]=='1' %}
-                                            <div class="flex items-center space-x-3 mt-1">
-                                                <span class="bg-purple-800 text-white text-xs px-3 py-1 rounded-lg">{{ wishlist[5] }}% OFF</span>
-                                                <span class="text-white line-through">${{ wishlist[2] }}</span>
-                                                <span class="text-pink-500 font-bold text-lg">${{ wishlist[3] }}</span>
-                                            </div>
-                                            {% else %}
-                                            <p class="text-pink-500 font-bold text-lg mt-1">${{ wishlist[3] }}</p>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="flex space-x-3">
-                                        <button type="button"
-                                                class="text-white bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
-                                                data-username="{{wishlist[0]}}" data-game_name_wishlist="{{ wishlist[1] }}"
-                                                onclick="RemoveFromWishList(this)">
-                                            Remove
-                                        </button>
-                                        <button type="button"
-                                                class="text-white bg-gradient-to-r from-purple-700 to-pink-700 hover:from-purple-800 hover:to-pink-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
-                                                data-username="{{wishlist[0]}}" data-game_name="{{ wishlist[1] }}"
-                                                data-game_name_cart="{{ wishlist[1] }}" data-game_sale_status="{{wishlist[4]}}"
-                                                onclick="AddtoCart(this)">
-                                            Add to Cart
-                                        </button>
-                                    </div>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Generic Popup -->
-            <div id="popup-modal" tabindex="-1"
-                 class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-xl transition-all duration-500">
-                <div class="relative p-4 sm:p-6 w-full max-w-md max-h-full animate-slideIn">
-                    <div class="relative bg-gradient-to-t from-purple-900/90 to-slate-900/90 rounded-3xl shadow-2xl border border-purple-600/40 p-6 sm:p-8 backdrop-blur-2xl">
-                        <button type="button"
-                                class="absolute top-4 end-4 text-gray-200 bg-gradient-to-r from-purple-700/50 to-transparent hover:from-purple-600/70 rounded-full p-2 transition-all duration-300"
-                                data-modal-hide="popup-modal" onclick="closePopupModal()">
-                            <i class="fas fa-times w-5 h-5"></i>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                        <div class="p-4 text-center">
-                            <i class="fas fa-exclamation-circle mx-auto mb-4 text-purple-400 text-4xl sm:text-5xl"></i>
-                            <h3 class="mb-4 text-lg sm:text-xl font-bold text-gray-100">Modal Title</h3>
-                            <div class="modal-body text-gray-200 text-sm sm:text-base"></div>
-                            <button data-modal-hide="popup-modal" type="button"
-                                    class="mt-4 text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 font-medium rounded-xl text-sm px-4 py-2 transition-all duration-300 hover:scale-105"
-                                    onclick="closePopupModal()">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer id="footer" class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10">
-            <div class="container mx-auto px-4 py-12">
-                <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
-                    <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
-                        <div class="flex items-center space-x-3 mb-4">
-                            <div class="relative group">
-                                <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"></div>
-                                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo"
-                                     class="w-12 h-8 rounded-xl relative z-10"/>
-                            </div>
-                            <div>
-                                <h1 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Bashpo</h1>
-                                <p class="text-xs text-gray-400">Gaming Platform</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 max-w-md">
-                            Find everything you love, in one place. Your ultimate gaming destination.
+                        {% else %}
+                        <p class="text-[#efeff1] font-semibold text-sm mt-1">
+                          ${{ wishlist[3] }}
                         </p>
+                        {% endif %}
+                      </div>
                     </div>
-                    <div class="text-center lg:text-right">
-                        <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
-                        <div class="flex justify-center lg:justify-end gap-4">
-                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                                <i class="fab fa-youtube text-white"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                                <i class="fab fa-facebook text-white"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                                <i class="fab fa-instagram text-white"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                                <i class="fab fa-x-twitter text-white"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                                <i class="fab fa-tiktok text-white"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                                <i class="fab fa-discord text-white"></i>
-                            </a>
-                        </div>
+
+                    <!-- Actions -->
+                    <div class="flex gap-2 flex-shrink-0">
+                      <button
+                        type="button"
+                        class="flex-1 sm:flex-none text-white bg-[#eb0400] hover:bg-[#c20400] font-medium rounded text-xs px-3 py-2 transition-colors"
+                        data-username="{{wishlist[0]}}"
+                        data-game_name_wishlist="{{ wishlist[1] }}"
+                        onclick="RemoveFromWishList(this)"
+                      >
+                        Remove
+                      </button>
+                      <button
+                        type="button"
+                        class="flex-1 sm:flex-none text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded text-xs px-3 py-2 transition-colors whitespace-nowrap"
+                        data-username="{{wishlist[0]}}"
+                        data-game_name="{{ wishlist[1] }}"
+                        data-game_name_cart="{{ wishlist[1] }}"
+                        data-game_sale_status="{{wishlist[4]}}"
+                        onclick="AddtoCart(this)"
+                      >
+                        Add to Cart
+                      </button>
                     </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% else %}
+                <!-- Empty Wishlist -->
+                <div
+                  class="text-center py-12 bg-[#1f1f23] rounded border border-[#2d2d35]"
+                >
+                  <i class="fas fa-heart text-5xl text-[#adadb8] mb-4"></i>
+                  <p class="text-[#efeff1] text-base mb-1">
+                    Your wishlist is empty
+                  </p>
+                  <p class="text-[#adadb8] text-sm">
+                    Add some games to your wishlist to see them here!
+                  </p>
                 </div>
-                <div class="border-t border-white/10 mt-8 pt-6 text-center">
-                    <p class="text-gray-400 text-sm">
-                        <i class="fa-regular fa-copyright mr-1"></i>
-                        2025 Bashpo. All rights reserved.
-                    </p>
-                </div>
+                {% endif %}
+              </div>
             </div>
-        </footer>
+          </div>
+        </div>
+
+        <!-- Generic Popup -->
+        <div
+          id="popup-modal"
+          tabindex="-1"
+          class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/70 backdrop-blur-sm transition-all duration-300"
+        >
+          <div class="relative p-4 w-full max-w-md">
+            <div
+              class="relative bg-[#18181b] rounded border border-[#2d2d35] p-6"
+            >
+              <button
+                type="button"
+                class="absolute top-4 right-4 text-[#adadb8] hover:text-[#efeff1] transition-colors"
+                data-modal-hide="popup-modal"
+                onclick="closePopupModal()"
+              >
+                <i class="fas fa-times text-xl"></i>
+                <span class="sr-only">Close modal</span>
+              </button>
+              <div class="text-center">
+                <i
+                  class="fas fa-check-circle mx-auto mb-4 text-[#9147ff] text-5xl"
+                ></i>
+                <h3 class="mb-4 text-xl font-bold text-[#efeff1]">
+                  Modal Title
+                </h3>
+                <div class="modal-body text-[#adadb8] text-sm"></div>
+                <button
+                  data-modal-hide="popup-modal"
+                  type="button"
+                  class="mt-4 text-white bg-[#9147ff] hover:bg-[#772ce8] font-medium rounded text-sm px-4 py-2 transition-colors"
+                  onclick="closePopupModal()"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer
+        id="footer"
+        class="relative bg-[#0e0e10] border-t border-[#2d2d35]"
+      >
+        <div class="container mx-auto px-4 py-12">
+          <div
+            class="flex flex-col lg:flex-row justify-between items-center gap-8"
+          >
+            <div
+              class="flex flex-col items-center lg:items-start text-center lg:text-left"
+            >
+              <div class="flex items-center space-x-3 mb-4">
+                <div class="relative group">
+                  <div
+                    class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75"
+                  ></div>
+                  <img
+                    src="{{ url_for('static', filename='img/logo.jpg') }}"
+                    alt="Bashpo Logo"
+                    class="w-12 h-8 rounded-xl relative"
+                  />
+                </div>
+                <div>
+                  <h1
+                    class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                  >
+                    Bashpo
+                  </h1>
+                  <p class="text-xs text-gray-400">Gaming Platform</p>
+                </div>
+              </div>
+              <p class="text-gray-400 max-w-md">
+                Find everything you love, in one place. Your ultimate gaming
+                destination.
+              </p>
+            </div>
+            <div class="text-center lg:text-right">
+              <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
+              <div class="flex justify-center lg:justify-end gap-4">
+                <a
+                  href="#"
+                  class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                >
+                  <i class="fab fa-youtube text-white"></i>
+                </a>
+                <a
+                  href="#"
+                  class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                >
+                  <i class="fab fa-facebook text-white"></i>
+                </a>
+                <a
+                  href="#"
+                  class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                >
+                  <i class="fab fa-instagram text-white"></i>
+                </a>
+                <a
+                  href="#"
+                  class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                >
+                  <i class="fab fa-x-twitter text-white"></i>
+                </a>
+                <a
+                  href="#"
+                  class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                >
+                  <i class="fab fa-tiktok text-white"></i>
+                </a>
+                <a
+                  href="#"
+                  class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                >
+                  <i class="fab fa-discord text-white"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-white/10 mt-8 pt-6 text-center">
+            <p class="text-gray-400 text-sm">
+              <i class="fa-regular fa-copyright mr-1"></i>
+              2025 Bashpo. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
 
     <script>
-        // Function to handle modal closing
-        function closeUpdatePasswordModal() {
-            const modal = document.getElementById('UpdatePasswordModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
+      // Function to handle modal closing
+      function closeUpdatePasswordModal() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        if (modal) {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+        }
+      }
+
+      function closeWishlistModal() {
+        const modal = document.getElementById("ViewWishlistedGamesModal");
+        if (modal) {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+        }
+      }
+
+      function closePopupModal() {
+        const modal = document.getElementById("popup-modal");
+        if (modal) {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+        }
+      }
+
+      function showUpdatePasswordModal() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        if (modal) {
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          document.body.style.overflow = "hidden";
+        }
+      }
+
+      function initializeModal_update_password() {
+        const modal = document.getElementById("UpdatePasswordModal");
+        const closeModalButton = modal?.querySelector(
+          '[data-modal-toggle="UpdatePasswordModal"]',
+        );
+
+        if (closeModalButton) {
+          closeModalButton.addEventListener("click", closeUpdatePasswordModal);
         }
 
-        function closeWishlistModal() {
-            const modal = document.getElementById('ViewWishlistedGamesModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
+        if (modal) {
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeUpdatePasswordModal();
             }
+          });
         }
+      }
 
-        function closePopupModal() {
-            const modal = document.getElementById('popup-modal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
-        }
+      document
+        .getElementById("updatePasswordForm")
+        ?.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const currentPassword =
+            document.getElementById("current-password")?.value;
+          const newPassword = document.getElementById("new-password")?.value;
+          const confirmPassword =
+            document.getElementById("confirm-password")?.value;
 
-        function showUpdatePasswordModal() {
-            const modal = document.getElementById('UpdatePasswordModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function initializeModal_update_password() {
-            const modal = document.getElementById('UpdatePasswordModal');
-            const closeModalButton = modal?.querySelector('[data-modal-toggle="UpdatePasswordModal"]');
-
-            if (closeModalButton) {
-                closeModalButton.addEventListener('click', closeUpdatePasswordModal);
-            }
-
-            if (modal) {
-                modal.addEventListener('click', function (event) {
-                    if (event.target === modal) {
-                        closeUpdatePasswordModal();
-                    }
-                });
-            }
-        }
-
-        document.getElementById('updatePasswordForm')?.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const currentPassword = document.getElementById('current-password')?.value;
-            const newPassword = document.getElementById('new-password')?.value;
-            const confirmPassword = document.getElementById('confirm-password')?.value;
-
-            if (newPassword !== confirmPassword) {
-                const errorDiv = document.getElementById('password-error');
-                if (errorDiv) errorDiv.classList.remove('hidden');
-                const successDiv = document.getElementById('password-success');
-                if (successDiv) successDiv.classList.add('hidden');
-            } else {
-                fetch('/update_password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ current_password: currentPassword, new_password: newPassword })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const successDiv = document.getElementById('password-success');
-                        if (successDiv) successDiv.classList.remove('hidden');
-                        const errorDiv = document.getElementById('password-error');
-                        if (errorDiv) errorDiv.classList.add('hidden');
-                        setTimeout(() => { window.location.href = '/logout'; }, 2000);
-                    } else {
-                        alert(data.error || 'Something went wrong!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Something went wrong!');
-                });
-            }
-        });
-
-        function handleDropdownChange(selectElement) {
-            const selectedValue = selectElement.value;
-            selectElement.value = "";
-            if (selectedValue === "logout") {
-                logout();
-            } else if (selectedValue === "AddMonitorWallet") {
-                window.location.href = '/AddMonitorWallet';
-            } else if (selectedValue === "update_pass") {
-                showUpdatePasswordModal();
-            } else if (selectedValue === "view_profile") {
-                window.location.href = '/ViewMyProfile';
-            }
-        }
-
-        function initializeSearch_wishlistedgames() {
-            const searchInput = document.getElementById('searchInput_wishlistedgames');
-            const userList = document.querySelectorAll('#ViewWishlistedGamesModal ul li');
-
-            if (searchInput) {
-                searchInput.addEventListener('input', function () {
-                    const filter = searchInput.value.toLowerCase();
-                    userList.forEach((userItem) => {
-                        const username = userItem.querySelector('span')?.textContent.toLowerCase() || '';
-                        if (username.includes(filter)) {
-                            userItem.style.display = '';
-                        } else {
-                            userItem.style.display = 'none';
-                        }
-                    });
-                });
-            }
-        }
-
-        function initializeModal_wishlistedgames() {
-            const openModalButton = document.getElementById('ViewWishlistedGamesButton');
-            const modal = document.getElementById('ViewWishlistedGamesModal');
-            const closeModalButton = modal?.querySelector('[data-modal-toggle="ViewWishlistedGamesModal"]');
-
-            if (openModalButton) {
-                openModalButton.addEventListener('click', function () {
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                        document.body.style.overflow = 'hidden';
-                    }
-                });
-            }
-
-            if (closeModalButton) {
-                closeModalButton.addEventListener('click', closeWishlistModal);
-            }
-
-            if (modal) {
-                modal.addEventListener('click', function (event) {
-                    if (event.target === modal) {
-                        closeWishlistModal();
-                    }
-                });
-            }
-        }
-
-        function RemoveFromWishList(button) {
-            const game_name = button.getAttribute('data-game_name_wishlist');
-            const listItem = button.closest('li');
-
-            if (listItem) {
-                listItem.style.animation = 'fadeOut 0.3s ease-out forwards';
-                setTimeout(() => {
-                    fetch('/RemoveFromWishlist', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ game_name: game_name })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message) {
-                            const modalTitle = document.querySelector('#popup-modal h3');
-                            const modalBody = document.querySelector('#popup-modal .modal-body');
-                            if (modalTitle) modalTitle.innerHTML = data.message;
-                            const modal = document.getElementById('popup-modal');
-                            if (modal) {
-                                modal.classList.remove('hidden');
-                                modal.classList.add('flex');
-                            }
-                            listItem.remove();
-                            updateWishlistCount();
-                        } else {
-                            alert(data.error || 'Failed to remove from wishlist.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Something went wrong!');
-                    });
-                }, 300);
-            }
-        }
-
-        function RemoveFromCart(button) {
-            const username = button.getAttribute('data-username');
-            const game_name = button.getAttribute('data-game_name');
-            const price = parseFloat(button.getAttribute('data-price'));
-            const cartItem = button.closest('.cart-item');
-
-            if (cartItem) {
-                cartItem.style.animation = 'fadeOut 0.3s ease-out forwards';
-                setTimeout(() => {
-                    fetch('/RemoveFromCart', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ game_name: game_name, username: username })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const modalTitle = document.querySelector('#popup-modal h3');
-                            const modalBody = document.querySelector('#popup-modal .modal-body');
-                            if (modalTitle) modalTitle.innerHTML = data.message;
-                            const modal = document.getElementById('popup-modal');
-                            if (modal) {
-                                modal.classList.remove('hidden');
-                                modal.classList.add('flex');
-                            }
-                            cartItem.remove();
-                            updateTotalPrice();
-                            if (data.empty_check) {
-                                setTimeout(() => { window.location.href = '/'; }, 2500);
-                            }
-                        } else {
-                            alert(data.message || 'Failed to remove from cart.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Something went wrong!');
-                    });
-                }, 300);
-            }
-        }
-
-        function updateTotalPrice() {
-            const cartItems = document.querySelectorAll('.cart-item');
-            let total = 0;
-            cartItems.forEach(item => {
-                const priceElement = item.querySelector('.text-pink-500.font-bold');
-                if (priceElement) {
-                    const price = parseFloat(priceElement.textContent.replace('$', '')) || 0;
-                    total += price;
-                }
-            });
-            const totalPriceElement = document.getElementById('total-price');
-            if (totalPriceElement) {
-                totalPriceElement.textContent = `$${total.toFixed(2)}`;
-            }
-        }
-
-        function updateWishlistCount() {
-            const wishlistItems = document.querySelectorAll('#buyerList li');
-            const wishlistButton = document.getElementById('ViewWishlistedGamesButton');
-            if (wishlistButton) {
-                const wishlistSpan = wishlistButton.querySelector('span');
-                if (wishlistSpan) {
-                    wishlistSpan.textContent = `Wishlist (${wishlistItems.length})`;
-                }
-            }
-        }
-
-        function PayUsingWallet() {
-            fetch('/PayUsingWallet', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
+          if (newPassword !== confirmPassword) {
+            const errorDiv = document.getElementById("password-error");
+            if (errorDiv) errorDiv.classList.remove("hidden");
+            const successDiv = document.getElementById("password-success");
+            if (successDiv) successDiv.classList.add("hidden");
+          } else {
+            fetch("/update_password", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword,
+              }),
             })
-            .then(response => response.json())
-            .then(data => {
+              .then((response) => response.json())
+              .then((data) => {
                 if (data.success) {
-                    const modalTitle = document.querySelector('#popup-modal h3');
-                    const modalBody = document.querySelector('#popup-modal .modal-body');
-                    if (modalTitle) modalTitle.innerHTML = data.message;
-                    const modal = document.getElementById('popup-modal');
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                    }
-                    setTimeout(() => { window.location.href = '/'; }, 2000);
+                  const successDiv =
+                    document.getElementById("password-success");
+                  if (successDiv) successDiv.classList.remove("hidden");
+                  const errorDiv = document.getElementById("password-error");
+                  if (errorDiv) errorDiv.classList.add("hidden");
+                  setTimeout(() => {
+                    window.location.href = "/logout";
+                  }, 2000);
                 } else {
-                    alert(data.message || 'Payment failed.');
+                  alert(data.error || "Something went wrong!");
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong!');
-            });
-        }
-
-        function AddtoCart(button) {
-            const game_name = button.getAttribute('data-game_name_cart');
-            const was_it_on_sale = button.getAttribute('data-game_sale_status');
-
-            fetch('/AddtoCart', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ game_name: game_name, was_it_on_sale: was_it_on_sale })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    const modalTitle = document.querySelector('#popup-modal h3');
-                    const modalBody = document.querySelector('#popup-modal .modal-body');
-                    if (modalTitle) modalTitle.innerHTML = data.message;
-                    const modal = document.getElementById('popup-modal');
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                    }
-                } else {
-                    alert(data.error || 'Failed to add to cart.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong!');
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeModal_update_password();
-            initializeModal_wishlistedgames();
-            initializeSearch_wishlistedgames();
-            updateTotalPrice();
-            updateWishlistCount();
-
-            document.querySelectorAll('[data-modal-toggle]').forEach(button => {
-                button.addEventListener('click', () => {
-                    const modalId = button.getAttribute('data-modal-target');
-                    const modal = document.getElementById(modalId);
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                        document.body.style.overflow = 'hidden';
-                    }
-                });
-            });
-
-            document.querySelectorAll('[data-modal-hide]').forEach(button => {
-                button.addEventListener('click', () => {
-                    const modal = button.closest('.fixed');
-                    if (modal) {
-                        modal.classList.add('hidden');
-                        modal.classList.remove('flex');
-                        document.body.style.overflow = '';
-                    }
-                });
-            });
-
-            document.querySelectorAll('.fixed').forEach(modal => {
-                modal.addEventListener('click', (event) => {
-                    if (event.target === modal) {
-                        modal.classList.add('hidden');
-                        modal.classList.remove('flex');
-                        document.body.style.overflow = '';
-                    }
-                });
-            });
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          }
         });
 
-        function updateNavbarColor() {
-            const navbar = document.getElementById('navbar');
-            const footer = document.getElementById('footer');
-            const currentHour = new Date().getHours();
+      function handleDropdownChange(selectElement) {
+        const selectedValue = selectElement.value;
+        selectElement.value = "";
+        if (selectedValue === "logout") {
+          logout();
+        } else if (selectedValue === "AddMonitorWallet") {
+          window.location.href = "/AddMonitorWallet";
+        } else if (selectedValue === "update_pass") {
+          showUpdatePasswordModal();
+        } else if (selectedValue === "view_profile") {
+          window.location.href = "/ViewMyProfile";
+        }
+      }
 
-            if (currentHour >= 6 && currentHour < 18) {
-                navbar.classList.remove('bg-[#010321]');
-                navbar.classList.add('bg-black/20');
-                footer.classList.remove('bg-[#010321]');
-                footer.classList.add('bg-slate-900/90');
-            } else {
-                navbar.classList.remove('bg-black/20');
-                navbar.classList.add('bg-[#010321]');
-                footer.classList.remove('bg-slate-900/90');
-                footer.classList.add('bg-[#010321]');
+      function initializeSearch_wishlistedgames() {
+        const searchInput = document.getElementById(
+          "searchInput_wishlistedgames",
+        );
+        const userList = document.querySelectorAll(
+          "#ViewWishlistedGamesModal ul li",
+        );
+
+        if (searchInput) {
+          searchInput.addEventListener("input", function () {
+            const filter = searchInput.value.toLowerCase();
+            userList.forEach((userItem) => {
+              const username =
+                userItem.querySelector("span")?.textContent.toLowerCase() || "";
+              if (username.includes(filter)) {
+                userItem.style.display = "";
+              } else {
+                userItem.style.display = "none";
+              }
+            });
+          });
+        }
+      }
+
+      function initializeModal_wishlistedgames() {
+        const openModalButton = document.getElementById(
+          "ViewWishlistedGamesButton",
+        );
+        const modal = document.getElementById("ViewWishlistedGamesModal");
+        const closeModalButton = modal?.querySelector(
+          '[data-modal-toggle="ViewWishlistedGamesModal"]',
+        );
+
+        if (openModalButton) {
+          openModalButton.addEventListener("click", function () {
+            if (modal) {
+              modal.classList.remove("hidden");
+              modal.classList.add("flex");
+              document.body.style.overflow = "hidden";
             }
+          });
         }
 
-        updateNavbarColor();
-
-        function logout() {
-            window.location.href = '/logout';
+        if (closeModalButton) {
+          closeModalButton.addEventListener("click", closeWishlistModal);
         }
+
+        if (modal) {
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeWishlistModal();
+            }
+          });
+        }
+      }
+
+      function RemoveFromWishList(button) {
+        const game_name = button.getAttribute("data-game_name_wishlist");
+        const listItem = button.closest("li");
+
+        if (listItem) {
+          listItem.style.animation = "fadeOut 0.3s ease-out forwards";
+          setTimeout(() => {
+            fetch("/RemoveFromWishlist", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ game_name: game_name }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.message) {
+                  const modalTitle = document.querySelector("#popup-modal h3");
+                  const modalBody = document.querySelector(
+                    "#popup-modal .modal-body",
+                  );
+                  if (modalTitle) modalTitle.innerHTML = data.message;
+                  const modal = document.getElementById("popup-modal");
+                  if (modal) {
+                    modal.classList.remove("hidden");
+                    modal.classList.add("flex");
+                  }
+                  listItem.remove();
+                  updateWishlistCount();
+                } else {
+                  alert(data.error || "Failed to remove from wishlist.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          }, 300);
+        }
+      }
+
+      function RemoveFromCart(button) {
+        const username = button.getAttribute("data-username");
+        const game_name = button.getAttribute("data-game_name");
+        const price = parseFloat(button.getAttribute("data-price"));
+        const cartItem = button.closest(".cart-item");
+
+        if (cartItem) {
+          cartItem.style.animation = "fadeOut 0.3s ease-out forwards";
+          setTimeout(() => {
+            fetch("/RemoveFromCart", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                game_name: game_name,
+                username: username,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  const modalTitle = document.querySelector("#popup-modal h3");
+                  const modalBody = document.querySelector(
+                    "#popup-modal .modal-body",
+                  );
+                  if (modalTitle) modalTitle.innerHTML = data.message;
+                  const modal = document.getElementById("popup-modal");
+                  if (modal) {
+                    modal.classList.remove("hidden");
+                    modal.classList.add("flex");
+                  }
+                  cartItem.remove();
+                  updateTotalPrice();
+
+                  // Check if cart is now empty
+                  const remainingItems =
+                    document.querySelectorAll(".cart-item");
+                  if (remainingItems.length === 0) {
+                    // Show empty cart state
+                    const mainContainer =
+                      document.querySelector("main .container");
+                    if (mainContainer) {
+                      mainContainer.innerHTML = `
+                                        <div class="flex justify-center items-center min-h-[60vh]">
+                                            <div class="text-center max-w-md mx-auto bg-[#18181b]/90 backdrop-blur-sm rounded-2xl p-12 border border-[#2d2d35] shadow-2xl">
+                                                <div class="mb-6">
+                                                    <i class="fas fa-shopping-cart text-8xl text-[#9147ff] mb-4"></i>
+                                                </div>
+                                                <h2 class="text-3xl font-bold text-[#efeff1] mb-4">Your Cart is Empty</h2>
+                                                <p class="text-[#adadb8] text-lg mb-8">
+                                                    Looks like you haven't added any games to your cart yet. Start exploring our collection!
+                                                </p>
+                                                <a href="/buyer_dashboard" class="inline-block">
+                                                    <button class="bg-[#9147ff] hover:bg-[#772ce8] text-white font-semibold py-3 px-8 rounded-lg transition-colors flex items-center gap-2 mx-auto">
+                                                        <i class="fas fa-gamepad"></i>
+                                                        Browse Games
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    `;
+                    }
+                  }
+                } else {
+                  alert(data.message || "Failed to remove from cart.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Something went wrong!");
+              });
+          }, 300);
+        }
+      }
+
+      function updateTotalPrice() {
+        const cartItems = document.querySelectorAll(".cart-item");
+        let total = 0;
+        cartItems.forEach((item) => {
+          const button = item.querySelector("button[data-price]");
+          if (button) {
+            const price = parseFloat(button.getAttribute("data-price")) || 0;
+            total += price;
+          }
+        });
+        const totalPriceElement = document.getElementById("total-price");
+        if (totalPriceElement) {
+          totalPriceElement.textContent = `$${total.toFixed(2)}`;
+        }
+      }
+
+      function updateWishlistCount() {
+        const wishlistItems = document.querySelectorAll("#buyerList li");
+        const wishlistButton = document.getElementById(
+          "ViewWishlistedGamesButton",
+        );
+        if (wishlistButton) {
+          const badgeSpan = wishlistButton.querySelector(
+            "span.bg-purple-500\\/20",
+          );
+          if (badgeSpan) {
+            badgeSpan.textContent = wishlistItems.length;
+          }
+        }
+      }
+
+      function PayUsingWallet() {
+        fetch("/PayUsingWallet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              const modalTitle = document.querySelector("#popup-modal h3");
+              const modalBody = document.querySelector(
+                "#popup-modal .modal-body",
+              );
+              if (modalTitle) modalTitle.innerHTML = data.message;
+              const modal = document.getElementById("popup-modal");
+              if (modal) {
+                modal.classList.remove("hidden");
+                modal.classList.add("flex");
+              }
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 2000);
+            } else {
+              alert(data.message || "Payment failed.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Something went wrong!");
+          });
+      }
+
+      function AddtoCart(button) {
+        const game_name = button.getAttribute("data-game_name_cart");
+        const was_it_on_sale = button.getAttribute("data-game_sale_status");
+
+        fetch("/AddtoCart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            game_name: game_name,
+            was_it_on_sale: was_it_on_sale,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.message) {
+              const modalTitle = document.querySelector("#popup-modal h3");
+              const modalBody = document.querySelector(
+                "#popup-modal .modal-body",
+              );
+              if (modalTitle) modalTitle.innerHTML = data.message;
+              const modal = document.getElementById("popup-modal");
+              if (modal) {
+                modal.classList.remove("hidden");
+                modal.classList.add("flex");
+              }
+            } else {
+              alert(data.error || "Failed to add to cart.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Something went wrong!");
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeModal_update_password();
+        initializeModal_wishlistedgames();
+        initializeSearch_wishlistedgames();
+        updateTotalPrice();
+        updateWishlistCount();
+
+        document.querySelectorAll("[data-modal-toggle]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const modalId = button.getAttribute("data-modal-target");
+            const modal = document.getElementById(modalId);
+            if (modal) {
+              modal.classList.remove("hidden");
+              modal.classList.add("flex");
+              document.body.style.overflow = "hidden";
+            }
+          });
+        });
+
+        document.querySelectorAll("[data-modal-hide]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const modal = button.closest(".fixed");
+            if (modal) {
+              modal.classList.add("hidden");
+              modal.classList.remove("flex");
+              document.body.style.overflow = "";
+            }
+          });
+        });
+
+        document.querySelectorAll(".fixed").forEach((modal) => {
+          modal.addEventListener("click", (event) => {
+            if (event.target === modal) {
+              modal.classList.add("hidden");
+              modal.classList.remove("flex");
+              document.body.style.overflow = "";
+            }
+          });
+        });
+      });
+
+      function logout() {
+        window.location.href = "/logout";
+      }
     </script>
-</body>
+  </body>
 </html>

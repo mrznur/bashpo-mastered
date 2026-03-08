@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Developer Sign Up</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon.png') }}">
 
@@ -24,248 +27,261 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap"
         rel="stylesheet">
-
+    <style>
+      :root {
+        --twitch-bg-primary: #0e0e10;
+        --twitch-bg-secondary: #18181b;
+        --twitch-bg-tertiary: #1f1f23;
+        --twitch-bg-hover: #26262c;
+        --twitch-purple: #9147ff;
+        --twitch-purple-hover: #772ce8;
+        --twitch-text-primary: #efeff1;
+        --twitch-text-secondary: #adadb8;
+        --twitch-border: #2d2d35;
+      }
+      
+      body {
+        background: var(--twitch-bg-primary);
+        color: var(--twitch-text-primary);
+      }
+    </style>
 </head>
 
 
-<body class="font-inter bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+<body class="font-inter">
     <!-- Header -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10">
-        <div class="container mx-auto px-4 py-3">
+    <header class="sticky top-0 z-50 bg-[#18181b] border-b border-[#2d2d35]">
+        <div class="container mx-auto px-3 sm:px-4 py-2 sm:py-3">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <div class="relative group">
-                        <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                        <a href="/" class="relative block">
-                            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-12 h-10 lg:w-16 lg:h-12 rounded-xl relative z-10 transition-transform duration-300 group-hover:scale-105">
-                        </a>
-                    </div>
-                    <div class="hidden lg:block">
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Bashpo</h1>
-                        <p class="text-xs text-gray-400">For Developers</p>
-                    </div>
+                <div class="inline-block flex-shrink-0">
+                    <a href="/" class="block hover:opacity-80 transition-opacity">
+                        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-12 h-8 rounded">
+                    </a>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <a href="/login" class="btn bg-gradient-to-r from-purple-600 to-blue-600 border-none text-white hover:from-purple-700 hover:to-blue-700">Login</a>
-                    <a href="/newacc" class="btn bg-gradient-to-r from-pink-600 to-red-600 border-none text-white hover:from-pink-700 hover:to-red-700">Sign Up</a>
+                <div class="absolute left-1/2 transform -translate-x-1/2">
+                    <h1 class="text-lg sm:text-2xl lg:text-3xl font-extrabold text-[#efeff1] tracking-wider sm:tracking-widest" style="font-family: 'Manrope', sans-serif">B A S H P O</h1>
                 </div>
-
+                <div class="flex items-center space-x-2">
+                    <a href="/login" class="bg-[#1f1f23] hover:bg-[#26262c] border border-[#2d2d35] text-[#efeff1] font-medium rounded px-3 py-1.5 sm:px-4 sm:py-2 transition-colors text-xs sm:text-sm">Login</a>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Developer Registration Form -->
-    <main class="relative min-h-screen">
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
-        <div class="relative z-10 container mx-auto px-4 py-12">
+    <main class="relative bg-[#0e0e10] min-h-screen">
+        <div class="relative z-10 container mx-auto px-4 py-6 sm:py-12">
             <div class="max-w-4xl mx-auto">
                 <!-- Header -->
-                <div class="text-center mb-12">
-                    <h1 class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 bg-clip-text text-transparent mb-4">
+                <div class="text-center mb-6 sm:mb-12">
+                    <h1 class="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#efeff1] mb-2 sm:mb-4">
                         Create Developer Account
                     </h1>
-                    <p class="text-gray-300 text-lg">Join our developer community and publish your games</p>
+                    <p class="text-[#adadb8] text-sm sm:text-lg">Join our developer community and publish your games</p>
                 </div>
 
                 <!-- Registration Card -->
-                <div class="relative group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative bg-slate-800/90 backdrop-blur-sm border border-white/20 rounded-3xl p-8 lg:p-12">
-                        <form id="developerForm" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Left Column -->
-                            <div class="space-y-6">
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text font-semibold text-white flex items-center">
-                                            <i class="fas fa-user text-emerald-400 mr-2"></i>
-                                            Developer Name
-                                        </span>
-                                    </label>
-                                    <input type="text" id="user_name" name="user_name"
-                                        class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
-                                        placeholder="Enter your developer name" required>
-                                </div>
-
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text font-semibold text-white flex items-center">
-                                            <i class="fas fa-building text-green-400 mr-2"></i>
-                                            Company Name
-                                        </span>
-                                    </label>
-                                    <input type="text" id="company_name" name="company_name"
-                                        class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
-                                        placeholder="Enter your company name" required>
-                                </div>
-
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text font-semibold text-white flex items-center">
-                                            <i class="fas fa-envelope text-teal-400 mr-2"></i>
-                                            Company Email
-                                        </span>
-                                    </label>
-                                    <input type="email" id="email" name="email"
-                                        class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
-                                        placeholder="Enter your company email" required>
-                                </div>
+                <div class="bg-[#18181b] border border-[#2d2d35] rounded p-4 sm:p-8 lg:p-12">
+                    <form id="developerForm" class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-4 sm:space-y-6">
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                        <i class="fas fa-user text-[#9147ff] mr-2"></i>
+                                        Developer Name
+                                    </span>
+                                </label>
+                                <input type="text" id="user_name" name="user_name"
+                                    class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm"
+                                    placeholder="Enter your developer name" required>
                             </div>
 
-                            <!-- Right Column -->
-                            <div class="space-y-6">
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text font-semibold text-white flex items-center">
-                                            <i class="fas fa-handshake text-cyan-400 mr-2"></i>
-                                            Publisher
-                                        </span>
-                                    </label>
-                                    <select id="publisher_name" name="publisher_name"
-                                        class="select select-bordered w-full bg-slate-700/50 border-white/20 text-white focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20" required>
-                                        <option value="" disabled selected class="text-gray-400">Select Publisher</option>
-                                        <option value="bandai_namco" class="text-white">🎮 Bandai Namco</option>
-                                        <option value="playstation_publishing" class="text-white">🎯 PlayStation Publishing</option>
-                                        <option value="xbox_game_studios" class="text-white">🎪 Xbox Game Studios</option>
-                                        <option value="square_enix" class="text-white">⚔️ Square Enix</option>
-                                        <option value="sega" class="text-white">🦔 Sega</option>
-                                        <option value="self" class="text-white">🏠 Self Published</option>
-                                    </select>
-                                    <label class="label">
-                                        <span class="label-text-alt text-yellow-400">💡 Choose "Self Published" if independent</span>
-                                    </label>
-                                </div>
-
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text font-semibold text-white flex items-center">
-                                            <i class="fas fa-lock text-lime-400 mr-2"></i>
-                                            Password
-                                        </span>
-                                    </label>
-                                    <input type="password" id="password" name="password"
-                                        class="input input-bordered w-full bg-slate-700/50 border-white/20 text-white placeholder-gray-400 focus:border-lime-500 focus:ring-2 focus:ring-lime-500/20"
-                                        placeholder="Create a secure password" required>
-                                </div>
-
-                                <!-- Developer Benefits Info -->
-                                <div class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20 rounded-xl p-4">
-                                    <h4 class="text-emerald-400 font-semibold mb-2 flex items-center">
-                                        <i class="fas fa-star mr-2"></i>
-                                        Developer Benefits
-                                    </h4>
-                                    <ul class="text-sm text-gray-300 space-y-1">
-                                        <li>• Revenue sharing up to 70%</li>
-                                        <li>• Global distribution platform</li>
-                                        <li>• Analytics and insights</li>
-                                    </ul>
-                                </div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                        <i class="fas fa-building text-[#9147ff] mr-2"></i>
+                                        Company Name
+                                    </span>
+                                </label>
+                                <input type="text" id="company_name" name="company_name"
+                                    class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm"
+                                    placeholder="Enter your company name" required>
                             </div>
 
-                            <!-- Full Width Submit Section -->
-                            <div class="lg:col-span-2 space-y-4">
-                                <div id="error-message" class="alert alert-error hidden">
-                                    <span></span>
-                                </div>
-
-                                <div class="text-center">
-                                    <button type="button"
-                                        class="btn btn-lg bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 border-none text-white hover:from-emerald-700 hover:via-green-700 hover:to-teal-700 px-12 py-4 text-lg font-bold shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105"
-                                        onclick="sendDeveloperRegistrationData()">
-                                        <i class="fas fa-code mr-2"></i>
-                                        Create Developer Account
-                                    </button>
-                                </div>
-
-                                <div class="text-center">
-                                    <p class="text-gray-400">Already have an account? 
-                                        <a href="/" class="text-emerald-400 hover:text-emerald-300 font-medium">Sign in here</a>
-                                    </p>
-                                </div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                        <i class="fas fa-envelope text-[#9147ff] mr-2"></i>
+                                        Company Email
+                                    </span>
+                                </label>
+                                <input type="email" id="email" name="email"
+                                    class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm"
+                                    placeholder="Enter your company email"
+                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                    title="Please enter a valid email address"
+                                    required>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="space-y-4 sm:space-y-6">
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                        <i class="fas fa-handshake text-[#9147ff] mr-2"></i>
+                                        Publisher
+                                    </span>
+                                </label>
+                                <select id="publisher_name" name="publisher_name"
+                                    class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm" required>
+                                    <option value="" disabled selected>Select Publisher</option>
+                                    <option value="bandai_namco">🎮 Bandai Namco</option>
+                                    <option value="playstation_publishing">🎯 PlayStation Publishing</option>
+                                    <option value="xbox_game_studios">🎪 Xbox Game Studios</option>
+                                    <option value="square_enix">⚔️ Square Enix</option>
+                                    <option value="sega">🦔 Sega</option>
+                                    <option value="self">🏠 Self Published</option>
+                                </select>
+                                <label class="label">
+                                    <span class="label-text-alt text-[#adadb8] text-xs">💡 Choose "Self Published" if independent</span>
+                                </label>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-[#efeff1] flex items-center text-xs sm:text-sm">
+                                        <i class="fas fa-lock text-[#9147ff] mr-2"></i>
+                                        Password
+                                    </span>
+                                </label>
+                                <input type="password" id="password" name="password"
+                                    class="w-full px-3 sm:px-4 py-2 bg-[#1f1f23] border border-[#2d2d35] rounded text-[#efeff1] placeholder-[#adadb8] focus:outline-none focus:ring-2 focus:ring-[#9147ff] text-xs sm:text-sm"
+                                    placeholder="Create a secure password (min. 8 characters)"
+                                    minlength="8"
+                                    title="Password must be at least 8 characters long"
+                                    required>
+                                <label class="label">
+                                    <span class="label-text-alt text-[#adadb8] text-xs">💡 Password must be at least 8 characters</span>
+                                </label>
+                            </div>
+
+                            <!-- Developer Benefits Info -->
+                            <div class="bg-[#1f1f23] border border-[#2d2d35] rounded p-3 sm:p-4">
+                                <h4 class="text-[#9147ff] font-semibold mb-2 flex items-center text-xs sm:text-sm">
+                                    <i class="fas fa-star mr-2"></i>
+                                    Developer Benefits
+                                </h4>
+                                <ul class="text-xs sm:text-sm text-[#adadb8] space-y-1">
+                                    <li>• Revenue sharing up to 70%</li>
+                                    <li>• Global distribution platform</li>
+                                    <li>• Analytics and insights</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Full Width Submit Section -->
+                        <div class="lg:col-span-2 space-y-4">
+                            <div id="error-message" class="bg-[#eb0400] text-white px-4 py-2 rounded text-xs sm:text-sm hidden">
+                                <span></span>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="button"
+                                    class="w-full sm:w-auto bg-[#9147ff] hover:bg-[#772ce8] text-white font-medium rounded px-8 sm:px-12 py-2 sm:py-3 transition-colors text-sm sm:text-base"
+                                    onclick="sendDeveloperRegistrationData()">
+                                    <i class="fas fa-code mr-2"></i>
+                                    Create Developer Account
+                                </button>
+                            </div>
+
+                            <div class="text-center">
+                                <p class="text-[#adadb8] text-xs sm:text-sm">Already have an account? 
+                                    <a href="/" class="text-[#9147ff] hover:text-[#772ce8] font-medium">Sign in here</a>
+                                </p>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- Benefits Section -->
-                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="text-center p-6 bg-slate-800/50 rounded-2xl border border-white/10">
-                        <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-chart-line text-white text-2xl"></i>
+                <div class="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="text-center p-4 sm:p-6 bg-[#18181b] rounded border border-[#2d2d35]">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-[#9147ff] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <i class="fas fa-chart-line text-white text-xl sm:text-2xl"></i>
                         </div>
-                        <h3 class="text-white font-bold text-lg mb-2">Revenue Analytics</h3>
-                        <p class="text-gray-400 text-sm">Track your game performance with detailed analytics and insights</p>
+                        <h3 class="text-[#efeff1] font-bold text-base sm:text-lg mb-2">Revenue Analytics</h3>
+                        <p class="text-[#adadb8] text-xs sm:text-sm">Track your game performance with detailed analytics and insights</p>
                     </div>
-                    <div class="text-center p-6 bg-slate-800/50 rounded-2xl border border-white/10">
-                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-globe text-white text-2xl"></i>
+                    <div class="text-center p-4 sm:p-6 bg-[#18181b] rounded border border-[#2d2d35]">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-[#9147ff] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <i class="fas fa-globe text-white text-xl sm:text-2xl"></i>
                         </div>
-                        <h3 class="text-white font-bold text-lg mb-2">Global Reach</h3>
-                        <p class="text-gray-400 text-sm">Distribute your games to millions of players worldwide</p>
+                        <h3 class="text-[#efeff1] font-bold text-base sm:text-lg mb-2">Global Reach</h3>
+                        <p class="text-[#adadb8] text-xs sm:text-sm">Distribute your games to millions of players worldwide</p>
                     </div>
-                    <div class="text-center p-6 bg-slate-800/50 rounded-2xl border border-white/10">
-                        <div class="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-tools text-white text-2xl"></i>
+                    <div class="text-center p-4 sm:p-6 bg-[#18181b] rounded border border-[#2d2d35]">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-[#9147ff] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                            <i class="fas fa-tools text-white text-xl sm:text-2xl"></i>
                         </div>
-                        <h3 class="text-white font-bold text-lg mb-2">Developer Tools</h3>
-                        <p class="text-gray-400 text-sm">Access powerful tools for game management and updates</p>
+                        <h3 class="text-[#efeff1] font-bold text-base sm:text-lg mb-2">Developer Tools</h3>
+                        <p class="text-[#adadb8] text-xs sm:text-sm">Access powerful tools for game management and updates</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer (Index Style) -->
-    <footer class="relative bg-slate-900/90 backdrop-blur-sm border-t border-white/10 mt-20">
-        <div class="container mx-auto px-4 py-12">
-            <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
+    <!-- Footer -->
+    <footer class="bg-[#0e0e10] border-t border-[#2d2d35] mt-12 sm:mt-20">
+        <div class="container mx-auto px-4 py-8 sm:py-12">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-6 sm:gap-8">
                 <!-- Logo and Description -->
                 <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
                     <div class="flex items-center space-x-3 mb-4">
-                        <div class="relative group">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-xl blur opacity-75"></div>
-                            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-16 h-10 rounded-xl relative z-10">
-                        </div>
+                        <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Bashpo Logo" class="w-12 h-8 sm:w-14 sm:h-10 rounded">
                         <div>
-                            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                            <h1 class="text-lg sm:text-xl font-bold text-[#efeff1]">
                                 Bashpo
                             </h1>
-                            <p class="text-xs text-gray-400">Gaming Platform</p>
+                            <p class="text-xs text-[#adadb8]">Gaming Platform</p>
                         </div>
                     </div>
-                    <p class="text-gray-400 max-w-md">
+                    <p class="text-[#adadb8] max-w-md text-sm sm:text-base">
                         Find everything you love, in one place. Your ultimate gaming destination.
                     </p>
                 </div>
 
                 <!-- Social Links -->
                 <div class="text-center lg:text-right">
-                    <h6 class="text-white font-bold mb-4">Find Us on Socials</h6>
-                    <div class="flex justify-center lg:justify-end gap-4">
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-youtube text-white"></i>
+                    <h6 class="text-[#efeff1] font-bold mb-4 text-sm sm:text-base">Find Us on Socials</h6>
+                    <div class="flex justify-center lg:justify-end gap-3 sm:gap-4">
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-youtube text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-facebook text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-facebook text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-instagram text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-instagram text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-x-twitter text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-x-twitter text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-tiktok text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-tiktok text-[#efeff1]"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
-                            <i class="fab fa-discord text-white"></i>
+                        <a href="#" class="w-8 h-8 sm:w-10 sm:h-10 bg-[#1f1f23] hover:bg-[#9147ff] rounded-full flex items-center justify-center transition-colors">
+                            <i class="fab fa-discord text-[#efeff1]"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
             <!-- Copyright -->
-            <div class="border-t border-white/10 mt-8 pt-6 text-center">
-                <p class="text-gray-400 text-sm">
+            <div class="border-t border-[#2d2d35] mt-6 sm:mt-8 pt-6 text-center">
+                <p class="text-[#adadb8] text-xs sm:text-sm">
                     <i class="fa-regular fa-copyright mr-1"></i>
                     2025 Bashpo. All rights reserved.
                 </p>
@@ -273,103 +289,35 @@
         </div>
     </footer>
 
-    <!-- Success Toast -->
-    <div id="success-toast" class="hidden fixed top-4 right-4 z-50 transform transition-transform duration-300 ease-in-out">
-        <div class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3">
-            <i class="fas fa-check-circle"></i>
-            <span id="toast-message">Success!</span>
-            <button onclick="hideToast()" class="ml-4 text-white/80 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-
-
-
     <script>
-// ----------------------------
-// Toast Functions
-// ----------------------------
-function showToast(message) {
-    const toast = document.getElementById('success-toast');
-    toast.querySelector('#toast-message').innerText = message;
-    toast.classList.remove('hidden'); // show toast
-    setTimeout(() => hideToast(), 3000); // auto hide after 3s
-}
-
-function hideToast() {
-    const toast = document.getElementById('success-toast');
-    toast.classList.add('hidden'); // hide toast
-}
-
-// ----------------------------
-// Forgot Password Function
-// ----------------------------
-async function ForgetPass() {
-    const formData = {
-        email: document.getElementById("user-email").value,
-        new_password: document.getElementById("new-password").value,
-        confirm_password: document.getElementById("confirm-password").value,
-    };
-
+async function sendDeveloperRegistrationData() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
     const errorDiv = document.getElementById('error-message');
     errorDiv.classList.add('hidden');
 
-    if (formData.new_password !== formData.confirm_password) {
-        errorDiv.querySelector('span').innerText = 'Passwords do not match.';
+    // Email validation
+    const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    if (!emailPattern.test(email)) {
+        errorDiv.querySelector('span').innerText = 'Please enter a valid email address.';
         errorDiv.classList.remove('hidden');
         return;
     }
 
-    if (formData.new_password.length < 6) {
-        errorDiv.querySelector('span').innerText = 'Password must be at least 6 characters long.';
+    // Password validation
+    if (password.length < 8) {
+        errorDiv.querySelector('span').innerText = 'Password must be at least 8 characters long.';
         errorDiv.classList.remove('hidden');
         return;
     }
 
-    try {
-        const response = await fetch("/forgot_password", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            showToast(result.success || "Password reset successful!");
-            setTimeout(() => { window.location.href = '/'; }, 1000);
-        } else {
-            errorDiv.querySelector('span').innerText = result.error || 'An error occurred. Please try again.';
-            errorDiv.classList.remove('hidden');
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        errorDiv.querySelector('span').innerText = 'An unexpected error occurred. Please try again.';
-        errorDiv.classList.remove('hidden');
-    }
-}
-
-// ----------------------------
-// Developer Registration Function
-// ----------------------------
-async function sendDeveloperRegistrationData() {
     const formData = {
         user_name: document.getElementById("user_name").value,
         company_name: document.getElementById("company_name").value,
-        email: document.getElementById("email").value,
+        email: email,
         publisher_name: document.getElementById("publisher_name").value,
-        password: document.getElementById("password").value
+        password: password
     };
-
-    const errorDiv = document.getElementById('error-message');
-    errorDiv.classList.add('hidden');
-
-    if (formData.password.length < 6) {
-        errorDiv.querySelector('span').innerText = 'Password must be at least 6 characters long.';
-        errorDiv.classList.remove('hidden');
-        return;
-    }
 
     try {
         const response = await fetch("/register_developer", {
@@ -381,7 +329,7 @@ async function sendDeveloperRegistrationData() {
         const result = await response.json();
 
         if (response.ok) {
-            showToast(result.success || "Developer account created!");
+            alert(result.success || "Developer account created!");
             setTimeout(() => { window.location.href = '/'; }, 1000);
         } else {
             errorDiv.querySelector('span').innerText = result.error || 'An error occurred. Please try again.';
@@ -393,7 +341,6 @@ async function sendDeveloperRegistrationData() {
         errorDiv.classList.remove('hidden');
     }
 }
-
     </script>
 
 </body>
